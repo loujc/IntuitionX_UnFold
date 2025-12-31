@@ -23,9 +23,20 @@
 | 2026-01-01 Review | Claude Opus 4.5 | `tests/test_db_basic.py` | 补充按 index 查询和 KeywordMention 跳转测试 |
 | 2026-01-01 Review | Claude Opus 4.5 | `requirements.txt` | 添加 `pydantic>=2.0` 显式依赖 |
 | 2026-01-01 Review | Claude Opus 4.5 | `HISTORY.md` | 新建修改记录文件 |
+| 2026-01-01 (Step 3) | Codex | `app/db/search.py` | 增加 FTS5/LIKE 搜索索引与查询逻辑 |
+| 2026-01-01 (Step 3) | Codex | `app/db/init_db.py` | 初始化时创建 FTS5 虚拟表（可用时） |
+| 2026-01-01 (Step 3) | Codex | `tests/test_search_index.py` | 索引与检索回归测试 |
+| 2026-01-01 Step 3 Review | Claude Opus 4.5 | `app/db/search.py` | 修复 FTS5 MATCH 语法错误（移除别名前缀） |
+| 2026-01-01 Step 3 Review | Claude Opus 4.5 | `app/db/search.py` | 移除 `index_segments/index_keywords` 中的 `db.commit()`，由调用方控制事务 |
+| 2026-01-01 Step 3 Review | Claude Opus 4.5 | `app/db/search.py` | 添加 FTS5 检测结果缓存（`_FTS5_CACHE`），优化性能 |
+| 2026-01-01 Step 3 Review | Claude Opus 4.5 | `app/db/search.py` | `_keyword_rows` 中添加 keyword_id 验证，跳过无效数据 |
+| 2026-01-01 Step 3 Review | Claude Opus 4.5 | `tests/test_search_index.py` | 补充边界测试：空查询、不存在的 task、无效 keyword_id |
+| 2026-01-01 Step 3 Review | Claude Opus 4.5 | `tests/test_search_index.py` | 添加 `session.commit()` 以适配事务控制修改 |
 
 ## 测试状态
 
 | 时间 | 测试结果 |
 |------|----------|
 | 2026-01-01 Review 后 | 4 passed, 0 warnings |
+| 2026-01-01 (Step 3) | 5 passed, 0 warnings |
+| 2026-01-01 Step 3 Review 后 | 5 passed, 0 warnings |

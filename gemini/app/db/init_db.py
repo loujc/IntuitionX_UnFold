@@ -7,6 +7,7 @@ from sqlalchemy.engine import make_url
 from app.core.config import AppConfig, get_config
 from app.db.session import Base, init_engine
 from app.db import models  # noqa: F401
+from app.db.search import ensure_fts_tables
 
 
 def _ensure_sqlite_dir(db_url: str) -> None:
@@ -26,3 +27,4 @@ def init_db(config: AppConfig | None = None) -> None:
     _ensure_sqlite_dir(cfg.db.url)
     engine = init_engine(cfg.db.url)
     Base.metadata.create_all(bind=engine)
+    ensure_fts_tables(engine)
