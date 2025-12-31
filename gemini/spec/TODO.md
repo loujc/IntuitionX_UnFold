@@ -30,13 +30,15 @@ Tests:
 
 ## 2. Database schema and persistence
 Tasks:
-- Define SQLAlchemy models for Task, TaskResult (clean), TaskRaw, TaskTiming, TaskLog.
-- Add Segment, Keyword, KeywordMention, KeywordLink models for indexing and fast lookup.
-- Store transcript segments and keywords in DB for indexing and retrieval by key/id.
-- Add DB init and session management utilities.
+- Add db/session.py with engine, SessionLocal, and Base; DB URL from config (default sqlite).
+- Add db/init_db.py to create tables on startup.
+- Define SQLAlchemy models: Task, TaskResult (clean), TaskRaw, TaskTiming, TaskLog (with indexes).
+- Add Segment, Keyword, KeywordMention, KeywordLink models with FKs and query indexes.
+- Add minimal repository/CRUD helpers to create/update Task, store result/raw/timing, and batch insert segments/keywords.
 Tests:
-- Create a temp SQLite DB, insert a task, read it back, update status.
+- Create a temp SQLite DB, init schema, insert a task, read it back, update status.
 - Verify TaskResult and TaskRaw are stored separately.
+- Insert segments/keywords and verify lookup by task_id and segment_id.
 
 ## 3. Search indexing (DB)
 Tasks:

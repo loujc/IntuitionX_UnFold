@@ -128,20 +128,21 @@ llm:
 
 ## 依赖清单（最小）
 - Python 3.10+
-- FastAPI + Uvicorn
-- OpenAI Python SDK
-- SQLAlchemy
-- PyYAML
-- Tenacity
 - FFmpeg
-- ASR：faster-whisper 或 mlx-whisper
+- Python 依赖见 requirements.txt（fastapi、uvicorn、openai、sqlalchemy、pyyaml、tenacity、pytest、httpx）
+- ASR 后端：faster-whisper 或 mlx-whisper
 
-## 最小运行命令（预期）
+## 最小运行命令
 ```bash
-# 安装基础依赖（requirements.txt 待补）
-pip install fastapi uvicorn openai sqlalchemy pyyaml tenacity
+# 安装依赖
+pip install -r requirements.txt
 # 启动（单进程）
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1
+```
+
+## 运行测试
+```bash
+pytest
 ```
 
 ## 备注

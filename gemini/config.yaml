@@ -1,0 +1,28 @@
+runtime:
+  # Max concurrent LLM calls across the process.
+  max_llm_concurrency: 10
+
+system:
+  # Allowed video type labels for classification.
+  video_types: ["History", "Anime", "Finance", "Course"]
+  default_mode: "simple"
+
+processing:
+  # Enable slicing for long videos.
+  enable_chunking: true
+  # Slice length in seconds.
+  chunk_duration: 300
+  # Limit ASR workers to avoid OOM.
+  max_asr_workers: 1
+  # LLM concurrency for summary/keywords.
+  llm_concurrency: 5
+
+asr:
+  backend: "auto"     # faster-whisper / mlx-whisper
+  model_size: "medium"
+
+llm:
+  base_url: "http://127.0.0.1:8045/v1"
+  model_name: "gemini-3-flash"
+  api_key: "${LLM_API_KEY}"
+

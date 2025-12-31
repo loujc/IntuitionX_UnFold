@@ -1,3 +1,6 @@
 .env
 .DS_Store
 /video/
+__pycache__/
+*.pyc
+.pytest_cache/
