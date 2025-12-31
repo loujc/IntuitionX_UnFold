@@ -39,3 +39,9 @@ def clear_context() -> None:
     _RUN_ID.set("-")
     _TASK_ID.set("-")
 
+
+def get_logger(name: str | None = None) -> logging.Logger:
+    """Get a logger with context filter applied."""
+    logger = logging.getLogger(name)
+    return logger
+

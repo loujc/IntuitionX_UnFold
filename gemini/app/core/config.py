@@ -31,14 +31,22 @@ class ProcessingConfig(BaseModel):
 
 
 class ASRConfig(BaseModel):
+    model_config = {"protected_namespaces": ()}
+
     backend: str = "auto"
     model_size: str = "medium"
 
 
 class LLMConfig(BaseModel):
+    model_config = {"protected_namespaces": ()}
+
     base_url: str = "http://127.0.0.1:8045/v1"
     model_name: str = "gemini-3-flash"
     api_key: str = ""
+
+
+class DBConfig(BaseModel):
+    url: str = "sqlite:///./data/intuitionx.db"
 
 
 class AppConfig(BaseModel):
@@ -47,6 +55,7 @@ class AppConfig(BaseModel):
     processing: ProcessingConfig = ProcessingConfig()
     asr: ASRConfig = ASRConfig()
     llm: LLMConfig = LLMConfig()
+    db: DBConfig = DBConfig()
 
 
 def _load_env_file(env_path: Path) -> None:
@@ -137,4 +146,3 @@ def get_config() -> AppConfig:
     if _CONFIG is None:
         _CONFIG = load_config()
     return _CONFIG
-

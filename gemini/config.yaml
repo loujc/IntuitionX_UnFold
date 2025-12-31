@@ -26,3 +26,6 @@ llm:
   model_name: "gemini-3-flash"
   api_key: "${LLM_API_KEY}"
 
+db:
+  # SQLite database file path.
+  url: "sqlite:///./data/intuitionx.db"
