@@ -61,6 +61,13 @@
 | 2026-01-01 (Step 5) | Codex | `requirements.txt` | 增加 python-multipart |
 | 2026-01-01 (Step 5) | Codex | `tests/test_api_upload.py` | 上传接口测试 |
 | 2026-01-01 (Step 5) | Codex | `tests/test_video_splitter.py` | 切片功能测试（ffmpeg 可用时） |
+| 2026-01-01 (Step 6) | Codex | `app/services/asr.py` | 新增 ASR 后端封装与 stub 转写 |
+| 2026-01-01 (Step 6) | Codex | `app/services/transcript.py` | 合并切片字幕为全量 segments |
+| 2026-01-01 (Step 6) | Codex | `app/services/subtitles.py` | 生成 SRT/VTT 字幕文本 |
+| 2026-01-01 (Step 6) | Codex | `app/workers/stage_handlers.py` | 补充 ASR/merge 阶段处理与持久化 |
+| 2026-01-01 (Step 6) | Codex | `requirements.txt` | 增加 faster-whisper 依赖 |
+| 2026-01-01 (Step 6) | Codex | `tests/test_asr_merge.py` | ASR 与 SRT/VTT 生成测试 |
+| 2026-01-01 Step 6 Review | Codex | `app/workers/stage_handlers.py` | 保存 ASR raw 输出到 TaskRaw |
 
 ## 测试状态
 
@@ -72,3 +79,5 @@
 | 2026-01-01 (Step 4) | 9 passed, 0 warnings (含 trio 失败) |
 | 2026-01-01 Step 4 Review 后 | 9 passed, 0 warnings |
 | 2026-01-01 (Step 5) | 10 passed, 1 skipped |
+| 2026-01-01 (Step 6) | 12 passed, 1 skipped |
+| 2026-01-01 Step 6 Review 后 | 4 passed (subset: asr_merge, job_manager) |

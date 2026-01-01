@@ -20,13 +20,16 @@
      ```
      前 codex 生成了 TODO.md 中的第X步，spec 都在 spec 文件夹中, 请你帮忙 review 一下，所有的工程在 gemini 文件夹下,看看有没有什么建议和问题
      ```
-   - 根据 Claude 建议修复或记录（必要时更新 HISTORY）。
-4. **Codex 复核**
+   - 记录 Claude 的 review 输出，并给出自己的判断（采纳/不采纳/原因）。
+4. **Claude 修改**
+   - 将「review 输出 + 你的判断」一起喂给 Claude Code，请其直接修改工程代码。
+   - 必要时同步更新 HISTORY 记录。
+5. **Codex 复核**
    - Codex 在当前会话中复核 Claude 的改动，确认无误。
-5. **提交与推送**
+6. **提交与推送**
    - `git add ...`
    - `git commit -m "<message>"`
    - 若远端有更新：`git pull --rebase origin main`
    - `git push origin main`
-6. **进入下一步**
+7. **进入下一步**
    - 重复上述流程直到 TODO 完成。
