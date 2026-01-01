@@ -41,7 +41,7 @@
 - GET /tasks/{task_id}/result
   - clean JSON 结果（不含 raw/timing）
 - GET /tasks/{task_id}/events (SSE)
-- 规划中的读取接口：
+- 读取接口：
   - GET /tasks/{task_id}/segments
   - GET /tasks/{task_id}/segments/{segment_id}
   - GET /tasks/{task_id}/raw

@@ -81,6 +81,9 @@
 | 2026-01-01 (Step 8) | Codex | `tests/test_result_endpoints.py` | result/raw/timing 接口测试 |
 | 2026-01-01 (Step 9) | Codex | `app/api/tasks.py` | SSE 事件流接口与 keepalive ping |
 | 2026-01-01 (Step 9) | Codex | `tests/test_sse_events.py` | SSE 事件顺序与断开清理测试 |
+| 2026-01-01 (Step 10) | Codex | `app/api/tasks.py` | 状态/segments 读取接口 |
+| 2026-01-01 (Step 10) | Codex | `tests/test_read_endpoints.py` | 读取接口与错误场景测试 |
+| 2026-01-01 (Step 10) | Codex | `README.md` | 更新读取接口说明 |
 
 ## 测试状态
 
@@ -97,3 +100,4 @@
 | 2026-01-01 (Step 7) | 16 passed |
 | 2026-01-01 (Step 8) | 17 passed |
 | 2026-01-01 (Step 9) | 18 passed |
+| 2026-01-01 (Step 10) | 20 passed |

@@ -12,6 +12,9 @@ from sqlalchemy.orm import Session
 from app.core.job_manager import STATUS_QUEUED
 from app.db.repository import (
     create_task,
+    get_segment_by_id,
+    get_segments_by_task,
+    get_task,
     get_task_raw,
     get_task_result,
     get_task_timings,
@@ -36,6 +39,16 @@ PING_INTERVAL_SECONDS = 15
 def _format_sse(event: str, data: dict) -> str:
     payload = json.dumps(data, ensure_ascii=True)
     return f"event: {event}\ndata: {payload}\n\n"
+
+
+def _serialize_segment(segment: object) -> dict:
+    return {
+        "segment_id": getattr(segment, "segment_id", None),
+        "index": getattr(segment, "index", None),
+        "start": float(getattr(segment, "start", 0.0)),
+        "end": float(getattr(segment, "end", 0.0)),
+        "text": getattr(segment, "text", ""),
+    }
 
 
 def _event_stream(job_manager: object, request: Request, task_id: str, ping_interval: int):
@@ -142,6 +155,8 @@ def get_task_raw_endpoint(task_id: str, db: Session = Depends(get_session)) -> d
 
 @router.get("/tasks/{task_id}/timing")
 def get_task_timing_endpoint(task_id: str, db: Session = Depends(get_session)) -> dict:
+    if get_task(db, task_id) is None:
+        raise HTTPException(status_code=404, detail="Task not found")
     timings = get_task_timings(db, task_id)
     return {
         "items": [
@@ -149,6 +164,41 @@ def get_task_timing_endpoint(task_id: str, db: Session = Depends(get_session)) -
             for timing in timings
         ]
     }
+
+
+@router.get("/tasks/{task_id}")
+def get_task_status_endpoint(task_id: str, db: Session = Depends(get_session)) -> dict:
+    task = get_task(db, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {
+        "task_id": task.id,
+        "status": task.status,
+        "stage": task.stage,
+        "error": task.error,
+    }
+
+
+@router.get("/tasks/{task_id}/segments")
+def get_task_segments_endpoint(task_id: str, db: Session = Depends(get_session)) -> dict:
+    task = get_task(db, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    segments = get_segments_by_task(db, task_id)
+    return {"items": [_serialize_segment(segment) for segment in segments]}
+
+
+@router.get("/tasks/{task_id}/segments/{segment_id}")
+def get_task_segment_endpoint(
+    task_id: str, segment_id: str, db: Session = Depends(get_session)
+) -> dict:
+    task = get_task(db, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    segment = get_segment_by_id(db, task_id, segment_id)
+    if segment is None:
+        raise HTTPException(status_code=404, detail="Segment not found")
+    return _serialize_segment(segment)
 
 
 @router.get("/tasks/{task_id}/events")

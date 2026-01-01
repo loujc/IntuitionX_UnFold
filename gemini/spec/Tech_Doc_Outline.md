@@ -1,71 +1,70 @@
-# IntuitionX: The Insight Engine
-> **Making Video Knowledge "Clickable"**
-
-IntuitionX 不是一个简单的转写工具，它是视频内容的“高亮笔”和“索引卡”。我们的目标是把 **2 小时的视频** 压缩进 **30 秒的直觉**，让那些沉睡在进度条里的知识变得 **可搜索、可引用、可交互**。
-
----
-
-## The Tech Stack (Under the Hood)
-> "Light on weight, heavy on capability."
-
-我们选用了一套 **Modern Python + Async Native** 的技术栈，既保证了黑客松需要的开发速度，也为生产环境预留了高性能扩展能力。
-
-*   **Core**: Python 3.10+ & **FastAPI** (High-perf Async Framework)
-*   **Orchestration**: **Asyncio Native Event Loop** (Non-blocking I/O)
-*   **Hearing**: **Faster-Whisper** & **MLX-Whisper** (Auto-switching / Apple Silicon Accelerated)
-*   **Vision**: **FFmpeg** (Battle-tested Media Processing)
-*   **Brain**: **OpenAI Python SDK** (Prompt Engineering & Structured Output)
-*   **Memory**: **SQLite + SQLAlchemy** (Zero-conf, ACID Compliant, Full-Text Search Ready)
+# 四、技术报告（Technical Realization Report）
+> **Agent & Backend Implementation / 楼锦程 王子怡**
+>
+> "IntuitionX 的后端不仅仅是一个 API Server，它是一个协同了听觉（ASR）、视觉（FFmpeg/Vision）、认知（LLM）与记忆（DB）的智能生命体。我们将复杂的异步任务流封装在极简的接口之下，确保每一次‘理解’都快如直觉。"
 
 ---
 
-## The Journey: From Pixels to Insights
+## 4.1 技术栈 (The Stack)
+> **"Lightweight, Async-Native, & Hardware-Aware"**
 
-### 1. The Portal (入园与接引)
-**“一切从这里开始。”**
+我们选用了一套专为高并发 I/O 和计算密集型混合场景设计的技术架构。
 
-*   **Product Thinking**: 上传不只是传输，它是用户意图的投射。在这里，系统不仅接收文件，更在瞬间完成格式探测与指纹生成。用户按下开始的那一刻，我们就已经为其分配了专属的“游园向导”（Task Worker）。
-*   **Tech Highlight**: 利用 **FastAPI** 的异步流式上传能力，配合 UUID 生成唯一任务空间，确保高并发下的请求隔离与快速响应。
-
-### 2. Divide & Conquer (化整为零)
-**“把巨石切成好搬运的砖块。”**
-
-*   **Product Thinking**: 长视频的处理痛点永远是“慢”和“不稳定”。我们的策略是并行的艺术——将长视频切分为独立处理的原子单元，既能跑满多核 CPU，又能让任何一段的失败不影响整体。
-*   **Tech Highlight**: **FFmpeg** 精确切片，音频转码为 16kHz 单声道（ASR 最佳拍档）。通过 **ThreadPoolExecutor** 实现 CPU 密集型任务的并发调度，榨干每一滴算力。
-
-### 3. Voice to Verbatim (听见真相)
-**“不仅要听得快，还要听得准。”**
-
-*   **Product Thinking**: 文本是理解的基石。在这一层，我们追求极致的转写速度。系统会自动感知运行环境，如果是 Mac 环境则自动切换至 MLX 引擎加速，仿佛给车换上了火箭推进器。
-*   **Tech Highlight**: **Dynamic ASR Backend**。根据硬件环境自动路由至 **Faster-Whisper** (CTranslate2) 或 **MLX-Whisper**，实现跨平台的最优推理性能。
-
-### 4. The Alignment (时间线编织)
-**“把碎片拼回完整的拼图。”**
-
-*   **Product Thinking**: 仅仅有文字是不够的，用户需要的是“带时间轴的剧本”。我们将碎片化的识别结果重新校准，修补切口处的断句，生成标准 SRT/VTT 字幕，让每一句话都能精准回溯到视频的某一帧。
-*   **Tech Highlight**: **Timestamp Reconstruction Algorithm**。处理分片 Offset，自动修正边缘时间戳，确保合并后的字幕流丝般顺滑，直接兼容 HTML5 `<track>` 标签。
-
-### 5. Semantic Understanding (大脑时刻)
-**“从‘说了什么’到‘讲了什么’。”**
-
-*   **Product Thinking**: 这是 Agent 的核心魔法。模型首先像鉴赏家一样识别视频类型（播客？教程？会议？），然后以此为上下文，生成“分段摘要”和“全篇总结”。这不只是概括，这是在为用户画重点。
-*   **Tech Highlight**: **LLM Chain of Thought**。利用 LLM 的 Context Window，配合精心设计的 Prompt Template，一次性输出结构化 JSON，包含 Summary, Chapters 以及 Type Classification。
-
-### 6. Knowledge Linking (构建超链接)
-**“让视频像维基百科一样可点击。”**
-
-*   **Product Thinking**: 我们最酷的功能。Deep Mode 下，Agent 会挖掘视频中的行话、术语和关键概念，并把它们变成可点击的“注释气泡”。点击一个关键词，不仅看到解释，还能直接跳转到视频里提到它的那一秒。
-*   **Tech Highlight**: **Keyword Extraction & Grounding**。让 LLM 提取实体（Entities），并基于 Fuzzy Matching 或 Embedding 搜索，将其锚定（Ground）回具体的 Transcript Segment。
-
-### 7. Asset Crystallization (落袋为安)
-**“交付价值。”**
-
-*   **Product Thinking**: 所有计算的终点，是用户手中的资产。我们不仅返回前端可渲染的数据，更将结构化信息持久化。这些数据是未来的宝藏——它们让视频变得可以被 SQL 查询、被向量检索。
-*   **Tech Highlight**: **Structured Data Lake**. 所有的 Log, Raw Output, Clean Metadata 全部存入 **SQLite**，并建立关联索引，为后续的 FTS5 全文检索和 RAG（检索增强生成）做好准备。
+*   **Core Framework**: **Python 3.10+ & FastAPI**. 选择 FastAPI 是因為其原生支持 Python `asyncio`，能够完美处理文件上传、SSE 事件流推送等长连接场景，同时自动生成 OpenAPI 文档，极大降低前后端联调成本。
+*   **Orchestration**: **Asyncio Native Event Loop**. 摒弃了 Celery 等重型队列，利用 Python 原生协程实现轻量级的任务编排。结合 `asyncio.Queue` 和内存状态管理，实现了零外部依赖的任务调度。
+*   **Inference Engine (Hearing)**: **Dynamic Backend Strategy**.
+    *   **Faster-Whisper (CTranslate2)**: 在标准 Linux/Intel 环境下提供 4x 推理加速。
+    *   **MLX-Whisper**: 针对 Apple Silicon (M-series) 芯片进行专门优化，利用统一内存架构实现本地极速转写。
+*   **Media Processing**: **FFmpeg**. 视频切片、音频提取、格式转码的瑞士军刀。
+*   **Cognition**: **OpenAI Python SDK**. 统一的大模型调用接口，支持 Structured Outputs (JSON Mode)，确保 Agent 输出的数据严格符合前端 Schema。
+*   **Data & Search**: **SQLite + SQLAlchemy + FTS5**. 单文件数据库实现 ACID 事务，内置的 FTS5 模块无需额外部署 ES 即可实现毫秒级的全文检索。
 
 ---
 
-## 8. The Frontend (The Last Mile / 占位)
-**“交互的画布。”**
+## 4.2 实现逻辑与架构 (The Flow)
 
-(Coming Soon: 这里将描述我们如何用流畅的 UI component 把上述数据编织成一个沉浸式的播放体验。Timeline Scrubbing, Keyword Popovers, Sidebar Summaries...)
+我们的核心是一个 **多阶段流水线（Multi-Stage Pipeline）**。传统的串行处理会导致长视频的等待时间不可接受，因此我们采用了 **“分治策略（Divide & Conquer）”**。
+
+**(附架构图说明)**:
+`Client (Upload) -> Task Manager (Queue) -> Video Splitter -> [Parallel ASR Workers] -> Merger & aligner -> LLM Cognition -> Knowledge Linking -> DB`
+
+### Phase 1: Ingestion & Splitting (吞吐与切分)
+*   **逻辑**: 当视频上传时，系统通过流式写入减少内存占用。随即调用 `VideoSplitter` 将视频按固定步长（如 5 分钟）切分为独立音频段。
+*   **技术点**: 利用 FFmpeg 的关键帧对其能力，确保切片处声音不被截断 (Audio Gap/Overlap Handling)。
+
+### Phase 2: Parallel Perception (并行感知)
+*   **逻辑**: 切分后的音频段进入 `ThreadPoolExecutor`。这里是计算最密集的环节。系统并行启动多个 Whisper 实例进行转写。
+*   **技术点**: 实现了由 `MAX_WORKERS` 控制的信号量机制，防止过度并发导致显存/内存溢出。
+
+### Phase 3: Alignment & Fusion (校准与融合)
+*   **逻辑**: 拿到碎片的 Transcript 后，需要将其还原回原始视频的时间轴。
+*   **技术点**: **Timestamp Reconstruction**. 我们设计了一个偏移量校准算法，将 `Segment[i]` 的相对时间戳加上 `Offset[i]`，无缝拼接成全局绝对时间戳，并重新生成符合 SRT 标准的字幕流。
+
+### Phase 4: Cognitive Processing (认知加工)
+*   **逻辑**: 这是 Agent 的“思考”时刻。我们将合并后的全量文本送入 LLM。
+    *   **Step A: Classification**. 识别视频类型（教程/访谈/叙事），决定后续的摘要风格。
+    *   **Step B: Summarization**. 生成带有时间戳的分段摘要（Chapters）。
+    *   **Step C: Entity Extraction**. 提取关键词（Keywords）。
+*   **技术点**: **Structured Prompting**. 通过 System Prompt 强制模型返回 JSON 格式，包含 `start_time`, `end_time`, `title`, `description` 等字段，直接对应前端组件。
+
+### Phase 5: Grounding & Linking (锚定与链接)
+*   **逻辑**: 仅仅有关键词是不够的，我们需要知道它们出现在哪里。Agent 会反向遍历字幕，模糊匹配实体出现的位置。
+*   **技术点**: **Fuzzy Anchoring**. 解决 LLM 输出的词形可能与 ASR 转写不完全一致的问题，将抽象概念“钉”回具体的时间轴坐标。
+
+---
+
+## 4.3 数据流向 (Data Flow)
+
+整个系统的数据流向遵循 **“从非结构化到结构化（Unstructured to Structured）”** 的熵减过程。
+
+1.  **Input**: Raw Video File (`mp4/mov`) + User Intent (`simple/deep mode`)
+2.  **Intermediate Layer (File System)**:
+    *   `chunks/*.wav`: 切片后的音频中间态。
+    *   `transcripts/*.json`: 原始 ASR 结果。
+3.  **Persistence Layer (SQLite)**:
+    *   `Tasks Table`: 任务状态机（Pending -> Processing -> Completed）。
+    *   `Segments Table`: 每一句字幕文本及其时间戳。
+    *   `Keywords Table`: 提取出的知识点及其解释。
+4.  **Output Layer (API)**:
+    *   SSE Stream: 实时推送进度百分比（Progress Bar）。
+    *   Final Payload: 包含字幕下载链接、摘要卡片数据、关键词索引的完整 JSON 包。
