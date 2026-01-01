@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import svgPaths from "./imports/svg-svp3s9ofq0";
 import imgImage13 from "figma:asset/1b939f420685ed9c8938abc89cf30951f9bcaf97.png";
 import imgRectangle34 from "figma:asset/caa09756c2c0383d70e8b4aaf1f8867fbac59966.png";
@@ -11,6 +11,12 @@ import imgRectangle40 from "figma:asset/7e2d0ad511bfb28d652cdc6178082141ac38f2ec
 import imgRectangle41 from "figma:asset/d8171626aea5f73ce218807f19b43ec6e8695d44.png";
 import imgRectangle43 from "figma:asset/ff402fbd8f833c106d51bdead08f65a61bb7ea50.png";
 import imgRectangle44 from "figma:asset/f37d5db6325420610e361115e5f6859812b1ee5d.png";
+import { UploadPopover } from './components/UploadPopover';
+import { AIAnalyzingIndicator, AIAnalysisCompleted, AIAnalysisFailed } from './components/AIAnalyzingIndicator';
+import { useVideoStore } from './store/useVideoStore';
+import { apiService } from './services/api';
+import { sseManager, cleanupSSE } from './services/sse';
+import type { AnalysisMode, VideoStyle, VideoTask } from './types';
 
 type PageType = 'welcome' | 'home' | 'library' | 'me' | 'detail';
 type VideoSection = 'reading' | 'later' | 'recent';
@@ -27,6 +33,13 @@ const videoData = [
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('welcome');
   const [selectedVideo, setSelectedVideo] = useState<number | null>(null);
+
+  // 组件卸载时清理所有 SSE 连接
+  useEffect(() => {
+    return () => {
+      cleanupSSE();
+    };
+  }, []);
 
   const handleStart = () => {
     setCurrentPage('home');
@@ -88,13 +101,27 @@ function WelcomePage({ onStart }: { onStart: () => void }) {
 }
 
 function HomePage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) => void, onVideoClick: (id: number) => void }) {
+  // 从 Zustand Store 读取视频列表
+  const videoTasks = useVideoStore((state) => state.videoTasks);
+
+  // 如果没有上传的视频，使用 mock 数据
+  const displayVideos = videoTasks.length > 0
+    ? videoTasks.map(task => ({
+        id: parseInt(task.id.replace('task_', '')),
+        title: task.title,
+        image: task.thumbnail || imgRectangle34, // TODO: 生成缩略图
+        progress: task.playProgress,
+        section: task.section,
+      }))
+    : videoData;
+
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
       <Sidebar currentPage="home" onNavigate={onNavigate} />
       <SearchBar />
       <div className="absolute content-stretch flex flex-col gap-[12px] items-start left-[calc(16.67%+19.67px)] top-[126px] w-[603px]">
-        <VideoSection title="Reading" videos={videoData.filter(v => v.section === 'reading')} onVideoClick={onVideoClick} />
-        <VideoSection title="Later" videos={videoData.filter(v => v.section === 'later')} onVideoClick={onVideoClick} />
+        <VideoSection title="Reading" videos={displayVideos.filter(v => v.section === 'reading')} onVideoClick={onVideoClick} />
+        <VideoSection title="Later" videos={displayVideos.filter(v => v.section === 'later')} onVideoClick={onVideoClick} />
         <RecentSection onVideoClick={onVideoClick} />
       </div>
       <StatsPanel />
@@ -104,6 +131,19 @@ function HomePage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) =
 }
 
 function LibraryPage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) => void, onVideoClick: (id: number) => void }) {
+  // 从 Zustand Store 读取视频列表（优先显示新上传的视频）
+  const videoTasks = useVideoStore((state) => state.videoTasks);
+
+  const displayVideos = videoTasks.length > 0
+    ? videoTasks.map(task => ({
+        id: parseInt(task.id.replace('task_', '')),
+        title: task.title,
+        image: task.thumbnail || imgRectangle34,
+        progress: task.playProgress,
+        section: task.section,
+      }))
+    : videoData;
+
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
       <Sidebar currentPage="library" onNavigate={onNavigate} />
@@ -116,9 +156,10 @@ function LibraryPage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType
         </div>
       </div>
       <div className="absolute left-[calc(16.67%+19.67px)] top-[193px] w-[604px]">
-        {videoData.slice(0, 3).map((video, index) => (
-          <div 
-            key={video.id} 
+        {/* 显示前3个视频，新上传的在最前面 */}
+        {displayVideos.slice(0, 3).map((video, index) => (
+          <div
+            key={video.id}
             className="mb-4 cursor-pointer hover:scale-[1.02] transition-transform"
             onClick={() => onVideoClick(video.id)}
           >
@@ -126,7 +167,7 @@ function LibraryPage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType
           </div>
         ))}
       </div>
-      
+
       {/* Right Side Chat Panel */}
       <ChatPanel />
     </div>
@@ -153,15 +194,37 @@ function MePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
 }
 
 function DetailPage({ onNavigate, videoId }: { onNavigate: (page: PageType) => void, videoId: number }) {
-  const video = videoData.find(v => v.id === videoId);
-  
+  const videoTasks = useVideoStore((state) => state.videoTasks);
+  const currentVideoSrc = useVideoStore((state) => state.currentVideoSrc);
+  const setCurrentVideo = useVideoStore((state) => state.setCurrentVideo);
+
+  // 查找对应的视频任务
+  const taskId = `task_${videoId}`;
+  const videoTask = videoTasks.find(task => task.id === taskId);
+
+  // 如果找不到 task，使用 mock 数据
+  const video = videoTask
+    ? {
+        id: videoId,
+        title: videoTask.title,
+        image: videoTask.thumbnail || imgRectangle34,
+        progress: videoTask.playProgress,
+        videoSrc: videoTask.videoSrc,
+      }
+    : videoData.find(v => v.id === videoId) || videoData[0];
+
+  // 设置当前视频（如果有 Blob URL）
+  if (videoTask && videoTask.videoSrc && currentVideoSrc !== videoTask.videoSrc) {
+    setCurrentVideo(videoTask.id, videoTask.videoSrc);
+  }
+
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
       <Sidebar currentPage="library" onNavigate={onNavigate} />
       <SearchBar />
-      
+
       <div className="absolute left-[calc(16.67%+19.67px)] top-[144px]">
-        <button 
+        <button
           onClick={() => onNavigate('library')}
           className="text-[#e0130b] hover:underline mb-4"
         >
@@ -173,25 +236,67 @@ function DetailPage({ onNavigate, videoId }: { onNavigate: (page: PageType) => v
           <TabButton icon={<CopyIcon />} label="Finish" active={false} />
         </div>
       </div>
-      
+
       <div className="absolute left-[calc(16.67%+19.67px)] top-[206px] w-[604px]">
+        {/* 视频信息卡片 */}
         <div className="bg-white rounded-[20px] p-6 mb-4">
           <div className="flex gap-4">
-            <div className="w-[288px] h-[200px] rounded-[10px] overflow-hidden">
-              <img src={video?.image} alt="" className="w-full h-full object-cover" />
+            {/* 视频播放器或缩略图 */}
+            <div className="w-[288px] h-[200px] rounded-[10px] overflow-hidden bg-black">
+              {videoTask && videoTask.videoSrc ? (
+                <video
+                  src={videoTask.videoSrc}
+                  controls
+                  className="w-full h-full object-contain"
+                  poster={videoTask.thumbnail}
+                >
+                  您的浏览器不支持视频播放。
+                </video>
+              ) : (
+                <img src={video.image} alt="" className="w-full h-full object-cover" />
+              )}
             </div>
             <div className="flex-1">
-              <h2 className="text-[20px] mb-2">{video?.title}</h2>
+              <h2 className="text-[20px] mb-2">{video.title}</h2>
               <p className="text-[14px] text-[#b8b5b5] mb-4">本文主要讲了2025 年全球经济的发展，对中美贸易战做了清晰的梳理</p>
               <div className="flex gap-2 text-[12px] text-[#b8b5b5]">
                 <span>昨天</span>
                 <span>Video</span>
-                <span>{video?.progress}%</span>
+                <span>{video.progress}%</span>
               </div>
+              {/* 显示任务状态 */}
+              {videoTask && (
+                <div className="mt-4">
+                  {/* 等待分析 */}
+                  {videoTask.status === 'queued' && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-[12px] text-[#e0130b]">⏳ 等待分析...</span>
+                    </div>
+                  )}
+
+                  {/* AI 分析中 - 使用详细模式显示完整阶段 */}
+                  {videoTask.status === 'processing' && (
+                    <AIAnalyzingIndicator
+                      stage={videoTask.stage || 'transcribing'}
+                      progress={videoTask.progress}
+                      detailed={true}
+                    />
+                  )}
+
+                  {/* 分析完成 */}
+                  {videoTask.status === 'completed' && <AIAnalysisCompleted />}
+
+                  {/* 分析失败 */}
+                  {videoTask.status === 'failed' && (
+                    <AIAnalysisFailed error={videoTask.result?.error || '未知错误'} />
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
-        
+
+        {/* 注释卡片（TODO: 显示真实的注释数据） */}
         <div className="bg-[rgba(255,255,255,0.7)] border-[#e0130b] border-2 rounded-[7px] p-4 shadow-lg">
           <div className="flex items-center gap-2 mb-2">
             <svg className="w-3 h-3" fill="#E0130B" viewBox="0 0 12 12">
@@ -212,7 +317,7 @@ function DetailPage({ onNavigate, videoId }: { onNavigate: (page: PageType) => v
           <button className="text-[8px] text-white underline mt-2">more</button>
         </div>
       </div>
-      
+
       <ChatWidget />
     </div>
   );
@@ -317,6 +422,102 @@ function CopyIcon() {
 }
 
 function SearchBar() {
+  const addVideoTask = useVideoStore((state) => state.addVideoTask);
+  const updateTaskProgress = useVideoStore((state) => state.updateTaskProgress);
+
+  const handleUpload = async (file: File, mode: AnalysisMode, style: VideoStyle) => {
+    // 生成本地 Blob URL（核心功能：秒开本地视频）
+    const videoSrc = URL.createObjectURL(file);
+
+    // 生成任务 ID
+    const taskId = `task_${Date.now()}`;
+
+    // 创建视频任务对象
+    const newTask: VideoTask = {
+      id: taskId,
+      title: file.name.replace(/\.[^/.]+$/, ''), // 去掉文件扩展名
+      videoSrc,
+      videoFile: file,
+      status: 'queued',
+      progress: 0,
+      mode,
+      style,
+      language: 'auto',
+      section: 'reading', // 新上传的视频默认放在 reading 分类
+      playProgress: 0,
+      startTime: 0,
+      endTime: 0, // 将在获取视频时长后更新
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+
+    // 添加到 Store（会自动保存到 localStorage）
+    addVideoTask(newTask);
+
+    console.log('✅ 视频任务已创建:', newTask);
+
+    // 调用后端 API 创建任务
+    try {
+      // 方法1：使用本地路径模式（Demo 推荐）
+      const response = await apiService.createTask({
+        source_type: 'path',
+        source_path: file.name, // 实际应用中这里应该是服务器上的路径
+        title: newTask.title,
+        mode,
+        style,
+        language: 'auto',
+        return_formats: ['srt', 'vtt', 'json'],
+      });
+
+      console.log('🚀 后端任务已创建:', response);
+
+      // 更新任务状态为 processing
+      updateTaskProgress(taskId, 0, 'transcribing');
+
+      // 开始监听 SSE 事件
+      sseManager.startListening(response.task_id || taskId);
+    } catch (error) {
+      console.error('❌ 调用后端 API 失败:', error);
+
+      // API 调用失败时，使用 Mock 数据模拟进度（Demo 模式）
+      console.log('⚠️ 进入 Mock 模式：模拟 AI 分析进度');
+      simulateMockProgress(taskId);
+    }
+  };
+
+  /**
+   * Mock 模式：模拟进度更新（当后端不可用时）
+   */
+  const simulateMockProgress = (taskId: string) => {
+    const stages = [
+      { stage: 'transcribing', duration: 2000 },
+      { stage: 'summarizing', duration: 1500 },
+      { stage: 'keywording', duration: 1500 },
+      { stage: 'linking', duration: 1000 },
+    ];
+
+    let currentProgress = 0;
+    let stageIndex = 0;
+
+    const interval = setInterval(() => {
+      currentProgress += 0.05;
+
+      if (currentProgress >= 1) {
+        clearInterval(interval);
+        updateTaskProgress(taskId, 1, 'linking');
+        console.log('✅ Mock 任务完成');
+        return;
+      }
+
+      // 更新阶段
+      const progressPerStage = 1 / stages.length;
+      stageIndex = Math.floor(currentProgress / progressPerStage);
+      if (stageIndex >= stages.length) stageIndex = stages.length - 1;
+
+      updateTaskProgress(taskId, currentProgress, stages[stageIndex].stage as any);
+    }, 200);
+  };
+
   return (
     <div className="absolute flex gap-[54px] items-center left-[calc(33.33%-2.67px)] top-[57px]">
       <div className="bg-white flex h-[46px] items-center justify-center px-[258px] py-[11px] rounded-[46.5px] shadow-[0px_4px_4px_4px_rgba(0,0,0,0.05)] w-[642px]">
@@ -328,12 +529,21 @@ function SearchBar() {
           <p className="text-[16px] text-black text-nowrap">search</p>
         </div>
       </div>
-      <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24">
-        <path d={svgPaths.p60b280} />
-        <path d={svgPaths.pd820400} />
-        <path d={svgPaths.pa185f00} />
-        <path d={svgPaths.p1d844e00} />
-      </svg>
+
+      {/* 上传 Popover - 包装右侧菜单图标 */}
+      <UploadPopover
+        trigger={
+          <button className="cursor-pointer hover:scale-110 transition-transform">
+            <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24">
+              <path d={svgPaths.p60b280} />
+              <path d={svgPaths.pd820400} />
+              <path d={svgPaths.pa185f00} />
+              <path d={svgPaths.p1d844e00} />
+            </svg>
+          </button>
+        }
+        onUpload={handleUpload}
+      />
     </div>
   );
 }
