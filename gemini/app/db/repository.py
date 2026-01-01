@@ -42,6 +42,18 @@ def update_task_status(
     return task
 
 
+def update_task_input_meta(db: Session, task_id: str, updates: dict) -> Task:
+    task = db.get(Task, task_id)
+    if task is None:
+        raise ValueError(f"Task {task_id} not found")
+    meta = dict(task.input_meta or {})
+    meta.update(updates)
+    task.input_meta = meta
+    db.commit()
+    db.refresh(task)
+    return task
+
+
 def save_task_result(db: Session, task_id: str, result_json: dict) -> TaskResult:
     result = TaskResult(task_id=task_id, result_json=result_json)
     db.add(result)

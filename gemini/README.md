@@ -126,6 +126,13 @@ llm:
   base_url: "http://127.0.0.1:8045/v1"
   model_name: "gemini-3-flash"
   api_key: "${LLM_API_KEY}"
+
+db:
+  url: "sqlite:///./data/intuitionx.db"
+
+storage:
+  temp_dir: "./temp"
+  max_upload_size_mb: 500
 ```
 
 ## 依赖清单（最小）

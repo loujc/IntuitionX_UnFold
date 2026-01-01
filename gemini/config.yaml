@@ -29,3 +29,9 @@ llm:
 db:
   # SQLite database file path.
   url: "sqlite:///./data/intuitionx.db"
+
+storage:
+  # Temp directory for uploads and generated artifacts.
+  temp_dir: "./temp"
+  # Max upload size in MB (set 0 or null to disable).
+  max_upload_size_mb: 500

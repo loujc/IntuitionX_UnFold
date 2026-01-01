@@ -49,6 +49,11 @@ class DBConfig(BaseModel):
     url: str = "sqlite:///./data/intuitionx.db"
 
 
+class StorageConfig(BaseModel):
+    temp_dir: str = "./temp"
+    max_upload_size_mb: int | None = 500
+
+
 class AppConfig(BaseModel):
     runtime: RuntimeConfig = RuntimeConfig()
     system: SystemConfig = SystemConfig()
@@ -56,6 +61,7 @@ class AppConfig(BaseModel):
     asr: ASRConfig = ASRConfig()
     llm: LLMConfig = LLMConfig()
     db: DBConfig = DBConfig()
+    storage: StorageConfig = StorageConfig()
 
 
 def _load_env_file(env_path: Path) -> None:

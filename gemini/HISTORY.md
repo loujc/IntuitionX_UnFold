@@ -50,6 +50,17 @@
 | 2026-01-01 Step 4 Review | Claude Opus 4.5 | `app/core/job_manager.py` | 修复 progress 计算（当前阶段为 0.5 进度更准确） |
 | 2026-01-01 Step 4 Review | Claude Opus 4.5 | `tests/test_llm_retry.py` | 更新测试以适配新的 `call_llm_with_retry` 签名 |
 | 2026-01-01 Step 4 Review | Claude Opus 4.5 | `pytest.ini` | 新增 pytest 配置文件 |
+| 2026-01-01 (Step 5) | Codex | `config.yaml` | 新增 storage.temp_dir 配置 |
+| 2026-01-01 (Step 5) | Codex | `app/core/config.py` | 增加 StorageConfig |
+| 2026-01-01 (Step 5) | Codex | `app/services/storage.py` | 上传文件保存与目录组织 |
+| 2026-01-01 (Step 5) | Codex | `app/services/video_splitter.py` | FFmpeg 切片实现 |
+| 2026-01-01 (Step 5) | Codex | `app/workers/stage_handlers.py` | 切片阶段处理与 noop 其他阶段 |
+| 2026-01-01 (Step 5) | Codex | `app/api/tasks.py` | 上传接口 POST /api/v1/tasks |
+| 2026-01-01 (Step 5) | Codex | `app/main.py` | 注册 API 路由与阶段处理器 |
+| 2026-01-01 (Step 5) | Codex | `app/db/repository.py` | 新增 update_task_input_meta |
+| 2026-01-01 (Step 5) | Codex | `requirements.txt` | 增加 python-multipart |
+| 2026-01-01 (Step 5) | Codex | `tests/test_api_upload.py` | 上传接口测试 |
+| 2026-01-01 (Step 5) | Codex | `tests/test_video_splitter.py` | 切片功能测试（ffmpeg 可用时） |
 
 ## 测试状态
 
@@ -60,3 +71,4 @@
 | 2026-01-01 Step 3 Review 后 | 6 passed, 0 warnings |
 | 2026-01-01 (Step 4) | 9 passed, 0 warnings (含 trio 失败) |
 | 2026-01-01 Step 4 Review 后 | 9 passed, 0 warnings |
+| 2026-01-01 (Step 5) | 10 passed, 1 skipped |
