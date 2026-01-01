@@ -4,5 +4,7 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-
+*.db
+*.mp4
+*.wav
 /front_ljc/
