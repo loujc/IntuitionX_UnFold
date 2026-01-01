@@ -108,7 +108,7 @@ def test_result_endpoints_exclude_raw_and_timing(tmp_path: Path) -> None:
             db,
             task_id,
             {
-                "video_type": {"label": "History", "confidence": 0.9},
+                "video_types": ["History", "Finance"],
                 "summary": {
                     "overall": "summary",
                     "by_slice": [{"slice_id": 0, "start": 0, "end": 300, "summary": "ok"}],
@@ -144,6 +144,8 @@ def test_result_endpoints_exclude_raw_and_timing(tmp_path: Path) -> None:
         payload = response.json()
         assert "raw" not in payload
         assert "timing" not in payload
+        assert payload["video_type"] == ["History"]
+        assert "video_types" not in payload
         assert payload["transcript"]["srt_path"] == "temp/sample.srt"
         assert payload["keywords"]["items"][0]["keyword_id"] == keyword.id
 

@@ -98,6 +98,15 @@
 | 2026-01-01 Step 10-12 Review | Claude Opus 4.5 | `app/api/tasks.py` | 修复重复的 GET /tasks/{task_id} 端点定义 |
 | 2026-01-01 (LLM Provider) | Codex | `app/services/llm_client.py` | 支持 Gemini 官方 API（google-genai）provider 分支 |
 | 2026-01-01 (LLM Provider) | Codex | `app/core/config.py` / `config.yaml` / `requirements.txt` / `README.md` | 增加 provider 配置与依赖、补充 Gemini 配置示例 |
+| 2026-01-01 (LLM Output) | Codex | `app/workers/stage_handlers.py` / `tests/test_llm_output_files.py` / `README.md` / `spec/Architecture_and_API_Spec.md` | LLM 输出写入 temp 并记录路径，补充文档与测试 |
+| 2026-01-01 (Chapters & Keywords) | Codex | `app/prompts/llm_prompts.py` / `app/services/llm_pipeline.py` / `app/workers/stage_handlers.py` / `app/services/result_builder.py` | 语义分章 + 章节摘要（中文），关键词抽取按章节输入并映射 segment_id，video_types 多标签输出 |
+| 2026-01-01 (Artifacts) | Codex | `app/workers/stage_handlers.py` / `README.md` / `spec/*` | 合并字幕输出 transcript.txt，新增 LLM 文本输出文件与文档更新 |
+| 2026-01-01 (Docs/Tests) | Codex | `spec/Frontend_Data_Contract.md` / `spec/Architecture_and_API_Spec.md` / `tests/test_llm_pipeline.py` / `tests/test_llm_output_files.py` | 更新前端契约与测试以适配新结构 |
+| 2026-01-01 Chapters Review | Claude Opus 4.5 | `app/workers/stage_handlers.py` | 复用 `_truncate` 函数、LLM 调用添加 try/except 日志、章节回退时添加警告日志 |
+| 2026-01-01 Chapters Review | Claude Opus 4.5 | `tests/test_job_manager.py` | 更新 timing 测试以适配 7 阶段（新增 llm_chapters） |
+| 2026-01-02 Chapters Review | Claude Opus 4.5 | `app/workers/stage_handlers.py` | 为 llm_summary/llm_chapters/llm_keywords 添加 docstring 说明职责变更 |
+| 2026-01-02 Prompts Review | Claude Opus 4.5 | `app/prompts/llm_prompts.py` | 优化所有 prompts：分类化 system prompt、全中文指令、明确输出格式、具体化规则 |
+| 2026-01-02 Prompts Review | Claude Opus 4.5 | `tests/test_llm_pipeline.py` | 更新测试以匹配中文 prompt |
 
 ## 测试状态
 

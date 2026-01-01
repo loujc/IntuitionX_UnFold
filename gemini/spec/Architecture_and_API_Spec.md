@@ -4,8 +4,8 @@
 
 *   **Language**: Python 3.10+
 *   **Web Framework**: **FastAPI** (Single Process)
-*   **LLM Client**: **OpenAI Python SDK** (`openai`)
-    *   *配置*: 兼容任意 OpenAI-Correction 接口 (如 DeepSeek, Moonshot, Local LLM)。
+*   **LLM Client**: **OpenAI Python SDK** (`openai`) / **Google GenAI** (`google-genai`)
+    *   *配置*: 兼容任意 OpenAI-compat 接口 (如 DeepSeek, Moonshot, Local LLM) 或 Gemini 官方 API。
 *   **ASR**: **Faster-Whisper** / **MLX-Whisper**
 *   **Video Processing**: **FFmpeg** (via `subprocess` or `ffmpeg-python`)
 *   **Queue & Event Bus**: **Python Native (`asyncio`)**
@@ -38,7 +38,7 @@
 字段：
 - `file`：视频文件（必填）
 - `mode`：`simple | deep`（可选，默认 `simple`）
-- `video_type`：字符串提示（可选，如 `History`）
+- `video_type`：字符串提示（可选，如 `History`，仅作为 hint）
 
 响应示例：
 ```json
@@ -52,7 +52,7 @@
 {
   "task_id": "uuid",
   "status": "queued|running|finished|failed",
-  "stage": "slicing|asr|merge|llm_summary|llm_keywords|finalize|",
+  "stage": "slicing|asr|merge|llm_summary|llm_chapters|llm_quotes|llm_keywords|finalize|",
   "error": null
 }
 ```
@@ -87,6 +87,17 @@
 ```json
 { "segment_id": "seg_000001", "index": 0, "start": 0.0, "end": 2.4, "text": "..." }
 ```
+
+### 3.4.1 本地 LLM 输出文件（temp）
+运行时会在 `temp/<task_id>/` 生成 LLM 输出文件，便于调试与复盘：
+- `llm_video_type.json`：视频类型 LLM 输出（raw + normalized）
+- `llm_summary.json`：摘要 LLM 输出（raw + normalized）
+- `llm_chapters.json`：语义章节 LLM 输出（raw + normalized）
+- `llm_quotes.json`：金句 LLM 输出（raw + normalized）
+- `llm_keywords.json`：关键词 LLM 输出（raw + normalized）
+
+### 3.4.2 本地合并字幕文本
+- `transcript.txt`：合并字幕纯文本（无时间戳）
 
 ### 3.5 实时流（SSE）
 **GET** `/tasks/{task_id}/events`  
@@ -139,7 +150,7 @@ es.addEventListener("task_result", async (e) => {
   "task_id": "uuid",
   "status": "finished|failed",
   "mode": "simple|deep",
-  "video_type": { "label": "History", "confidence": 0.82 },
+  "video_type": ["History", "Finance"],
   "transcript": {
     "segments": [<TranscriptSegment>],
     "srt_path": "temp/xxx.srt",
@@ -147,7 +158,11 @@ es.addEventListener("task_result", async (e) => {
   },
   "summary": {
     "overall": "string",
-    "by_slice": [<SummarySlice>]
+    "by_slice": [],
+    "chapters": [<SummaryChapter>]
+  },
+  "quotes": {
+    "items": [<QuoteItem>]
   },
   "keywords": {
     "items": [<KeywordItem>]
@@ -167,9 +182,32 @@ es.addEventListener("task_result", async (e) => {
 }
 ```
 
-**SummarySlice**
+**SummarySlice**（当前不启用）
 ```json
 { "slice_id": 0, "start": 0, "end": 300, "summary": "..." }
+```
+
+**SummaryChapter**
+```json
+{
+  "chapter_id": 0,
+  "segment_start_id": "seg_000001",
+  "segment_end_id": "seg_000120",
+  "start": 0.0,
+  "end": 600.0,
+  "summary": "..."
+}
+```
+
+**QuoteItem**（金句）
+```json
+{
+  "segment_id": "seg_000123",
+  "index": 0,
+  "start": 0.0,
+  "end": 2.4,
+  "text": "..."
+}
 ```
 
 **KeywordItem / KeywordMention / KeywordLink**
@@ -184,9 +222,11 @@ es.addEventListener("task_result", async (e) => {
 ```
 
 说明：
+- `video_type` 为 LLM 自动生成的多标签列表，不受 config 列表限制。
 - `segment_id` 为前端跳转的稳定主键，`index` 为 0-based。
 - `srt_path` / `vtt_path` 为本地文件路径（Demo 场景）。
 - `keywords.links` 可能为空；`source` 默认为 `llm`。
+- `summary.chapters` 为全局语义章节，边界以 `segment_id` 映射到时间轴。
 - SSE 的 `progress` 为阶段级（stage-level）进度，不代表精确百分比。
 
 ## 4. 关键策略 & 配置 (Configuration)
@@ -195,7 +235,7 @@ es.addEventListener("task_result", async (e) => {
 
 ```yaml
 system:
-  video_types: ["History", "Anime", "Finance", "Course"] # 可扩展
+  video_types: ["History", "Anime", "Finance", "Course"] # 仅作为可选配置，不再限制分类
   default_mode: "simple"
 
 processing:

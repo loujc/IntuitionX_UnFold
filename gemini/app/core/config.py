@@ -44,7 +44,6 @@ class LLMConfig(BaseModel):
     base_url: str = "http://127.0.0.1:8045/v1"
     model_name: str = "gemini-3-flash"
     api_key: str = ""
-    response_format: str | None = "json_object"
 
 
 class DBConfig(BaseModel):

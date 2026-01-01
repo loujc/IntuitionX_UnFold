@@ -10,10 +10,10 @@ the current codebase models.
 `queued` | `running` | `finished` | `failed`
 
 ### Task stage (sub-steps)
-`""` | `slicing` | `asr` | `merge` | `llm_summary` | `llm_keywords` | `finalize`
+`""` | `slicing` | `asr` | `merge` | `llm_summary` | `llm_chapters` | `llm_quotes` | `llm_keywords` | `finalize`
 
 ### Stage flow
-`queued -> slicing -> asr -> merge -> llm_summary -> llm_keywords -> finalize -> finished`
+`queued -> slicing -> asr -> merge -> llm_summary -> llm_chapters -> llm_quotes -> llm_keywords -> finalize -> finished`
 
 If any stage fails, status becomes `failed` and `error` is set.
 
@@ -23,7 +23,7 @@ If any stage fails, status becomes `failed` and `error` is set.
 Fields:
 - `file` (required): video file
 - `mode` (optional): `simple` | `deep` (default `simple`)
-- `video_type` (optional): string hint, e.g. `History`
+- `video_type` (optional): string hint, e.g. `History` (as input hint only)
 
 Response: `TaskCreateResponse`
 
@@ -43,7 +43,7 @@ Event types: `task_status` | `task_progress` | `task_result` | `ping`
 {
   "task_id": "uuid",
   "status": "queued|running|finished|failed",
-  "stage": "slicing|asr|merge|llm_summary|llm_keywords|finalize|",
+  "stage": "slicing|asr|merge|llm_summary|llm_chapters|llm_quotes|llm_keywords|finalize|",
   "message": "optional human-readable note",
   "ts": "2025-01-01T12:00:00Z"
 }
@@ -80,6 +80,8 @@ type TaskStage =
   | "asr"
   | "merge"
   | "llm_summary"
+  | "llm_chapters"
+  | "llm_quotes"
   | "llm_keywords"
   | "finalize";
 type Mode = "simple" | "deep";
@@ -98,7 +100,7 @@ type Mode = "simple" | "deep";
 {
   "task_id": "uuid",
   "status": "queued|running|finished|failed",
-  "stage": "slicing|asr|merge|llm_summary|llm_keywords|finalize|",
+  "stage": "slicing|asr|merge|llm_summary|llm_chapters|llm_quotes|llm_keywords|finalize|",
   "error": null
 }
 ```
@@ -109,7 +111,7 @@ type Mode = "simple" | "deep";
   "task_id": "uuid",
   "status": "finished|failed",
   "mode": "simple|deep",
-  "video_type": { "label": "History", "confidence": 0.82 },
+  "video_type": ["History", "Finance"],
   "transcript": {
     "segments": [<TranscriptSegment>],
     "srt_path": "temp/xxx.srt",
@@ -117,7 +119,11 @@ type Mode = "simple" | "deep";
   },
   "summary": {
     "overall": "string",
-    "by_slice": [<SummarySlice>]
+    "by_slice": [],
+    "chapters": [<SummaryChapter>]
+  },
+  "quotes": {
+    "items": [<QuoteItem>]
   },
   "keywords": {
     "items": [<KeywordItem>]
@@ -137,13 +143,36 @@ type Mode = "simple" | "deep";
 }
 ```
 
-### SummarySlice
+### SummarySlice (disabled)
 ```
 {
   "slice_id": 0,
   "start": 0,
   "end": 300,
   "summary": "..."
+}
+```
+
+### SummaryChapter
+```
+{
+  "chapter_id": 0,
+  "segment_start_id": "seg_000001",
+  "segment_end_id": "seg_000120",
+  "start": 0.0,
+  "end": 600.0,
+  "summary": "..."
+}
+```
+
+### QuoteItem
+```
+{
+  "segment_id": "seg_000123",
+  "index": 0,
+  "start": 0.0,
+  "end": 2.4,
+  "text": "..."
 }
 ```
 
@@ -176,7 +205,7 @@ type Mode = "simple" | "deep";
 
 - Time fields (`start`, `end`) are seconds, float.
 - `index` is 0-based; `segment_id` is the stable key for mentions.
-- `video_type` can be null if not detected; `confidence` is 0..1.
+- `video_type` 为 LLM 自动生成的多标签列表。
 - `progress` is overall progress (0..1) for the whole task; no per-stage progress.
 - `links` may be empty; external search is disabled in the demo, so `source` is usually `llm`.
 - `srt_path` and `vtt_path` are local filesystem paths (demo runs locally), not HTTP URLs.

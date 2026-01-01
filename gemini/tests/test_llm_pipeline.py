@@ -40,15 +40,17 @@ def test_call_llm_json_parses_response() -> None:
 
 
 def test_keyword_prompt_mode_affects_content() -> None:
-    segments = [{"segment_id": "seg_000001", "text": "Hello world"}]
-    simple_messages = build_keyword_prompt("History", "simple", segments)
-    deep_messages = build_keyword_prompt("History", "deep", segments)
+    chapters = [{"chapter_id": 0, "text": "Hello world"}]
+    simple_messages = build_keyword_prompt(["History"], "simple", "simple", chapters)
+    deep_messages = build_keyword_prompt(["History"], "deep", "simple", chapters)
     simple_text = simple_messages[-1]["content"]
     deep_text = deep_messages[-1]["content"]
-    assert "Extraction Mode: simple" in simple_text
-    assert "Extraction Mode: deep" in deep_text
-    assert "highly obscure terms" in simple_text
-    assert "technical terms" in deep_text
+    # 检查中文模式标识
+    assert "当前模式：simple" in simple_text
+    assert "当前模式：deep" in deep_text
+    # 检查模式特定规则
+    assert "简洁模式" in simple_text
+    assert "专业模式" in deep_text
 
 
 def test_normalize_keywords_maps_index_to_segment_id() -> None:

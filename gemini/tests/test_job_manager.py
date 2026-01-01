@@ -96,7 +96,7 @@ async def test_job_manager_records_timing(tmp_path, monkeypatch) -> None:
         session.refresh(task)
         task_id = task.id
 
-    durations_ms = [100, 200, 150, 50, 75, 125]
+    durations_ms = [100, 200, 150, 50, 80, 60, 75, 125]  # 8 stages
     values = []
     current = 0.0
     for ms in durations_ms:

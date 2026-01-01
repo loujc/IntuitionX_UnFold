@@ -89,20 +89,11 @@ def _call_openai_json(
     client: OpenAI | None,
 ) -> dict[str, Any]:
     llm_client = client or get_llm_client(config)
-    response_format = (config.llm.response_format or "").strip()
-    if response_format:
-        response = llm_client.chat.completions.create(
-            model=config.llm.model_name,
-            messages=messages,
-            temperature=temperature,
-            response_format={"type": response_format},
-        )
-    else:
-        response = llm_client.chat.completions.create(
-            model=config.llm.model_name,
-            messages=messages,
-            temperature=temperature,
-        )
+    response = llm_client.chat.completions.create(
+        model=config.llm.model_name,
+        messages=messages,
+        temperature=temperature,
+    )
     content = response.choices[0].message.content or ""
     return _extract_json(content)
 
@@ -117,17 +108,13 @@ def _call_gemini_json(
         return {}
 
     client = get_gemini_client(config)
-    response_format = (config.llm.response_format or "").strip()
-    response_mime_type = "application/json" if response_format else None
-
     gen_config = None
-    if response_mime_type or temperature is not None:
+    if temperature is not None:
         try:
             from google import genai
 
             gen_config = genai.types.GenerateContentConfig(
                 temperature=temperature,
-                response_mime_type=response_mime_type,
             )
         except Exception:
             gen_config = None

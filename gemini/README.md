@@ -6,13 +6,14 @@
 
 ## 目标
 - 20-30s 端到端时延目标（尽力而为），使用切片并行。
-- LLM 调用仅使用 OpenAI Python SDK（不使用 raw HTTP，不用 LangChain）。
+- LLM 调用支持 OpenAI SDK（兼容 OpenAI 接口）与 Google Gemini SDK（google-genai）。
 - 结构化 JSON 输出；所有 raw 输出与耗时统计落库。
 
 ## 功能（目标）
 - 使用 ffmpeg 切片 + 并行 ASR（Faster-Whisper 或 MLX-Whisper）。
 - 视频类型识别与摘要（chunk + reduce）。
 - 关键词提取（simple/deep 模式）并附带 segment 级 mentions。
+- 金句抽取（1-5 句，带时间戳）。
 - SSE 进度流用于前端实时更新。
 - SQLite 存储字幕与关键词，可全文检索（优先 FTS5）。
 
@@ -20,7 +21,7 @@
 - FastAPI 处理 HTTP + SSE。
 - JobManager 单例：asyncio.Queue + 内存任务状态。
 - ASR 运行在 ThreadPoolExecutor，worker 数量可配置。
-- LLM 调用为异步 IO，OpenAI SDK + 重试。
+- LLM 调用为异步 IO，OpenAI SDK / google-genai + 重试。
 - SQLite + SQLAlchemy 持久化任务与结果。
 
 ## 处理流程
@@ -28,8 +29,9 @@
 2. 对每个切片并行执行 ASR。
 3. 合并字幕并生成 SRT/VTT，修正时间偏移。
 4. LLM 任务并行执行：
-   - 视频类型识别
-   - 摘要（chunk + reduce）
+   - 视频类型识别（多标签）
+   - 语义章节分割 + 章节摘要（中文）
+   - 金句抽取（1-5 句原文）
    - 关键词提取（simple/deep 模式）
 
 ## API（Base: /api/v1）
@@ -55,7 +57,7 @@ data: JSON with task_id, status, stage, progress, message, ts
 
 ## 任务状态
 status: queued | running | finished | failed
-stage: slicing -> asr -> merge -> llm_summary -> llm_keywords -> finalize
+stage: slicing -> asr -> merge -> llm_summary -> llm_chapters -> llm_quotes -> llm_keywords -> finalize
 
 ## 结果 JSON（clean）
 对前端返回的结果不包含 raw 输出与 timing 统计。
@@ -65,7 +67,7 @@ stage: slicing -> asr -> merge -> llm_summary -> llm_keywords -> finalize
   "task_id": "...",
   "status": "finished",
   "mode": "simple",
-  "video_type": { "label": "history", "confidence": 0.82 },
+  "video_type": ["history", "finance"],
   "transcript": {
     "segments": [
       { "segment_id": 123, "index": 0, "start": 0.0, "end": 2.4, "text": "..." }
@@ -75,8 +77,21 @@ stage: slicing -> asr -> merge -> llm_summary -> llm_keywords -> finalize
   },
   "summary": {
     "overall": "...",
-    "by_slice": [
-      { "slice_id": 0, "start": 0, "end": 300, "summary": "..." }
+    "by_slice": [],
+    "chapters": [
+      {
+        "chapter_id": 0,
+        "segment_start_id": "seg_000001",
+        "segment_end_id": "seg_000120",
+        "start": 0.0,
+        "end": 600.0,
+        "summary": "..."
+      }
+    ]
+  },
+  "quotes": {
+    "items": [
+      { "segment_id": "seg_000010", "index": 10, "start": 10.0, "end": 12.0, "text": "..." }
     ]
   },
   "keywords": {
@@ -243,6 +258,15 @@ curl http://127.0.0.1:8000/api/v1/tasks/<task_id>/segments
 - `temp/<task_id>/input.*`：原始上传文件  
 - `temp/<task_id>/chunks/`：切片音频  
 - `temp/<task_id>/asr.json`：ASR 原始输出  
+- `temp/<task_id>/transcript.txt`：合并字幕纯文本  
+- `temp/<task_id>/llm_video_type.json`：视频类型 LLM 输出（raw + normalized）  
+- `temp/<task_id>/llm_video_type.txt`：视频类型文本  
+- `temp/<task_id>/llm_chapters.json`：章节分割与章节摘要（raw + normalized）  
+- `temp/<task_id>/llm_chapters.txt`：章节分割文本  
+- `temp/<task_id>/llm_summary.json`：章节摘要汇总（raw + normalized）  
+- `temp/<task_id>/llm_summary.txt`：章节摘要文本  
+- `temp/<task_id>/llm_keywords.json`：关键词 LLM 输出（raw + normalized）  
+- `temp/<task_id>/llm_keywords.txt`：关键词文本  
 - `temp/<task_id>/transcript.srt|vtt`：字幕文件  
 
 ## 运行测试

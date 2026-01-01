@@ -23,6 +23,8 @@ STAGES: list[str] = [
     "asr",
     "merge",
     "llm_summary",
+    "llm_chapters",
+    "llm_quotes",
     "llm_keywords",
     "finalize",
 ]
