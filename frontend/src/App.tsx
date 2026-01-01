@@ -1,0 +1,676 @@
+import { useState } from 'react';
+import svgPaths from "./imports/svg-svp3s9ofq0";
+import imgImage13 from "figma:asset/1b939f420685ed9c8938abc89cf30951f9bcaf97.png";
+import imgRectangle34 from "figma:asset/caa09756c2c0383d70e8b4aaf1f8867fbac59966.png";
+import imgRectangle35 from "figma:asset/6563664671bdb9c906c1438c612b9bd618b8697e.png";
+import imgRectangle36 from "figma:asset/228f498b2fd0a9ddee568cd50bafbcab08188a1d.png";
+import imgRectangle37 from "figma:asset/e5bf9baa7e09ee6d16b7c343777ad74ff3613b21.png";
+import imgRectangle38 from "figma:asset/ff402fbd8f833c106d51bdead08f65a61bb7ea50.png";
+import imgRectangle39 from "figma:asset/090e70978c57885db2d5bccd47c8efd05ad94044.png";
+import imgRectangle40 from "figma:asset/7e2d0ad511bfb28d652cdc6178082141ac38f2ec.png";
+import imgRectangle41 from "figma:asset/d8171626aea5f73ce218807f19b43ec6e8695d44.png";
+import imgRectangle43 from "figma:asset/ff402fbd8f833c106d51bdead08f65a61bb7ea50.png";
+import imgRectangle44 from "figma:asset/f37d5db6325420610e361115e5f6859812b1ee5d.png";
+
+type PageType = 'welcome' | 'home' | 'library' | 'me' | 'detail';
+type VideoSection = 'reading' | 'later' | 'recent';
+
+const videoData = [
+  { id: 1, title: "一口气了解2025年全球经济 | 关税新格局", image: imgRectangle34, progress: 20, section: 'reading' },
+  { id: 2, title: "一口气了解2025年全球经济 | 关税新格局", image: imgRectangle35, progress: 20, section: 'reading' },
+  { id: 3, title: "一口气了解2025年全球经济 | 关税新格局", image: imgRectangle36, progress: 20, section: 'reading' },
+  { id: 4, title: "一口气了解2025年全球经济 | 关税新格局", image: imgRectangle37, progress: 0, section: 'later' },
+  { id: 5, title: "一口气了解2025年全球经济 | 关税新格局", image: imgRectangle38, progress: 0, section: 'later' },
+  { id: 6, title: "一口气了解2025年全球经济 | 关税新格局", image: imgRectangle39, progress: 0, section: 'later' },
+];
+
+export default function App() {
+  const [currentPage, setCurrentPage] = useState<PageType>('welcome');
+  const [selectedVideo, setSelectedVideo] = useState<number | null>(null);
+
+  const handleStart = () => {
+    setCurrentPage('home');
+  };
+
+  const handleNavigation = (page: PageType) => {
+    setCurrentPage(page);
+    setSelectedVideo(null);
+  };
+
+  const handleVideoClick = (videoId: number) => {
+    setSelectedVideo(videoId);
+    setCurrentPage('detail');
+  };
+
+  return (
+    <div className="w-screen h-screen overflow-hidden bg-[#f9f9f9]">
+      {currentPage === 'welcome' && <WelcomePage onStart={handleStart} />}
+      {currentPage === 'home' && <HomePage onNavigate={handleNavigation} onVideoClick={handleVideoClick} />}
+      {currentPage === 'library' && <LibraryPage onNavigate={handleNavigation} onVideoClick={handleVideoClick} />}
+      {currentPage === 'me' && <MePage onNavigate={handleNavigation} />}
+      {currentPage === 'detail' && selectedVideo && <DetailPage onNavigate={handleNavigation} videoId={selectedVideo} />}
+    </div>
+  );
+}
+
+function WelcomePage({ onStart }: { onStart: () => void }) {
+  return (
+    <div className="relative w-full h-full bg-white overflow-clip">
+      <div className="absolute left-1/2 size-[1240px] top-[-233px] translate-x-[-50%]">
+        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 1240 1240">
+          <circle cx="620" cy="620" fill="#E0130B" r="620" />
+        </svg>
+      </div>
+      <div className="absolute contents left-[calc(25%+29px)] top-[258px]">
+        <p className="absolute font-['Avenir:Heavy',sans-serif] leading-[normal] left-1/2 not-italic text-[96px] text-nowrap text-white top-[258px] tracking-[-4.8px] -translate-x-1/2">VideO Reader</p>
+        <div className="absolute flex h-[28.94px] items-center justify-center left-1/2 top-[305px] w-[24.806px] -translate-x-1/2" style={{ "--transform-inner-width": "0", "--transform-inner-height": "0" } as React.CSSProperties}>
+          <div className="flex-none rotate-[90deg]">
+            <div className="h-[24.806px] relative w-[28.94px]">
+              <div className="absolute bottom-1/4 left-[6.7%] right-[6.7%] top-0">
+                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 25.0627 18.6042">
+                  <path d={svgPaths.p255f5a00} fill="#F5F5F5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p className="absolute font-['Avenir:Light',sans-serif] leading-[normal] left-1/2 not-italic text-[24px] text-nowrap text-white top-[372px] -translate-x-1/2">See More. Know More. Be More.</p>
+      <button 
+        onClick={onStart}
+        className="absolute bg-white h-[60px] left-1/2 rounded-[26.5px] top-[calc(50%+76px)] translate-x-[-50%] translate-y-[-50%] w-[133px] cursor-pointer hover:scale-105 transition-transform"
+      >
+        <p className="font-['Helvetica:Bold',sans-serif] leading-[normal] text-[#e0130b] text-[28px] text-center">Start</p>
+      </button>
+      <p className="absolute font-['Avenir:Roman',sans-serif] leading-[normal] left-1/2 not-italic text-[15px] text-nowrap text-white bottom-[40px] -translate-x-1/2">Design by : Jingcheng ,Liliana,Yaxuan,Ziyi</p>
+    </div>
+  );
+}
+
+function HomePage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) => void, onVideoClick: (id: number) => void }) {
+  return (
+    <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
+      <Sidebar currentPage="home" onNavigate={onNavigate} />
+      <SearchBar />
+      <div className="absolute content-stretch flex flex-col gap-[12px] items-start left-[calc(16.67%+19.67px)] top-[126px] w-[603px]">
+        <VideoSection title="Reading" videos={videoData.filter(v => v.section === 'reading')} onVideoClick={onVideoClick} />
+        <VideoSection title="Later" videos={videoData.filter(v => v.section === 'later')} onVideoClick={onVideoClick} />
+        <RecentSection onVideoClick={onVideoClick} />
+      </div>
+      <StatsPanel />
+      <CalendarWidget />
+    </div>
+  );
+}
+
+function LibraryPage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) => void, onVideoClick: (id: number) => void }) {
+  return (
+    <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
+      <Sidebar currentPage="library" onNavigate={onNavigate} />
+      <SearchBar />
+      <div className="absolute left-[calc(16.67%+19.67px)] top-[144px]">
+        <div className="flex gap-[38px] items-center mb-6">
+          <TabButton icon={<BookIcon color="#E0130B" />} label="Reading" active={true} />
+          <TabButton icon={<TagIcon />} label="Later" active={false} />
+          <TabButton icon={<CopyIcon />} label="Finish" active={false} />
+        </div>
+      </div>
+      <div className="absolute left-[calc(16.67%+19.67px)] top-[193px] w-[604px]">
+        {videoData.slice(0, 3).map((video, index) => (
+          <div 
+            key={video.id} 
+            className="mb-4 cursor-pointer hover:scale-[1.02] transition-transform"
+            onClick={() => onVideoClick(video.id)}
+          >
+            <LibraryVideoCard video={video} />
+          </div>
+        ))}
+      </div>
+      
+      {/* Right Side Chat Panel */}
+      <ChatPanel />
+    </div>
+  );
+}
+
+function MePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
+  return (
+    <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
+      <Sidebar currentPage="me" onNavigate={onNavigate} />
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-32 h-32 rounded-full bg-[#ef3e23] flex items-center justify-center">
+            <svg className="w-16 h-16" fill="white" viewBox="0 0 24 24">
+              <path d={svgPaths.p1ad07300} />
+            </svg>
+          </div>
+          <p className="text-[32px] text-black">个人中心</p>
+          <p className="text-[16px] text-[#b8b5b5]">欢迎使用 VideO Reader</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailPage({ onNavigate, videoId }: { onNavigate: (page: PageType) => void, videoId: number }) {
+  const video = videoData.find(v => v.id === videoId);
+  
+  return (
+    <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
+      <Sidebar currentPage="library" onNavigate={onNavigate} />
+      <SearchBar />
+      
+      <div className="absolute left-[calc(16.67%+19.67px)] top-[144px]">
+        <button 
+          onClick={() => onNavigate('library')}
+          className="text-[#e0130b] hover:underline mb-4"
+        >
+          ← 返回
+        </button>
+        <div className="flex gap-[38px] items-center mb-6">
+          <TabButton icon={<BookIcon color="#E0130B" />} label="Reading" active={true} />
+          <TabButton icon={<TagIcon />} label="Later" active={false} />
+          <TabButton icon={<CopyIcon />} label="Finish" active={false} />
+        </div>
+      </div>
+      
+      <div className="absolute left-[calc(16.67%+19.67px)] top-[206px] w-[604px]">
+        <div className="bg-white rounded-[20px] p-6 mb-4">
+          <div className="flex gap-4">
+            <div className="w-[288px] h-[200px] rounded-[10px] overflow-hidden">
+              <img src={video?.image} alt="" className="w-full h-full object-cover" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-[20px] mb-2">{video?.title}</h2>
+              <p className="text-[14px] text-[#b8b5b5] mb-4">本文主要讲了2025 年全球经济的发展，对中美贸易战做了清晰的梳理</p>
+              <div className="flex gap-2 text-[12px] text-[#b8b5b5]">
+                <span>昨天</span>
+                <span>Video</span>
+                <span>{video?.progress}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-[rgba(255,255,255,0.7)] border-[#e0130b] border-2 rounded-[7px] p-4 shadow-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <svg className="w-3 h-3" fill="#E0130B" viewBox="0 0 12 12">
+              <path d={svgPaths.pe3e3e00} />
+            </svg>
+            <span className="text-[10px] text-[#e0130b]">美股泡沫</span>
+            <div className="ml-auto flex items-center gap-2 text-[8px]">
+              <span className="text-[#b8b5b5]">小白</span>
+              <div className="bg-[#ef3e23] rounded-full w-8 h-4 flex items-center justify-end px-1">
+                <div className="w-3 h-3 bg-white rounded-full" />
+              </div>
+              <span className="text-[#e0130b]">大师</span>
+            </div>
+          </div>
+          <p className="text-[8px] text-[#e0130b] leading-relaxed">
+            2025 年美股泡沫核心是AI 狂热叠加宽松流动性驱动的高估值失衡，集中体现为科技巨头估值与基本面脱节、巴菲特指标创历史新高，本质是市场对 AI 长期盈利的过度乐观与资金 "自我强化" 推升的非理性繁荣。估值极度偏高·······
+          </p>
+          <button className="text-[8px] text-white underline mt-2">more</button>
+        </div>
+      </div>
+      
+      <ChatWidget />
+    </div>
+  );
+}
+
+function Sidebar({ currentPage, onNavigate }: { currentPage: string, onNavigate: (page: PageType) => void }) {
+  return (
+    <div className="absolute bg-[#ef3e23] flex flex-col gap-[28px] h-[calc(100%-48px)] items-center left-[24px] px-[8px] py-[32px] rounded-[20px] top-[24px] w-[185px]">
+      <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start">
+        <p className="[grid-area:1_/_1] font-['Avenir:Heavy',sans-serif] leading-[normal] ml-0 mt-0 not-italic text-[24.742px] text-nowrap text-white tracking-[-1.2371px]">VideO Reader</p>
+        <div className="[grid-area:1_/_1] flex h-[7.459px] items-center justify-center ml-[55.15px] mt-[12.11px] w-[6.393px]">
+          <div className="flex-none rotate-[90deg]">
+            <div className="h-[6.393px] relative w-[7.459px]">
+              <div className="absolute bottom-1/4 left-[6.7%] right-[6.7%] top-0">
+                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 6.45946 4.79491">
+                  <path d={svgPaths.p210a6e00} fill="#F5F5F5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex flex-col gap-[11px] w-full">
+        <NavItem 
+          icon={<HomeIcon />} 
+          label="Home" 
+          active={currentPage === 'home'} 
+          onClick={() => onNavigate('home')}
+        />
+        <NavItem 
+          icon={<BookIcon />} 
+          label="Library" 
+          active={currentPage === 'library'} 
+          onClick={() => onNavigate('library')}
+        />
+        <NavItem 
+          icon={<StickerIcon />} 
+          label="Me" 
+          active={currentPage === 'me'} 
+          onClick={() => onNavigate('me')}
+        />
+      </div>
+    </div>
+  );
+}
+
+function NavItem({ icon, label, active, onClick }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`${active ? 'bg-[#e0130b]' : 'bg-[rgba(224,19,11,0)]'} h-[39px] rounded-[10px] w-full flex items-center px-[9px] py-[4px] gap-[4px] hover:bg-[rgba(224,19,11,0.5)] transition-colors cursor-pointer`}
+    >
+      {icon}
+      <p className={`${active ? "font-['Helvetica:Bold',sans-serif]" : "font-['Helvetica:Regular',sans-serif]"} text-[16px] text-nowrap text-white`}>{label}</p>
+    </button>
+  );
+}
+
+function HomeIcon() {
+  return (
+    <svg className="w-6 h-6" fill="white" viewBox="0 0 24 24">
+      <path d={svgPaths.p3f91be80} />
+    </svg>
+  );
+}
+
+function BookIcon({ color = "white" }: { color?: string }) {
+  return (
+    <svg className="w-6 h-6" fill={color} viewBox="0 0 24 24">
+      <path d={svgPaths.p2e301c00} />
+      <path d={svgPaths.p1d744d80} />
+    </svg>
+  );
+}
+
+function StickerIcon() {
+  return (
+    <svg className="w-6 h-6" fill="white" viewBox="0 0 24 24">
+      <path d={svgPaths.p1ad07300} />
+      <path d={svgPaths.pa40b100} />
+    </svg>
+  );
+}
+
+function TagIcon() {
+  return (
+    <svg className="w-6 h-6" fill="#B8B5B5" viewBox="0 0 23 23">
+      <path d={svgPaths.p34d4d270} />
+      <path d={svgPaths.pd4e4b70} />
+    </svg>
+  );
+}
+
+function CopyIcon() {
+  return (
+    <svg className="w-6 h-6" fill="#B8B5B5" viewBox="0 0 23 23">
+      <path d={svgPaths.p4d57440} />
+      <path d={svgPaths.p1094c900} />
+    </svg>
+  );
+}
+
+function SearchBar() {
+  return (
+    <div className="absolute flex gap-[54px] items-center left-[calc(33.33%-2.67px)] top-[57px]">
+      <div className="bg-white flex h-[46px] items-center justify-center px-[258px] py-[11px] rounded-[46.5px] shadow-[0px_4px_4px_4px_rgba(0,0,0,0.05)] w-[642px]">
+        <div className="flex gap-[19px] items-center">
+          <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24">
+            <path d={svgPaths.p33fa9e80} />
+            <path d={svgPaths.p26843900} />
+          </svg>
+          <p className="text-[16px] text-black text-nowrap">search</p>
+        </div>
+      </div>
+      <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24">
+        <path d={svgPaths.p60b280} />
+        <path d={svgPaths.pd820400} />
+        <path d={svgPaths.pa185f00} />
+        <path d={svgPaths.p1d844e00} />
+      </svg>
+    </div>
+  );
+}
+
+function VideoSection({ title, videos, onVideoClick }: { title: string, videos: any[], onVideoClick: (id: number) => void }) {
+  return (
+    <div className="flex flex-col gap-[6px] w-full">
+      <p className="font-['Helvetica:Bold',sans-serif] text-[20px] text-black">{title}</p>
+      <div className="flex gap-[24px]">
+        {videos.map(video => (
+          <div 
+            key={video.id} 
+            className="flex flex-col gap-[6px] w-[185px] cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => onVideoClick(video.id)}
+          >
+            <div className="h-[185px] rounded-[10px] overflow-hidden">
+              <img src={video.image} alt="" className="w-full h-full object-cover" />
+            </div>
+            <p className="text-[12px] text-black line-clamp-2">{video.title}</p>
+            <div className="flex gap-[9px] text-[10px] text-[#b8b5b5]">
+              <span>昨天</span>
+              <span>Video</span>
+              <span>{video.progress}%</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RecentSection({ onVideoClick }: { onVideoClick: (id: number) => void }) {
+  return (
+    <div className="flex flex-col gap-[6px] w-[185px]">
+      <p className="font-['Helvetica:Bold',sans-serif] text-[20px] text-black">Recent</p>
+      <div 
+        className="flex flex-col gap-[6px] cursor-pointer hover:scale-105 transition-transform"
+        onClick={() => onVideoClick(2)}
+      >
+        <div className="h-[185px] rounded-[10px] overflow-hidden">
+          <img src={imgRectangle35} alt="" className="w-full h-full object-cover" />
+        </div>
+        <p className="text-[12px] text-black">一口气了解2025年全球经济 | 关税新格局</p>
+      </div>
+    </div>
+  );
+}
+
+function LibraryVideoCard({ video }: { video: any }) {
+  return (
+    <div className="bg-white rounded-[20px] flex overflow-hidden">
+      <div className="w-[288px] h-[113px] overflow-hidden">
+        <img src={video.image} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="flex-1 p-4">
+        <p className="text-[16px] mb-2">{video.title}</p>
+        <p className="text-[10px] text-[#b8b5b5] mb-2">本文主要讲了2025 年全球经济的发展，对中美贸易战做了清晰的梳理本文主要讲了2025 年全球经济的发展，对中美······</p>
+        <div className="flex gap-[9px] text-[12px] text-[#b8b5b5]">
+          <span>昨天</span>
+          <span>Video</span>
+          <span>{video.progress}%</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TabButton({ icon, label, active }: { icon: React.ReactNode, label: string, active: boolean }) {
+  return (
+    <div className="flex gap-[4px] items-center">
+      {icon}
+      <p className={`font-['Helvetica:Bold',sans-serif] text-[20px] ${active ? 'text-[#e0130b]' : 'text-[#b8b5b5]'}`}>{label}</p>
+    </div>
+  );
+}
+
+function StatsPanel() {
+  return (
+    <div className="absolute h-[641px] left-[calc(66.67%+7.67px)] top-[159px] w-[395px]">
+      <div className="absolute bg-white h-[641px] left-0 rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] top-0 w-[395px]" />
+      
+      {/* Circle Chart */}
+      <div className="absolute content-stretch flex flex-col gap-[10px] items-center justify-center left-0 px-[66px] py-[61px] size-[188.001px] top-0">
+        <div className="absolute left-0 size-[188.001px] top-0">
+          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 188.001 188.001">
+            <path d={svgPaths.pb3587b0} fill="#FFD580" />
+            <path d={svgPaths.p12290280} fill="#E32C25" />
+          </svg>
+        </div>
+        <div className="content-stretch flex flex-col items-center justify-center leading-[normal] not-italic relative shrink-0 text-center w-[56px] z-10">
+          <p className="font-['Helvetica:Bold',sans-serif] min-w-full relative shrink-0 text-[#e32c25] text-[32px] w-[min-content]">16</p>
+          <p className="font-['Helvetica:Regular',sans-serif] relative shrink-0 text-[12px] text-black w-[80px]">Finished</p>
+        </div>
+      </div>
+      
+      {/* Aim */}
+      <div className="absolute bg-[#f9f9f9] content-stretch flex font-['Alibaba_PuHuiTi_3.0:85_Bold',sans-serif] gap-[6px] h-[40px] items-end leading-[normal] left-[184px] not-italic px-[17px] py-[8px] rounded-[10px] text-center top-[25px] w-[189px]">
+        <p className="h-[30px] relative shrink-0 text-[#ef3e23] text-[28px] w-[62px]">4/7</p>
+        <p className="relative shrink-0 text-[14px] text-black text-nowrap">Aim</p>
+      </div>
+      
+      {/* Reading */}
+      <div className="absolute bg-[#f9f9f9] content-stretch flex font-['Alibaba_PuHuiTi_3.0:85_Bold',sans-serif] gap-[6px] h-[40px] items-end leading-[normal] left-[184px] not-italic px-[17px] py-[8px] rounded-[10px] text-center top-[74px] w-[189px]">
+        <p className="h-[34px] relative shrink-0 text-[#e0130b] text-[32px] w-[13px]">4</p>
+        <p className="relative shrink-0 text-[12px] text-black text-nowrap">Reading</p>
+      </div>
+      
+      {/* Not Yet */}
+      <div className="absolute bg-[#f9f9f9] content-stretch flex font-['Alibaba_PuHuiTi_3.0:85_Bold',sans-serif] gap-[6px] h-[40px] items-end leading-[normal] left-[184px] not-italic px-[17px] py-[8px] rounded-[10px] text-center top-[120px] w-[189px]">
+        <p className="h-[34px] relative shrink-0 text-[#ef3e23] text-[32px] w-[13px]">4</p>
+        <p className="relative shrink-0 text-[12px] text-black text-nowrap">Not Yet</p>
+      </div>
+      
+      {/* Decorative Images */}
+      <div className="absolute h-[14px] left-[188px] top-[469px] w-[16px]">
+        <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgImage13} />
+      </div>
+      <div className="absolute h-[14px] left-[239px] top-[410px] w-[16px]">
+        <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgImage13} />
+      </div>
+      <div className="absolute h-[14px] left-[239px] top-[348px] w-[16px]">
+        <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgImage13} />
+      </div>
+    </div>
+  );
+}
+
+function CalendarWidget() {
+  // 使用正确的日历数据结构 - 参考图片中的布局
+  // 第1周: 1, 2, 3 (非活跃)
+  // 第2周: 4 (非活跃), 5, 6, 7, 8, 9, 10 (非活跃)
+  // 第3周: 11 (非活跃), 12, 13, 14, 15, 16, 17 (非活跃)
+  // 第4周: 18 (非活跃), 19, 20, 21, 22, 23, 24 (非活跃)
+  // 第5周: 25 (非活跃), 26, 27, 28, 29, 30, 31 (非活跃)
+  
+  const calendarData = [
+    // Week 1
+    [
+      { num: 1, active: true },
+      { num: 2, active: true },
+      { num: 3, active: false },
+      { num: 4, active: false },
+      { num: 5, active: true },
+      { num: 6, active: true },
+      { num: 7, active: true }
+    ],
+    // Week 2
+    [
+      { num: 8, active: true },
+      { num: 9, active: true },
+      { num: 10, active: false },
+      { num: 11, active: false },
+      { num: 12, active: true },
+      { num: 13, active: true },
+      { num: 14, active: true }
+    ],
+    // Week 3
+    [
+      { num: 15, active: true },
+      { num: 16, active: true },
+      { num: 17, active: false },
+      { num: 18, active: false },
+      { num: 19, active: true },
+      { num: 20, active: true },
+      { num: 21, active: true }
+    ],
+    // Week 4
+    [
+      { num: 22, active: true },
+      { num: 23, active: true },
+      { num: 24, active: false },
+      { num: 25, active: false },
+      { num: 26, active: true },
+      { num: 27, active: true },
+      { num: 28, active: true }
+    ],
+    // Week 5
+    [
+      { num: 29, active: true },
+      { num: 30, active: true },
+      { num: 31, active: false },
+      { num: null, active: false },
+      { num: null, active: false },
+      { num: null, active: false },
+      { num: null, active: false }
+    ]
+  ];
+  
+  return (
+    <div className="absolute contents left-[calc(66.67%+26.67px)] top-[340px]">
+      <p className="absolute font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] leading-[normal] left-[calc(66.67%+26.67px)] not-italic text-[#212121] text-[24px] text-nowrap top-[340px]">Calendar</p>
+      <p className="absolute font-['Alibaba_PuHuiTi_3.0:85_Bold',sans-serif] leading-[normal] left-[calc(66.67%+26.67px)] not-italic text-[#212121] text-[16px] text-nowrap top-[386px]">1,1 2026</p>
+      
+      {/* Week Days */}
+      <div className="absolute content-stretch flex gap-[40px] items-start leading-[normal] left-[calc(66.67%+26.67px)] not-italic overflow-clip px-[20px] py-[12px] text-[#212121] text-[16px] text-nowrap top-[420px]">
+        <p className="font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] relative shrink-0">S</p>
+        <p className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] relative shrink-0">M</p>
+        <p className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] relative shrink-0">T</p>
+        <p className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] relative shrink-0">W</p>
+        <p className="font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] relative shrink-0">T</p>
+        <p className="font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] relative shrink-0">F</p>
+        <p className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] relative shrink-0">S</p>
+      </div>
+      
+      {/* Calendar Dates */}
+      <div className="absolute content-stretch flex flex-col gap-[12px] items-end left-[calc(66.67%+26.67px)] top-[476px]">
+        {calendarData.map((week, weekIdx) => (
+          <div key={weekIdx} className="content-stretch flex gap-[3px] items-start relative shrink-0">
+            {week.map((day, dayIdx) => (
+              <div key={dayIdx} className="content-stretch flex gap-[8px] items-start relative shrink-0">
+                {day.active && day.num && (
+                  <div className="relative shrink-0 size-[48px]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
+                      <circle cx="24" cy="24" fill="#FF7878" fillOpacity="0.2" r="24" />
+                    </svg>
+                  </div>
+                )}
+                {day.num && (
+                  <p className={`absolute font-['Pretendard:Bold',sans-serif] leading-[normal] left-[24px] not-italic ${day.active ? 'text-[#3f6262]' : 'opacity-40 text-[#212121]'} text-[16px] text-center text-nowrap top-[15px] translate-x-[-50%]`}>
+                    {day.num}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ChatWidget() {
+  return (
+    <div className="absolute right-[24px] bottom-[24px] w-[230px]">
+      <div className="mb-4 bg-[#f5f5f5] rounded-[9px] p-3">
+        <p className="text-[12px] text-[#5e5e5e]">你好，请问你还好吗？我有几个关于 AI 的问题想要请教你，你是否可以解答？</p>
+      </div>
+      <div className="bg-[rgba(255,120,120,0.2)] rounded-[9px] p-3 mb-4">
+        <p className="text-[12px] text-[#5c5c5c] leading-relaxed">
+          你好呀，我很好，随时可以帮你解答关于 AI 的问题～<br/>
+          不管是 AI 技术原理、行业应用、发展趋势，还是和之前聊到的美股 AI 泡沫相关的内容，你都可以直接提出来，我会尽力给你详细的答复。
+        </p>
+      </div>
+      <div className="bg-white rounded-[8px] p-2 flex items-center gap-2">
+        <input 
+          type="text" 
+          placeholder="Describe your task or ask a question…" 
+          className="flex-1 text-[13px] text-[#5c5c5c] outline-none"
+        />
+        <svg className="w-4 h-4" fill="#C9C9C9" viewBox="0 0 16 16">
+          <path d={svgPaths.p18c26800} />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function ChatPanel() {
+  return (
+    <div className="absolute contents left-[calc(66.67%+9.67px)] top-[193px]">
+      {/* Main Chat Container - 615px height */}
+      <div className="absolute bg-white h-[615px] left-[calc(66.67%+9.67px)] rounded-[20px] shadow-[0px_4px_20px_4px_rgba(0,0,0,0.1)] top-[193px] w-[393px]" />
+      
+      {/* Title Section */}
+      <div className="absolute contents left-[calc(66.67%+21.67px)] top-[218px]">
+        <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(91.67%+6.67px)] not-italic text-[14px] text-black text-nowrap top-[218px]">new</p>
+        <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(66.67%+56.67px)] not-italic text-[14px] text-black text-nowrap top-[218px]">一口气了解2025年全球经济 | 关税新格局</p>
+        
+        {/* Chat Messages Group */}
+        <div className="absolute contents left-[calc(66.67%+21.67px)] top-[249px]">
+          {/* User Message 1 */}
+          <div className="absolute bg-[#f5f5f5] content-stretch flex h-[64px] items-center justify-center left-[calc(75%+84px)] p-[6px] rounded-[9px] top-[249px] w-[195px]">
+            <p className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#5e5e5e] text-[12px] w-[181px]">你好，请问你还好吗？我有几个关于 AI 的问题想要请教你，你是否可以解答？</p>
+          </div>
+          
+          {/* AI Response 1 */}
+          <div className="absolute bg-[rgba(255,120,120,0.2)] content-stretch flex h-[119px] items-center justify-center left-[calc(66.67%+21.67px)] px-[9px] py-[11px] rounded-[9px] top-[321px] w-[230px]">
+            <div className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] leading-[16px] not-italic relative shrink-0 text-[#5c5c5c] text-[12px] w-[211px]">
+              <p className="mb-0">你好呀，我很好，随时可以帮你解答关于 AI 的问题～</p>
+              <p>不管是 AI 技术原理、行业应用、发展趋势，还是和之前聊到的美股 AI 泡沫相关的内容，你都可以直接提出来，我会尽力给你详细的答复。</p>
+            </div>
+          </div>
+          
+          {/* User Message 2 */}
+          <div className="absolute bg-[#f5f5f5] content-stretch flex h-[64px] items-center justify-center left-[calc(75%+84px)] p-[6px] rounded-[9px] top-[448px] w-[195px]">
+            <p className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#5e5e5e] text-[12px] w-[181px]">你好，请问你还好吗？我有几个关于 AI 的问题想要请教你，你是否可以解答？</p>
+          </div>
+          
+          {/* AI Response 2 */}
+          <div className="absolute bg-[rgba(255,120,120,0.2)] content-stretch flex h-[119px] items-center justify-center left-[calc(66.67%+21.67px)] px-[9px] py-[11px] rounded-[9px] top-[520px] w-[230px]">
+            <div className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] leading-[16px] not-italic relative shrink-0 text-[#5c5c5c] text-[12px] w-[211px]">
+              <p className="mb-0">你好呀，我很好，随时可以帮你解答关于 AI 的问题～</p>
+              <p>不管是 AI 技术原理、行业应用、发展趋势，还是和之前聊到的美股 AI 泡沫相关的内容，你都可以直接提出来，我会尽力给你详细的答复。</p>
+            </div>
+          </div>
+          
+          {/* User Message 3 */}
+          <div className="absolute bg-[#f5f5f5] content-stretch flex h-[64px] items-center justify-center left-[calc(75%+84px)] p-[6px] rounded-[9px] top-[647px] w-[195px]">
+            <p className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#5e5e5e] text-[12px] w-[181px]">你好，请问你还好吗？我有几个关于 AI 的问题想要请教你，你是否可以解答？</p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Bottom Section with Gradient and Input */}
+      <div className="absolute contents left-[calc(66.67%+9.67px)] top-[659px]">
+        {/* Bottom Gradient - starts at 659px, height 149px, ends at 808px (193+615=808) */}
+        <div className="absolute bg-gradient-to-b from-[11.074%] from-[rgba(255,255,255,0)] h-[149px] left-[calc(66.67%+9.67px)] rounded-bl-[20px] rounded-br-[20px] to-[#ffffff] to-[32.55%] top-[659px] w-[393px]" />
+        
+        {/* Input Field Container - 72px height at 713px */}
+        <div className="absolute content-stretch flex flex-col gap-[4px] h-[72px] items-start left-[calc(66.67%+23.67px)] top-[713px] w-[366px]">
+          <div className="basis-0 bg-white grow min-h-px min-w-px relative rounded-[8px] shrink-0 w-full">
+            <div className="overflow-clip rounded-[inherit] size-full">
+              <div className="content-stretch flex gap-[8px] items-start pl-[8px] pr-0 py-0 relative size-full">
+                <div className="basis-0 content-stretch flex grow h-full items-start min-h-px min-w-px px-0 py-[8px] relative shrink-0">
+                  <p className="basis-0 font-['SF_Pro:Regular',sans-serif] font-normal grow h-full leading-[18px] min-h-px min-w-px overflow-ellipsis overflow-hidden relative shrink-0 text-[#5c5c5c] text-[13px] text-nowrap">
+                    Describe your task or ask a question…
+                  </p>
+                </div>
+                <div className="content-stretch flex h-full items-end justify-center pb-[8px] pt-0 px-0 relative shrink-0 w-[32px]">
+                  <svg className="w-4 h-4" fill="#C9C9C9" viewBox="0 0 16 16">
+                    <path d={svgPaths.p18c26800} />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div aria-hidden="true" className="absolute border border-[#5c5c5c] border-solid inset-0 pointer-events-none rounded-[8px]" />
+          </div>
+        </div>
+        
+        {/* Small Avatar - at 666px */}
+        <div className="absolute left-[calc(66.67%+26.67px)] rounded-[4px] size-[42px] top-[666px]">
+          <div aria-hidden="true" className="absolute inset-0 pointer-events-none rounded-[4px]">
+            <div className="absolute bg-[#d9d9d9] inset-0 rounded-[4px]" />
+            <img alt="" className="absolute max-w-none object-50%-50% object-cover rounded-[4px] size-full" src={imgRectangle43} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
