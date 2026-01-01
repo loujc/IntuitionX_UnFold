@@ -13,3 +13,6 @@
 - 补充前端对齐的数据结构文档，并在 Gemini README 中引用说明。
 - 完成 TODO 第 6 步：ASR 转写与合并（线程池、字幕生成与测试）。
 - 更新 `Step.md`：补充 Claude Review -> 修改 -> Codex 复核流程。
+- 完成 TODO 第 7 步：LLM 流水线（视频类型、摘要、关键词）与基础测试。
+- 完成 TODO 第 8 步：结果组装、Result/Raw/Timing 读取接口与测试。
+- 完成 TODO 第 9 步：SSE 事件流接口与测试。

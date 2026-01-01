@@ -68,6 +68,19 @@
 | 2026-01-01 (Step 6) | Codex | `requirements.txt` | 增加 faster-whisper 依赖 |
 | 2026-01-01 (Step 6) | Codex | `tests/test_asr_merge.py` | ASR 与 SRT/VTT 生成测试 |
 | 2026-01-01 Step 6 Review | Codex | `app/workers/stage_handlers.py` | 保存 ASR raw 输出到 TaskRaw |
+| 2026-01-01 (Step 7) | Codex | `app/services/llm_client.py` | OpenAI SDK 调用与 JSON 解析 |
+| 2026-01-01 (Step 7) | Codex | `app/prompts/llm_prompts.py` | 视频类型/摘要/关键词提示词模板 |
+| 2026-01-01 (Step 7) | Codex | `app/services/llm_pipeline.py` | Transcript/关键词规范化与切片汇总 |
+| 2026-01-01 (Step 7) | Codex | `app/db/repository.py` | 增加 upsert_task_raw 与 update_task_video_type |
+| 2026-01-01 (Step 7) | Codex | `app/workers/stage_handlers.py` | LLM summary/keywords 阶段与持久化 |
+| 2026-01-01 (Step 7) | Codex | `tests/test_llm_pipeline.py` | LLM 解析与 prompt 规则测试 |
+| 2026-01-01 (Step 8) | Codex | `app/services/result_builder.py` | Clean result 组装工具 |
+| 2026-01-01 (Step 8) | Codex | `app/db/repository.py` | 增加 upsert_task_result |
+| 2026-01-01 (Step 8) | Codex | `app/workers/stage_handlers.py` | finalize 阶段生成 TaskResult |
+| 2026-01-01 (Step 8) | Codex | `app/api/tasks.py` | 增加 result/raw/timing 读取接口 |
+| 2026-01-01 (Step 8) | Codex | `tests/test_result_endpoints.py` | result/raw/timing 接口测试 |
+| 2026-01-01 (Step 9) | Codex | `app/api/tasks.py` | SSE 事件流接口与 keepalive ping |
+| 2026-01-01 (Step 9) | Codex | `tests/test_sse_events.py` | SSE 事件顺序与断开清理测试 |
 
 ## 测试状态
 
@@ -81,3 +94,6 @@
 | 2026-01-01 (Step 5) | 10 passed, 1 skipped |
 | 2026-01-01 (Step 6) | 12 passed, 1 skipped |
 | 2026-01-01 Step 6 Review 后 | 4 passed (subset: asr_merge, job_manager) |
+| 2026-01-01 (Step 7) | 16 passed |
+| 2026-01-01 (Step 8) | 17 passed |
+| 2026-01-01 (Step 9) | 18 passed |

@@ -62,9 +62,38 @@ def save_task_result(db: Session, task_id: str, result_json: dict) -> TaskResult
     return result
 
 
+def upsert_task_result(db: Session, task_id: str, result_json: dict) -> TaskResult:
+    result = (
+        db.execute(select(TaskResult).where(TaskResult.task_id == task_id))
+        .scalar_one_or_none()
+    )
+    if result is None:
+        result = TaskResult(task_id=task_id, result_json=result_json)
+        db.add(result)
+    else:
+        result.result_json = result_json
+    db.commit()
+    db.refresh(result)
+    return result
+
+
 def save_task_raw(db: Session, task_id: str, raw_json: dict) -> TaskRaw:
     raw = TaskRaw(task_id=task_id, raw_json=raw_json)
     db.add(raw)
+    db.commit()
+    db.refresh(raw)
+    return raw
+
+
+def upsert_task_raw(db: Session, task_id: str, updates: dict) -> TaskRaw:
+    raw = db.execute(select(TaskRaw).where(TaskRaw.task_id == task_id)).scalar_one_or_none()
+    if raw is None:
+        raw = TaskRaw(task_id=task_id, raw_json=updates)
+        db.add(raw)
+    else:
+        merged = dict(raw.raw_json or {})
+        merged.update(updates)
+        raw.raw_json = merged
     db.commit()
     db.refresh(raw)
     return raw
@@ -91,6 +120,16 @@ def increment_task_retry(db: Session, task_id: str, increment: int = 1) -> Task 
     if task is None:
         return None
     task.llm_retry_count += increment
+    db.commit()
+    db.refresh(task)
+    return task
+
+
+def update_task_video_type(db: Session, task_id: str, video_type: str | None) -> Task:
+    task = db.get(Task, task_id)
+    if task is None:
+        raise ValueError(f"Task {task_id} not found")
+    task.video_type = video_type
     db.commit()
     db.refresh(task)
     return task

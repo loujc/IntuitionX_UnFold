@@ -9,14 +9,39 @@ from typing import Dict
 from app.core.config import AppConfig
 from app.core.job_manager import JobManager, STAGES, StageHandler, SessionFactory
 from app.db.repository import (
+    bulk_insert_keywords,
+    bulk_insert_links,
+    bulk_insert_mentions,
     bulk_insert_segments,
+    get_keyword_links,
+    get_keyword_mentions,
+    get_keywords_by_task,
+    get_segments_by_task,
     get_task,
+    get_task_raw,
     save_task_log,
-    save_task_raw,
     update_task_input_meta,
+    update_task_video_type,
+    upsert_task_raw,
+    upsert_task_result,
 )
-from app.db.search import index_segments
+from app.db.search import index_keywords, index_segments
+from app.prompts.llm_prompts import (
+    build_keyword_prompt,
+    build_summary_prompt,
+    build_video_type_prompt,
+)
 from app.services.asr import ASRManager
+from app.services.llm_client import call_llm_json
+from app.services.llm_pipeline import (
+    build_summary_slices,
+    build_transcript_text,
+    normalize_keywords,
+    normalize_summary,
+    normalize_video_type,
+)
+from app.services.llm_retry import call_llm_with_retry
+from app.services.result_builder import build_task_result
 from app.services.storage import get_task_dir
 from app.services.subtitles import generate_srt, generate_vtt, write_subtitle
 from app.services.transcript import merge_chunk_segments
@@ -26,6 +51,20 @@ from app.services.video_splitter import split_video
 def build_stage_handlers(
     config: AppConfig, session_factory: SessionFactory
 ) -> Dict[str, StageHandler]:
+    llm_semaphore = asyncio.Semaphore(max(1, config.processing.llm_concurrency))
+
+    async def call_llm_json_async(task_id: str, messages: list[dict]) -> dict:
+        async with llm_semaphore:
+            return await asyncio.to_thread(
+                call_llm_with_retry,
+                session_factory,
+                task_id,
+                call_llm_json,
+                config,
+                messages,
+                temperature=0.3,
+            )
+
     async def slicing(task_id: str, _: JobManager) -> None:
         with session_factory() as db:
             task = get_task(db, task_id)
@@ -93,7 +132,7 @@ def build_stage_handlers(
         )
 
         with session_factory() as db:
-            save_task_raw(db, task_id, {"chunks": chunks_payload})
+            upsert_task_raw(db, task_id, {"asr": {"chunks": chunks_payload}})
             update_task_input_meta(
                 db,
                 task_id,
@@ -142,6 +181,146 @@ def build_stage_handlers(
             if indexed:
                 save_task_log(db, task_id, "info", "transcript indexed for search")
 
+    async def llm_summary(task_id: str, _: JobManager) -> None:
+        with session_factory() as db:
+            task = get_task(db, task_id)
+            if task is None:
+                raise RuntimeError(f"Task {task_id} not found")
+            segments = get_segments_by_task(db, task_id)
+
+        if not segments:
+            raise RuntimeError("Missing segments for summary")
+
+        transcript_text = build_transcript_text(segments)
+        slices = build_summary_slices(segments, config.processing.chunk_duration)
+        if not slices:
+            raise RuntimeError("Missing slices for summary")
+
+        video_type_payload: dict
+        if task.video_type:
+            video_type_payload = {"label": task.video_type, "confidence": 1.0}
+        else:
+            type_messages = build_video_type_prompt(config.system.video_types, transcript_text)
+            type_raw = await call_llm_json_async(task_id, type_messages)
+            video_type_payload = normalize_video_type(type_raw, config.system.video_types)
+            if video_type_payload.get("label"):
+                with session_factory() as db:
+                    update_task_video_type(db, task_id, video_type_payload["label"])
+
+        summary_messages = build_summary_prompt(video_type_payload.get("label"), slices)
+        summary_raw = await call_llm_json_async(task_id, summary_messages)
+        summary_payload = normalize_summary(summary_raw, slices)
+
+        with session_factory() as db:
+            upsert_task_raw(
+                db,
+                task_id,
+                {"video_type": video_type_payload, "summary": summary_payload},
+            )
+            save_task_log(db, task_id, "info", "llm summary completed")
+
+    async def llm_keywords(task_id: str, _: JobManager) -> None:
+        with session_factory() as db:
+            task = get_task(db, task_id)
+            if task is None:
+                raise RuntimeError(f"Task {task_id} not found")
+            segments = get_segments_by_task(db, task_id)
+
+        if not segments:
+            raise RuntimeError("Missing segments for keyword extraction")
+
+        mode = (task.mode or config.system.default_mode or "simple").lower()
+        segment_payload = [
+            {"segment_id": seg.segment_id, "text": seg.text}
+            for seg in segments
+            if seg.text
+        ]
+        keyword_messages = build_keyword_prompt(task.video_type, mode, segment_payload)
+        keyword_raw = await call_llm_json_async(task_id, keyword_messages)
+        keywords_payload = normalize_keywords(keyword_raw, segments)
+
+        if not keywords_payload:
+            with session_factory() as db:
+                upsert_task_raw(db, task_id, {"keywords": {"items": []}})
+                save_task_log(db, task_id, "info", "llm keywords empty")
+            return
+
+        keyword_rows = [
+            {"term": item["term"], "definition": item["definition"]}
+            for item in keywords_payload
+        ]
+        with session_factory() as db:
+            keywords = bulk_insert_keywords(db, task_id, keyword_rows)
+
+        mentions_to_insert: list[dict] = []
+        links_to_insert: list[dict] = []
+        for item, keyword in zip(keywords_payload, keywords):
+            item["keyword_id"] = keyword.id
+            for mention in item.get("mentions", []):
+                mentions_to_insert.append(
+                    {
+                        "keyword_id": keyword.id,
+                        "segment_id": mention["segment_id"],
+                    }
+                )
+            for link in item.get("links", []):
+                links_to_insert.append(
+                    {
+                        "keyword_id": keyword.id,
+                        "title": link["title"],
+                        "url": link["url"],
+                        "source": link["source"],
+                    }
+                )
+
+        with session_factory() as db:
+            if mentions_to_insert:
+                bulk_insert_mentions(db, task_id, mentions_to_insert)
+            if links_to_insert:
+                bulk_insert_links(db, links_to_insert)
+
+        with session_factory() as db:
+            indexed = index_keywords(db, task_id, keywords)
+            db.commit()  # Commit index changes regardless of FTS5 availability
+            if indexed:
+                save_task_log(db, task_id, "info", "keywords indexed for search")
+
+        with session_factory() as db:
+            upsert_task_raw(db, task_id, {"keywords": {"items": keywords_payload}})
+            save_task_log(db, task_id, "info", f"llm keywords completed ({len(keywords_payload)})")
+
+    async def finalize(task_id: str, _: JobManager) -> None:
+        with session_factory() as db:
+            task = get_task(db, task_id)
+            if task is None:
+                raise RuntimeError(f"Task {task_id} not found")
+            segments = get_segments_by_task(db, task_id)
+            keywords = get_keywords_by_task(db, task_id)
+            raw = get_task_raw(db, task_id)
+
+        mentions_by_keyword: dict[int, list] = {}
+        links_by_keyword: dict[int, list] = {}
+        if keywords:
+            with session_factory() as db:
+                for keyword in keywords:
+                    mentions_by_keyword[keyword.id] = get_keyword_mentions(db, keyword.id)
+                    links_by_keyword[keyword.id] = get_keyword_links(db, keyword.id)
+
+        result_payload = build_task_result(
+            task=task,
+            segments=segments,
+            keywords=keywords,
+            mentions_by_keyword=mentions_by_keyword,
+            links_by_keyword=links_by_keyword,
+            input_meta=task.input_meta,
+            raw=raw.raw_json if raw else None,
+            status="finished",
+        )
+
+        with session_factory() as db:
+            upsert_task_result(db, task_id, result_payload)
+            save_task_log(db, task_id, "info", "final result assembled")
+
     async def noop(_: str, __: JobManager) -> None:
         return None
 
@@ -149,4 +328,7 @@ def build_stage_handlers(
     handlers["slicing"] = slicing
     handlers["asr"] = asr
     handlers["merge"] = merge
+    handlers["llm_summary"] = llm_summary
+    handlers["llm_keywords"] = llm_keywords
+    handlers["finalize"] = finalize
     return handlers
