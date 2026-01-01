@@ -109,6 +109,8 @@ stage: slicing -> asr -> merge -> llm_summary -> llm_chapters -> llm_quotes -> l
 }
 ```
 
+说明：`quotes.items[].segment_id` 为金句起始段，`text` 可能由连续多段拼接而成，`start/end` 为金句覆盖区间。
+
 ## 存储
 - temp/ 保存上传文件与生成的 SRT/VTT（暂不清理）。
 - SQLite 存储任务记录、字幕片段、关键词与日志。

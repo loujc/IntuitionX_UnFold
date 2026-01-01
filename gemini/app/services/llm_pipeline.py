@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable
 from typing import Any
 
@@ -170,9 +171,14 @@ def normalize_chapter_ranges(raw: dict, segments: Iterable[Any]) -> list[dict]:
         return []
 
     last_index = len(segment_list) - 1
-    if ranges[0]["start_index"] != 0 or ranges[-1]["end_index"] != last_index:
-        return []
 
+    # Auto-extend boundaries to cover full transcript
+    if ranges[0]["start_index"] > 0:
+        ranges[0]["start_index"] = 0
+    if ranges[-1]["end_index"] < last_index:
+        ranges[-1]["end_index"] = last_index
+
+    # Validate no overlaps and no gaps
     prev_end = -1
     for item in ranges:
         if item["start_index"] <= prev_end:
@@ -180,6 +186,7 @@ def normalize_chapter_ranges(raw: dict, segments: Iterable[Any]) -> list[dict]:
         if prev_end != -1 and item["start_index"] != prev_end + 1:
             return []
         prev_end = item["end_index"]
+
     return ranges
 
 
@@ -221,12 +228,14 @@ def attach_mentions_by_term(
         if not term:
             item["mentions"] = []
             continue
-        term_lower = term.lower()
+        # Use word boundary matching to avoid substring false positives
+        # e.g., "AI" should not match "WAIT", "in" should not match "inside"
+        pattern = re.compile(r'\b' + re.escape(term) + r'\b', re.IGNORECASE)
         mentions: list[dict] = []
         seen_ids: set[str] = set()
         for segment in segment_list:
             text = segment["text"]
-            if term in text or term_lower in text.lower():
+            if pattern.search(text):
                 seg_id = segment["segment_id"]
                 if seg_id in seen_ids:
                     continue
@@ -289,6 +298,25 @@ def normalize_keywords(raw: dict, segments: Iterable[Any]) -> list[dict]:
     return normalized
 
 
+def _normalize_match_text(text: str) -> str:
+    return "".join(char for char in text if not char.isspace())
+
+
+def _trim_text_to_target(text: str, target_norm: str) -> str:
+    if not target_norm:
+        return text
+    chars: list[str] = []
+    count = 0
+    for char in text:
+        chars.append(char)
+        if char.isspace():
+            continue
+        count += 1
+        if count >= len(target_norm):
+            break
+    return "".join(chars)
+
+
 def normalize_quotes(raw: dict, segments: Iterable[Any], max_items: int = 5) -> list[dict]:
     items = raw.get("quotes") or raw.get("items") or []
     if isinstance(items, dict):
@@ -298,13 +326,15 @@ def normalize_quotes(raw: dict, segments: Iterable[Any], max_items: int = 5) -> 
     if not isinstance(items, list):
         return []
 
-    segment_list = list(segments)
+    segment_list = sorted(segments, key=lambda item: int(_get_field(item, "index", 0)))
     by_id: dict[str, Any] = {}
     by_index: dict[int, Any] = {}
-    for segment in segment_list:
+    id_to_pos: dict[str, int] = {}
+    for pos, segment in enumerate(segment_list):
         segment_id = str(_get_field(segment, "segment_id", "") or "")
         if segment_id:
             by_id[segment_id] = segment
+            id_to_pos[segment_id] = pos
         try:
             index = int(_get_field(segment, "index", 0))
         except (TypeError, ValueError):
@@ -327,19 +357,44 @@ def normalize_quotes(raw: dict, segments: Iterable[Any], max_items: int = 5) -> 
         segment_id = str(segment_id)
         if segment_id in seen or segment_id not in by_id:
             continue
-        segment = by_id[segment_id]
+        target_text = str(item.get("text") or "").strip()
+        if not target_text:
+            continue
+        target_norm = _normalize_match_text(target_text)
+        if not target_norm:
+            continue
+
+        start_idx = id_to_pos.get(segment_id)
+        if start_idx is None:
+            continue
+        match_end_idx = None
+        concat_text = ""
+        concat_norm = ""
+        for end_idx in range(start_idx, len(segment_list)):
+            concat_text += str(_get_field(segment_list[end_idx], "text", "") or "")
+            concat_norm = _normalize_match_text(concat_text)
+            if concat_norm.startswith(target_norm) and len(concat_norm) >= len(target_norm):
+                match_end_idx = end_idx
+                break
+
+        if match_end_idx is None:
+            match_end_idx = start_idx
+            matched_text = str(_get_field(segment_list[start_idx], "text", "") or "")
+        else:
+            matched_text = _trim_text_to_target(concat_text, target_norm).strip()
+            if not matched_text:
+                matched_text = str(_get_field(segment_list[start_idx], "text", "") or "")
+
+        start_segment = segment_list[start_idx]
+        end_segment = segment_list[match_end_idx]
         seen.add(segment_id)
-        try:
-            index = int(_get_field(segment, "index", 0))
-        except (TypeError, ValueError):
-            index = 0
         results.append(
             {
                 "segment_id": segment_id,
-                "index": index,
-                "start": float(_get_field(segment, "start", 0.0)),
-                "end": float(_get_field(segment, "end", 0.0)),
-                "text": str(_get_field(segment, "text", "") or ""),
+                "index": int(_get_field(start_segment, "index", 0)),
+                "start": float(_get_field(start_segment, "start", 0.0)),
+                "end": float(_get_field(end_segment, "end", 0.0)),
+                "text": matched_text,
             }
         )
         if len(results) >= max_items:

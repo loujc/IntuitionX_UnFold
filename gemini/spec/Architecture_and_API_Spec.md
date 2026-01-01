@@ -224,6 +224,7 @@ es.addEventListener("task_result", async (e) => {
 说明：
 - `video_type` 为 LLM 自动生成的多标签列表，不受 config 列表限制。
 - `segment_id` 为前端跳转的稳定主键，`index` 为 0-based。
+- `quotes.items[].segment_id` 为金句起始段；`text` 可能由连续多段拼接而成；`start/end` 为该金句覆盖的起止时间。
 - `srt_path` / `vtt_path` 为本地文件路径（Demo 场景）。
 - `keywords.links` 可能为空；`source` 默认为 `llm`。
 - `summary.chapters` 为全局语义章节，边界以 `segment_id` 映射到时间轴。

@@ -206,6 +206,7 @@ type Mode = "simple" | "deep";
 - Time fields (`start`, `end`) are seconds, float.
 - `index` is 0-based; `segment_id` is the stable key for mentions.
 - `video_type` 为 LLM 自动生成的多标签列表。
+- `quotes.items[].segment_id` 为金句起始段；`text` 可能由连续多段拼接而成；`start/end` 为该金句覆盖的起止时间。
 - `progress` is overall progress (0..1) for the whole task; no per-stage progress.
 - `links` may be empty; external search is disabled in the demo, so `source` is usually `llm`.
 - `srt_path` and `vtt_path` are local filesystem paths (demo runs locally), not HTTP URLs.
