@@ -1,0 +1,213 @@
+{
+  "raw": {
+    "items": [
+      {
+        "term": "Web3",
+        "definition": "下一代互联网，特点是用户自己拥有数据所有权，不再由大公司垄断，通常基于区块链技术。"
+      },
+      {
+        "term": "Swift",
+        "definition": "全球银行间的“通讯软件”，银行靠它发送转账指令，是目前国际汇款的核心系统。"
+      },
+      {
+        "term": "区块链",
+        "definition": "一种去中心化的电子记账本，数据由大家共同维护，公开透明且很难被篡改。"
+      },
+      {
+        "term": "加密货币",
+        "definition": "基于区块链技术的数字货币（如比特币），不由央行发行，交易安全且难以追踪。"
+      },
+      {
+        "term": "去中心化",
+        "definition": "指没有一个绝对的领导或中心服务器，权力或数据分散在网络中的各个节点上。"
+      },
+      {
+        "term": "中本聪",
+        "definition": "比特币的神秘发明者，发布了比特币白皮书，但至今没人知道他的真实身份。"
+      },
+      {
+        "term": "稳定币",
+        "definition": "价格锚定法币（如美元）的加密货币，为了解决比特币价格波动大而设计，适合支付。"
+      },
+      {
+        "term": "暗网",
+        "definition": "普通搜索引擎搜不到的隐藏网络，用户身份隐秘，常被用于非法交易或隐私保护。"
+      },
+      {
+        "term": "抗审查",
+        "definition": "指交易或信息发布无法被中心化机构（如银行或政府）随意拦截、冻结或删除。"
+      }
+    ]
+  },
+  "normalized": {
+    "items": [
+      {
+        "term": "Web3",
+        "definition": "下一代互联网，特点是用户自己拥有数据所有权，不再由大公司垄断，通常基于区块链技术。",
+        "mentions": [
+          {
+            "segment_id": "seg_000000"
+          },
+          {
+            "segment_id": "seg_000139"
+          }
+        ],
+        "links": []
+      },
+      {
+        "term": "Swift",
+        "definition": "全球银行间的“通讯软件”，银行靠它发送转账指令，是目前国际汇款的核心系统。",
+        "mentions": [
+          {
+            "segment_id": "seg_000013"
+          },
+          {
+            "segment_id": "seg_000025"
+          },
+          {
+            "segment_id": "seg_000029"
+          },
+          {
+            "segment_id": "seg_000031"
+          },
+          {
+            "segment_id": "seg_000051"
+          },
+          {
+            "segment_id": "seg_000059"
+          },
+          {
+            "segment_id": "seg_000065"
+          },
+          {
+            "segment_id": "seg_000068"
+          },
+          {
+            "segment_id": "seg_000071"
+          },
+          {
+            "segment_id": "seg_000079"
+          },
+          {
+            "segment_id": "seg_000093"
+          },
+          {
+            "segment_id": "seg_000094"
+          },
+          {
+            "segment_id": "seg_000105"
+          }
+        ],
+        "links": []
+      },
+      {
+        "term": "区块链",
+        "definition": "一种去中心化的电子记账本，数据由大家共同维护，公开透明且很难被篡改。",
+        "mentions": [
+          {
+            "segment_id": "seg_000001"
+          },
+          {
+            "segment_id": "seg_000004"
+          },
+          {
+            "segment_id": "seg_000012"
+          },
+          {
+            "segment_id": "seg_000127"
+          },
+          {
+            "segment_id": "seg_000147"
+          }
+        ],
+        "links": []
+      },
+      {
+        "term": "加密货币",
+        "definition": "基于区块链技术的数字货币（如比特币），不由央行发行，交易安全且难以追踪。",
+        "mentions": [
+          {
+            "segment_id": "seg_000006"
+          },
+          {
+            "segment_id": "seg_000014"
+          },
+          {
+            "segment_id": "seg_000021"
+          },
+          {
+            "segment_id": "seg_000100"
+          },
+          {
+            "segment_id": "seg_000138"
+          },
+          {
+            "segment_id": "seg_000139"
+          },
+          {
+            "segment_id": "seg_000142"
+          }
+        ],
+        "links": []
+      },
+      {
+        "term": "去中心化",
+        "definition": "指没有一个绝对的领导或中心服务器，权力或数据分散在网络中的各个节点上。",
+        "mentions": [
+          {
+            "segment_id": "seg_000001"
+          }
+        ],
+        "links": []
+      },
+      {
+        "term": "中本聪",
+        "definition": "比特币的神秘发明者，发布了比特币白皮书，但至今没人知道他的真实身份。",
+        "mentions": [
+          {
+            "segment_id": "seg_000111"
+          }
+        ],
+        "links": []
+      },
+      {
+        "term": "稳定币",
+        "definition": "价格锚定法币（如美元）的加密货币，为了解决比特币价格波动大而设计，适合支付。",
+        "mentions": [
+          {
+            "segment_id": "seg_000151"
+          }
+        ],
+        "links": []
+      },
+      {
+        "term": "暗网",
+        "definition": "普通搜索引擎搜不到的隐藏网络，用户身份隐秘，常被用于非法交易或隐私保护。",
+        "mentions": [
+          {
+            "segment_id": "seg_000136"
+          }
+        ],
+        "links": []
+      },
+      {
+        "term": "抗审查",
+        "definition": "指交易或信息发布无法被中心化机构（如银行或政府）随意拦截、冻结或删除。",
+        "mentions": [
+          {
+            "segment_id": "seg_000109"
+          },
+          {
+            "segment_id": "seg_000115"
+          }
+        ],
+        "links": []
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}

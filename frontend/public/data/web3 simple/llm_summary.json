@@ -1,0 +1,65 @@
+{
+  "raw": {
+    "overall": "本视频探讨区块链技术在跨境支付领域的应用，分析Swift体系的弊端与加密货币的优势，展望国家级合规支付系统的未来。",
+    "chapters": [
+      {
+        "chapter_id": 0,
+        "summary": "介绍跨境支付作为区块链最成熟的应用场景，探讨其挑战Swift霸权的潜力。"
+      },
+      {
+        "chapter_id": 1,
+        "summary": "解析Swift体系的运作流程，指出其流程繁琐、结算缓慢及存在政治审查风险的弊端。"
+      },
+      {
+        "chapter_id": 2,
+        "summary": "阐述加密货币因匿名性、抗审查及高效率特性，早期在灰产交易中被广泛应用的原因。"
+      },
+      {
+        "chapter_id": 3,
+        "summary": "展望国家层面利用区块链技术优势，建立兼顾监管与效率的新型跨境支付体系。"
+      }
+    ]
+  },
+  "normalized": {
+    "overall": "本视频探讨区块链技术在跨境支付领域的应用，分析Swift体系的弊端与加密货币的优势，展望国家级合规支付系统的未来。",
+    "chapters": [
+      {
+        "chapter_id": 0,
+        "segment_start_id": "seg_000000",
+        "segment_end_id": "seg_000023",
+        "start": 0.0,
+        "end": 77.3,
+        "summary": "介绍跨境支付作为区块链最成熟的应用场景，探讨其挑战Swift霸权的潜力。"
+      },
+      {
+        "chapter_id": 1,
+        "segment_start_id": "seg_000024",
+        "segment_end_id": "seg_000098",
+        "start": 77.3,
+        "end": 252.92,
+        "summary": "解析Swift体系的运作流程，指出其流程繁琐、结算缓慢及存在政治审查风险的弊端。"
+      },
+      {
+        "chapter_id": 2,
+        "segment_start_id": "seg_000099",
+        "segment_end_id": "seg_000140",
+        "start": 252.92,
+        "end": 361.94,
+        "summary": "阐述加密货币因匿名性、抗审查及高效率特性，早期在灰产交易中被广泛应用的原因。"
+      },
+      {
+        "chapter_id": 3,
+        "segment_start_id": "seg_000141",
+        "segment_end_id": "seg_000155",
+        "start": 361.94,
+        "end": 396.98,
+        "summary": "展望国家层面利用区块链技术优势，建立兼顾监管与效率的新型跨境支付体系。"
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}

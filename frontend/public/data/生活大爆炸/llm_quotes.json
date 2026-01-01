@@ -1,0 +1,48 @@
+{
+  "raw": {
+    "quotes": [
+      {
+        "segment_id": "seg_000027",
+        "text": "I'm done hiding from bullies. I am taking this into the real world."
+      },
+      {
+        "segment_id": "seg_000036",
+        "text": "I'm so sick of people being mean on the internet. I think the anonymity makes everyone feel like they can say things they'd never say to your face."
+      },
+      {
+        "segment_id": "seg_000042",
+        "text": "You know, you had a theory. You wrote a paper. You made an actual contribution. All guys like this do is just tear down other people's work."
+      }
+    ]
+  },
+  "normalized": {
+    "items": [
+      {
+        "segment_id": "seg_000027",
+        "index": 27,
+        "start": 103.0,
+        "end": 107.0,
+        "text": "I'm done hiding from bullies. I am taking this into the real world."
+      },
+      {
+        "segment_id": "seg_000036",
+        "index": 36,
+        "start": 135.0,
+        "end": 143.0,
+        "text": "I'm so sick of people being mean on the internet.I think the anonymity makes everyone feel like they can say things they'd never say to your face."
+      },
+      {
+        "segment_id": "seg_000042",
+        "index": 42,
+        "start": 157.0,
+        "end": 166.0,
+        "text": "You know, you had a theory. You wrote a paper. You made an actual contribution.All guys like this do is just tear down other people's work."
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}

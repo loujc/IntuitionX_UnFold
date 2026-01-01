@@ -1,0 +1,70 @@
+{
+  "raw": {
+    "quotes": [
+      {
+        "segment_id": "seg_000039",
+        "text": "其实是过去所有的痛苦都在共鸣"
+      },
+      {
+        "segment_id": "seg_000165",
+        "text": "那你就相当于受了两次苦"
+      },
+      {
+        "segment_id": "seg_000169",
+        "text": "你不是你的思维"
+      },
+      {
+        "segment_id": "seg_000297",
+        "text": "你的身体知道一切"
+      },
+      {
+        "segment_id": "seg_000369",
+        "text": "过去已经死了"
+      }
+    ]
+  },
+  "normalized": {
+    "items": [
+      {
+        "segment_id": "seg_000039",
+        "index": 39,
+        "start": 61.419999999999995,
+        "end": 63.959999999999994,
+        "text": "其实是过去所有的痛苦都在共鸣"
+      },
+      {
+        "segment_id": "seg_000165",
+        "index": 165,
+        "start": 249.08,
+        "end": 250.70000000000002,
+        "text": "那你就相当于受了两次苦"
+      },
+      {
+        "segment_id": "seg_000169",
+        "index": 169,
+        "start": 254.4,
+        "end": 255.58,
+        "text": "你不是你的思维"
+      },
+      {
+        "segment_id": "seg_000297",
+        "index": 297,
+        "start": 412.3,
+        "end": 413.64,
+        "text": "你的身体知道一切"
+      },
+      {
+        "segment_id": "seg_000369",
+        "index": 369,
+        "start": 492.06,
+        "end": 493.1,
+        "text": "过去已经死了"
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}

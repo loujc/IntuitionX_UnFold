@@ -1,0 +1,55 @@
+{
+  "raw": {
+    "items": [
+      {
+        "term": "斯蒂芬·霍金 (Stephen Hawking)",
+        "definition": "英国著名物理学家，被誉为“宇宙之王”，身患渐冻症仍坚持研究黑洞，是剧中客串的重量级大咖。"
+      },
+      {
+        "term": "加州理工学院 (Caltech)",
+        "definition": "世界顶尖的研究型大学，也是剧中主角们工作的地方，以物理学和工程学闻名，学术地位极高。"
+      },
+      {
+        "term": "匿名性 (Anonymity)",
+        "definition": "指隐藏真实身份的状态。剧中指在网络上因没人知道你是谁，所以人们更容易肆意攻击他人。"
+      },
+      {
+        "term": "前提 (Premise)",
+        "definition": "逻辑推理的基础或假设。剧中霍金评价主角的论文“前提很有趣”，意指认可其理论的核心出发点。"
+      }
+    ]
+  },
+  "normalized": {
+    "items": [
+      {
+        "term": "斯蒂芬·霍金 (Stephen Hawking)",
+        "definition": "英国著名物理学家，被誉为“宇宙之王”，身患渐冻症仍坚持研究黑洞，是剧中客串的重量级大咖。",
+        "mentions": [],
+        "links": []
+      },
+      {
+        "term": "加州理工学院 (Caltech)",
+        "definition": "世界顶尖的研究型大学，也是剧中主角们工作的地方，以物理学和工程学闻名，学术地位极高。",
+        "mentions": [],
+        "links": []
+      },
+      {
+        "term": "匿名性 (Anonymity)",
+        "definition": "指隐藏真实身份的状态。剧中指在网络上因没人知道你是谁，所以人们更容易肆意攻击他人。",
+        "mentions": [],
+        "links": []
+      },
+      {
+        "term": "前提 (Premise)",
+        "definition": "逻辑推理的基础或假设。剧中霍金评价主角的论文“前提很有趣”，意指认可其理论的核心出发点。",
+        "mentions": [],
+        "links": []
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}

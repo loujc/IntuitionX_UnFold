@@ -1,0 +1,70 @@
+{
+  "raw": {
+    "quotes": [
+      {
+        "segment_id": "seg_000013",
+        "text": "是可以挑战Swift和美国chips的霸权的一个机会"
+      },
+      {
+        "segment_id": "seg_000089",
+        "text": "如果能有类似国内转账体验的跨境支付"
+      },
+      {
+        "segment_id": "seg_000109",
+        "text": "他们需要一个能够抗审查的转账系统"
+      },
+      {
+        "segment_id": "seg_000113",
+        "text": "一个点对点的电子现金系统"
+      },
+      {
+        "segment_id": "seg_000143",
+        "text": "其效率会远远领先于现在的体系"
+      }
+    ]
+  },
+  "normalized": {
+    "items": [
+      {
+        "segment_id": "seg_000013",
+        "index": 13,
+        "start": 45.58,
+        "end": 50.22,
+        "text": "是可以挑战Swift和美国chips的霸权的一个机会"
+      },
+      {
+        "segment_id": "seg_000089",
+        "index": 89,
+        "start": 225.54,
+        "end": 230.16,
+        "text": "如果能有类似国内转账体验的跨境支付"
+      },
+      {
+        "segment_id": "seg_000109",
+        "index": 109,
+        "start": 278.84000000000003,
+        "end": 281.84000000000003,
+        "text": "他们需要一个能够抗审查的转账系统"
+      },
+      {
+        "segment_id": "seg_000113",
+        "index": 113,
+        "start": 289.36,
+        "end": 292.90000000000003,
+        "text": "一个点对点的电子现金系统"
+      },
+      {
+        "segment_id": "seg_000143",
+        "index": 143,
+        "start": 367.38,
+        "end": 370.82,
+        "text": "其效率会远远领先于现在的体系"
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}

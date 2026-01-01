@@ -2149,9 +2149,7 @@ function Home1() {
         <div aria-hidden="true" className="absolute border-[#e0130b] border-[0px_0px_0px_2px] border-solid inset-[0_0_0_-2px] rounded-[14px]" />
       </div>
       <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(16.67%+19.67px)] not-italic text-[22.135px] text-black top-[132px] w-[451px]">一口气了解2025年全球经济 | 关税新格局</p>
-      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(16.67%+20.67px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">@小 Lin 说</p>
-      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(25%-6px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">2025/12/23</p>
-      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(25%+87px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">Video</p>
+
       <Group />
       <div className="absolute flex h-[26px] items-center justify-center left-[calc(58.33%+72.33px)] top-[234px] w-[24px]" style={{ "--transform-inner-width": "0", "--transform-inner-height": "0" } as React.CSSProperties}>
         <div className="flex-none rotate-[270deg]">
@@ -2765,9 +2763,7 @@ function Home2() {
         <div aria-hidden="true" className="absolute border-[#e0130b] border-[0px_0px_0px_2px] border-solid inset-[0_0_0_-2px] rounded-[14px]" />
       </div>
       <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(16.67%+19.67px)] not-italic text-[22.135px] text-black top-[132px] w-[451px]">一口气了解2025年全球经济 | 关税新格局</p>
-      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(16.67%+20.67px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">@小 Lin 说</p>
-      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(25%-6px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">2025/12/23</p>
-      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(25%+87px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">Video</p>
+
       <Group1 />
       <Group12 />
       <Group27 />

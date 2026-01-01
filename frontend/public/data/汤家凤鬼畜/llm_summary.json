@@ -1,0 +1,53 @@
+{
+  "raw": {
+    "overall": "本视频将老师批评学生上课睡觉的录音改编成魔性鬼畜说唱，通过反复吟唱“你怎么睡得着的”等金句，制造洗脑搞笑效果。",
+    "chapters": [
+      {
+        "chapter_id": 0,
+        "summary": "老师责备学生上课睡觉，反复质问“你怎么睡得着的”，开启魔性洗脑节奏。"
+      },
+      {
+        "chapter_id": 1,
+        "summary": "混剪老师训话内容生成高语速说唱，吐槽学生不努力学习只顾玩手机。"
+      },
+      {
+        "chapter_id": 2,
+        "summary": "视频进入高潮部分，循环播放核心鬼畜旋律，强化“你怎么睡得着的”洗脑效果。"
+      }
+    ]
+  },
+  "normalized": {
+    "overall": "本视频将老师批评学生上课睡觉的录音改编成魔性鬼畜说唱，通过反复吟唱“你怎么睡得着的”等金句，制造洗脑搞笑效果。",
+    "chapters": [
+      {
+        "chapter_id": 0,
+        "segment_start_id": "seg_000000",
+        "segment_end_id": "seg_000013",
+        "start": 0.0,
+        "end": 23.86,
+        "summary": "老师责备学生上课睡觉，反复质问“你怎么睡得着的”，开启魔性洗脑节奏。"
+      },
+      {
+        "chapter_id": 1,
+        "segment_start_id": "seg_000014",
+        "segment_end_id": "seg_000061",
+        "start": 23.86,
+        "end": 71.24,
+        "summary": "混剪老师训话内容生成高语速说唱，吐槽学生不努力学习只顾玩手机。"
+      },
+      {
+        "chapter_id": 2,
+        "segment_start_id": "seg_000062",
+        "segment_end_id": "seg_000082",
+        "start": 71.24,
+        "end": 95.28,
+        "summary": "视频进入高潮部分，循环播放核心鬼畜旋律，强化“你怎么睡得着的”洗脑效果。"
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}

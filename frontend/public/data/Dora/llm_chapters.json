@@ -1,0 +1,90 @@
+{
+  "raw": {
+    "split": {
+      "chapters": [
+        {
+          "chapter_id": 0,
+          "start_segment_id": "seg_000000",
+          "end_segment_id": "seg_000097"
+        },
+        {
+          "chapter_id": 1,
+          "start_segment_id": "seg_000098",
+          "end_segment_id": "seg_000227"
+        },
+        {
+          "chapter_id": 2,
+          "start_segment_id": "seg_000228",
+          "end_segment_id": "seg_000324"
+        },
+        {
+          "chapter_id": 3,
+          "start_segment_id": "seg_000325",
+          "end_segment_id": "seg_000461"
+        }
+      ]
+    },
+    "summary": {
+      "overall": "本视频解读《当下的力量》，剖析痛苦之身与思维认同导致内耗的根源，提供回归身体感知、建立观察者意识等实用方法，帮助观众摆脱焦虑，活在当下。",
+      "chapters": [
+        {
+          "chapter_id": 0,
+          "summary": "解析“痛苦之身”概念，指出过往未处理的创伤会积聚能量，导致当下的情绪失控与内耗。"
+        },
+        {
+          "chapter_id": 1,
+          "summary": "阐述“思维认同”如何制造焦虑，通过采访案例说明将注意力集中于当下具体行动可化解精神内耗。"
+        },
+        {
+          "chapter_id": 2,
+          "summary": "提出回归“内在身体”是停止胡思乱想的开关，建议通过响应身体信号和感官练习来切断思维噪音。"
+        },
+        {
+          "chapter_id": 3,
+          "summary": "介绍“观察者意识”与心理时间的概念，利用第三人称对话法与情绪拉开距离，实现自我治愈。"
+        }
+      ]
+    }
+  },
+  "normalized": {
+    "chapters": [
+      {
+        "chapter_id": 0,
+        "segment_start_id": "seg_000000",
+        "segment_end_id": "seg_000097",
+        "start": 0.0,
+        "end": 150.46,
+        "summary": "解析“痛苦之身”概念，指出过往未处理的创伤会积聚能量，导致当下的情绪失控与内耗。"
+      },
+      {
+        "chapter_id": 1,
+        "segment_start_id": "seg_000098",
+        "segment_end_id": "seg_000227",
+        "start": 150.46,
+        "end": 327.82,
+        "summary": "阐述“思维认同”如何制造焦虑，通过采访案例说明将注意力集中于当下具体行动可化解精神内耗。"
+      },
+      {
+        "chapter_id": 2,
+        "segment_start_id": "seg_000228",
+        "segment_end_id": "seg_000324",
+        "start": 330.0,
+        "end": 443.5,
+        "summary": "提出回归“内在身体”是停止胡思乱想的开关，建议通过响应身体信号和感官练习来切断思维噪音。"
+      },
+      {
+        "chapter_id": 3,
+        "segment_start_id": "seg_000325",
+        "segment_end_id": "seg_000461",
+        "start": 443.5,
+        "end": 597.48,
+        "summary": "介绍“观察者意识”与心理时间的概念，利用第三人称对话法与情绪拉开距离，实现自我治愈。"
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}

@@ -1,0 +1,2541 @@
+{
+    "task_id": "86af46e6-7f80-4ba4-9394-284f94823c24",
+    "status": "finished",
+    "mode": "simple",
+    "video_type": {
+        "label": "Finance",
+        "confidence": 0.95
+    },
+    "transcript": {
+        "segments": [
+            {
+                "segment_id": "seg_000000",
+                "index": 0,
+                "start": 0.0,
+                "end": 0.64,
+                "text": "哎"
+            },
+            {
+                "segment_id": "seg_000001",
+                "index": 1,
+                "start": 0.64,
+                "end": 1.0,
+                "text": "你看"
+            },
+            {
+                "segment_id": "seg_000002",
+                "index": 2,
+                "start": 1.0,
+                "end": 2.56,
+                "text": "这个是一盒普迪兰口服液"
+            },
+            {
+                "segment_id": "seg_000003",
+                "index": 3,
+                "start": 2.56,
+                "end": 3.48,
+                "text": "在医院的价格"
+            },
+            {
+                "segment_id": "seg_000004",
+                "index": 4,
+                "start": 3.48,
+                "end": 4.72,
+                "text": "12-44"
+            },
+            {
+                "segment_id": "seg_000005",
+                "index": 5,
+                "start": 4.72,
+                "end": 5.44,
+                "text": "在药店呢"
+            },
+            {
+                "segment_id": "seg_000006",
+                "index": 6,
+                "start": 5.44,
+                "end": 6.88,
+                "text": "10只要卖66"
+            },
+            {
+                "segment_id": "seg_000007",
+                "index": 7,
+                "start": 6.88,
+                "end": 8.040000000000001,
+                "text": "网上卖48"
+            },
+            {
+                "segment_id": "seg_000008",
+                "index": 8,
+                "start": 8.040000000000001,
+                "end": 8.96,
+                "text": "价格差的还不少"
+            },
+            {
+                "segment_id": "seg_000009",
+                "index": 9,
+                "start": 8.96,
+                "end": 10.36,
+                "text": "类似的你看奥斯塔维"
+            },
+            {
+                "segment_id": "seg_000010",
+                "index": 10,
+                "start": 10.36,
+                "end": 11.52,
+                "text": "在药店卖88"
+            },
+            {
+                "segment_id": "seg_000011",
+                "index": 11,
+                "start": 11.52,
+                "end": 12.56,
+                "text": "医院医保报销完"
+            },
+            {
+                "segment_id": "seg_000012",
+                "index": 12,
+                "start": 12.56,
+                "end": 13.32,
+                "text": "自费才20"
+            },
+            {
+                "segment_id": "seg_000013",
+                "index": 13,
+                "start": 13.32,
+                "end": 14.280000000000001,
+                "text": "网上才15"
+            },
+            {
+                "segment_id": "seg_000014",
+                "index": 14,
+                "start": 14.280000000000001,
+                "end": 15.200000000000001,
+                "text": "你说同一款药"
+            },
+            {
+                "segment_id": "seg_000015",
+                "index": 15,
+                "start": 15.200000000000001,
+                "end": 16.28,
+                "text": "为什么不同的渠道"
+            },
+            {
+                "segment_id": "seg_000016",
+                "index": 16,
+                "start": 16.28,
+                "end": 17.240000000000002,
+                "text": "价格能差这么多"
+            },
+            {
+                "segment_id": "seg_000017",
+                "index": 17,
+                "start": 17.240000000000002,
+                "end": 18.92,
+                "text": "难道药也有阴阳价吗"
+            },
+            {
+                "segment_id": "seg_000018",
+                "index": 18,
+                "start": 19.92,
+                "end": 20.48,
+                "text": "我跟你说"
+            },
+            {
+                "segment_id": "seg_000019",
+                "index": 19,
+                "start": 20.48,
+                "end": 22.2,
+                "text": "这其实并不是什么行业乱象"
+            },
+            {
+                "segment_id": "seg_000020",
+                "index": 20,
+                "start": 22.2,
+                "end": 23.6,
+                "text": "就是咱们医药体系的结果"
+            },
+            {
+                "segment_id": "seg_000021",
+                "index": 21,
+                "start": 23.6,
+                "end": 24.68,
+                "text": "这三个不同的渠道"
+            },
+            {
+                "segment_id": "seg_000022",
+                "index": 22,
+                "start": 24.68,
+                "end": 26.32,
+                "text": "是三个完全不同的定价逻辑"
+            },
+            {
+                "segment_id": "seg_000023",
+                "index": 23,
+                "start": 26.32,
+                "end": 28.4,
+                "text": "甚至这种所谓三个药价"
+            },
+            {
+                "segment_id": "seg_000024",
+                "index": 24,
+                "start": 28.4,
+                "end": 30.12,
+                "text": "在全世界范围都是非常独特的"
+            },
+            {
+                "segment_id": "seg_000025",
+                "index": 25,
+                "start": 30.12,
+                "end": 31.68,
+                "text": "咱们今天就来拆解一下"
+            },
+            {
+                "segment_id": "seg_000026",
+                "index": 26,
+                "start": 35.4,
+                "end": 37.8,
+                "text": "中国整体去年医药市场的规模"
+            },
+            {
+                "segment_id": "seg_000027",
+                "index": 27,
+                "start": 37.8,
+                "end": 39.120000000000005,
+                "text": "大概是1.9万亿"
+            },
+            {
+                "segment_id": "seg_000028",
+                "index": 28,
+                "start": 39.120000000000005,
+                "end": 41.0,
+                "text": "这里头大头都是处方药"
+            },
+            {
+                "segment_id": "seg_000029",
+                "index": 29,
+                "start": 41.0,
+                "end": 42.36,
+                "text": "你看占了将近80%"
+            },
+            {
+                "segment_id": "seg_000030",
+                "index": 30,
+                "start": 42.36,
+                "end": 43.44,
+                "text": "剩下是非处方药"
+            },
+            {
+                "segment_id": "seg_000031",
+                "index": 31,
+                "start": 43.44,
+                "end": 44.44,
+                "text": "也叫OTC"
+            },
+            {
+                "segment_id": "seg_000032",
+                "index": 32,
+                "start": 44.44,
+                "end": 45.96,
+                "text": "这俩听名你就能猜个大概"
+            },
+            {
+                "segment_id": "seg_000033",
+                "index": 33,
+                "start": 45.96,
+                "end": 46.72,
+                "text": "处方药呢"
+            },
+            {
+                "segment_id": "seg_000034",
+                "index": 34,
+                "start": 46.72,
+                "end": 48.28,
+                "text": "就是你得有医生的处方才能卖"
+            },
+            {
+                "segment_id": "seg_000035",
+                "index": 35,
+                "start": 48.28,
+                "end": 49.2,
+                "text": "它对安全性"
+            },
+            {
+                "segment_id": "seg_000036",
+                "index": 36,
+                "start": 49.2,
+                "end": 50.68,
+                "text": "剂量都有非常严格的要求"
+            },
+            {
+                "segment_id": "seg_000037",
+                "index": 37,
+                "start": 50.68,
+                "end": 51.68,
+                "text": "你比如说降压"
+            },
+            {
+                "segment_id": "seg_000038",
+                "index": 38,
+                "start": 51.68,
+                "end": 52.32,
+                "text": "降糖"
+            },
+            {
+                "segment_id": "seg_000039",
+                "index": 39,
+                "start": 52.32,
+                "end": 52.92,
+                "text": "抗生素"
+            },
+            {
+                "segment_id": "seg_000040",
+                "index": 40,
+                "start": 52.92,
+                "end": 53.480000000000004,
+                "text": "抗肿瘤"
+            },
+            {
+                "segment_id": "seg_000041",
+                "index": 41,
+                "start": 53.480000000000004,
+                "end": 54.760000000000005,
+                "text": "这都是非常典型的处方药"
+            },
+            {
+                "segment_id": "seg_000042",
+                "index": 42,
+                "start": 54.760000000000005,
+                "end": 56.28,
+                "text": "而在处方药市场里头呢"
+            },
+            {
+                "segment_id": "seg_000043",
+                "index": 43,
+                "start": 56.28,
+                "end": 57.04,
+                "text": "谁卖的多"
+            },
+            {
+                "segment_id": "seg_000044",
+                "index": 44,
+                "start": 57.04,
+                "end": 58.480000000000004,
+                "text": "医院是绝对的主力"
+            },
+            {
+                "segment_id": "seg_000045",
+                "index": 45,
+                "start": 58.480000000000004,
+                "end": 59.68,
+                "text": "有超过八成的处方药"
+            },
+            {
+                "segment_id": "seg_000046",
+                "index": 46,
+                "start": 59.68,
+                "end": 60.760000000000005,
+                "text": "都是从医院卖出去的"
+            },
+            {
+                "segment_id": "seg_000047",
+                "index": 47,
+                "start": 60.760000000000005,
+                "end": 61.6,
+                "text": "而非处方药呢"
+            },
+            {
+                "segment_id": "seg_000048",
+                "index": 48,
+                "start": 61.6,
+                "end": 62.44,
+                "text": "你一般看药盒上"
+            },
+            {
+                "segment_id": "seg_000049",
+                "index": 49,
+                "start": 62.44,
+                "end": 64.08,
+                "text": "都会有一个OTC的标志"
+            },
+            {
+                "segment_id": "seg_000050",
+                "index": 50,
+                "start": 64.08,
+                "end": 65.04,
+                "text": "叫over the counter"
+            },
+            {
+                "segment_id": "seg_000051",
+                "index": 51,
+                "start": 65.04,
+                "end": 66.08,
+                "text": "就是你隔着药店"
+            },
+            {
+                "segment_id": "seg_000052",
+                "index": 52,
+                "start": 66.08,
+                "end": 67.2,
+                "text": "那个坛就能买"
+            },
+            {
+                "segment_id": "seg_000053",
+                "index": 53,
+                "start": 67.2,
+                "end": 67.88,
+                "text": "不用处方"
+            },
+            {
+                "segment_id": "seg_000054",
+                "index": 54,
+                "start": 67.88,
+                "end": 68.92,
+                "text": "常见的比如说像"
+            },
+            {
+                "segment_id": "seg_000055",
+                "index": 55,
+                "start": 68.92,
+                "end": 69.52,
+                "text": "维生素"
+            },
+            {
+                "segment_id": "seg_000056",
+                "index": 56,
+                "start": 69.52,
+                "end": 70.08,
+                "text": "不洛分"
+            },
+            {
+                "segment_id": "seg_000057",
+                "index": 57,
+                "start": 70.08,
+                "end": 70.68,
+                "text": "胃药"
+            },
+            {
+                "segment_id": "seg_000058",
+                "index": 58,
+                "start": 70.68,
+                "end": 71.28,
+                "text": "盐药水"
+            },
+            {
+                "segment_id": "seg_000059",
+                "index": 59,
+                "start": 71.28,
+                "end": 72.84,
+                "text": "非处方这里谁是主力呢"
+            },
+            {
+                "segment_id": "seg_000060",
+                "index": 60,
+                "start": 72.84,
+                "end": 75.12,
+                "text": "它是互联网电商和药店的主战场"
+            },
+            {
+                "segment_id": "seg_000061",
+                "index": 61,
+                "start": 75.12,
+                "end": 77.44,
+                "text": "它俩加起来占了OTC80%的销量"
+            },
+            {
+                "segment_id": "seg_000062",
+                "index": 62,
+                "start": 77.44,
+                "end": 78.48,
+                "text": "你看咱刚刚分析的"
+            },
+            {
+                "segment_id": "seg_000063",
+                "index": 63,
+                "start": 78.48,
+                "end": 79.2,
+                "text": "你就会发现"
+            },
+            {
+                "segment_id": "seg_000064",
+                "index": 64,
+                "start": 79.2,
+                "end": 80.56,
+                "text": "二八定律在医药市场"
+            },
+            {
+                "segment_id": "seg_000065",
+                "index": 65,
+                "start": 80.56,
+                "end": 81.56,
+                "text": "体现的临厉尽致"
+            },
+            {
+                "segment_id": "seg_000066",
+                "index": 66,
+                "start": 81.56,
+                "end": 83.2,
+                "text": "非处方药和处方药28K"
+            },
+            {
+                "segment_id": "seg_000067",
+                "index": 67,
+                "start": 83.2,
+                "end": 84.04,
+                "text": "处方药里头呢"
+            },
+            {
+                "segment_id": "seg_000068",
+                "index": 68,
+                "start": 84.04,
+                "end": 85.32000000000001,
+                "text": "非医院和医院28K"
+            },
+            {
+                "segment_id": "seg_000069",
+                "index": 69,
+                "start": 85.32000000000001,
+                "end": 86.08,
+                "text": "非处方药里头呢"
+            },
+            {
+                "segment_id": "seg_000070",
+                "index": 70,
+                "start": 86.08,
+                "end": 87.24000000000001,
+                "text": "医院和非医院28K"
+            },
+            {
+                "segment_id": "seg_000071",
+                "index": 71,
+                "start": 87.24000000000001,
+                "end": 88.04,
+                "text": "跟绕口令是"
+            },
+            {
+                "segment_id": "seg_000072",
+                "index": 72,
+                "start": 88.04,
+                "end": 90.12,
+                "text": "咱先来看医院"
+            },
+            {
+                "segment_id": "seg_000073",
+                "index": 73,
+                "start": 90.12,
+                "end": 91.36,
+                "text": "从规模上来看"
+            },
+            {
+                "segment_id": "seg_000074",
+                "index": 74,
+                "start": 91.36,
+                "end": 92.86,
+                "text": "医院占了药这个领域"
+            },
+            {
+                "segment_id": "seg_000075",
+                "index": 75,
+                "start": 92.86,
+                "end": 93.68,
+                "text": "三分之二的市场"
+            },
+            {
+                "segment_id": "seg_000076",
+                "index": 76,
+                "start": 93.68,
+                "end": 94.98,
+                "text": "但其实它们并不是靠"
+            },
+            {
+                "segment_id": "seg_000077",
+                "index": 77,
+                "start": 94.98,
+                "end": 95.84,
+                "text": "卖药挣钱"
+            },
+            {
+                "segment_id": "seg_000078",
+                "index": 78,
+                "start": 95.84,
+                "end": 97.10000000000001,
+                "text": "这个其实也很合理"
+            },
+            {
+                "segment_id": "seg_000079",
+                "index": 79,
+                "start": 97.10000000000001,
+                "end": 98.88,
+                "text": "而且从它们明面上的财务数据"
+            },
+            {
+                "segment_id": "seg_000080",
+                "index": 80,
+                "start": 98.88,
+                "end": 99.74000000000001,
+                "text": "也能体现出来"
+            },
+            {
+                "segment_id": "seg_000081",
+                "index": 81,
+                "start": 99.74000000000001,
+                "end": 100.72,
+                "text": "比如你看22年"
+            },
+            {
+                "segment_id": "seg_000082",
+                "index": 82,
+                "start": 100.72,
+                "end": 101.88,
+                "text": "公立医院的受制情况"
+            },
+            {
+                "segment_id": "seg_000083",
+                "index": 83,
+                "start": 101.88,
+                "end": 102.76,
+                "text": "平均来看呢"
+            },
+            {
+                "segment_id": "seg_000084",
+                "index": 84,
+                "start": 102.76,
+                "end": 104.04,
+                "text": "药品收入是7000多万"
+            },
+            {
+                "segment_id": "seg_000085",
+                "index": 85,
+                "start": 104.04,
+                "end": 105.58,
+                "text": "药品支出也是7000多万"
+            },
+            {
+                "segment_id": "seg_000086",
+                "index": 86,
+                "start": 105.58,
+                "end": 106.84,
+                "text": "这几乎就是平进平出"
+            },
+            {
+                "segment_id": "seg_000087",
+                "index": 87,
+                "start": 106.84,
+                "end": 108.98,
+                "text": "医院用的药"
+            },
+            {
+                "segment_id": "seg_000088",
+                "index": 88,
+                "start": 108.98,
+                "end": 110.22,
+                "text": "它在这三个渠道里头"
+            },
+            {
+                "segment_id": "seg_000089",
+                "index": 89,
+                "start": 110.22,
+                "end": 111.94,
+                "text": "跟医保重合度是最高的"
+            },
+            {
+                "segment_id": "seg_000090",
+                "index": 90,
+                "start": 111.94,
+                "end": 112.62,
+                "text": "这也很合理嘛"
+            },
+            {
+                "segment_id": "seg_000091",
+                "index": 91,
+                "start": 112.62,
+                "end": 113.34,
+                "text": "你想医保保的"
+            },
+            {
+                "segment_id": "seg_000092",
+                "index": 92,
+                "start": 113.34,
+                "end": 114.32000000000001,
+                "text": "就是最刚需的部分"
+            },
+            {
+                "segment_id": "seg_000093",
+                "index": 93,
+                "start": 114.32000000000001,
+                "end": 115.88000000000001,
+                "text": "这里边绝大多数都是处方药"
+            },
+            {
+                "segment_id": "seg_000094",
+                "index": 94,
+                "start": 115.88000000000001,
+                "end": 117.78,
+                "text": "那医院又是处方药的主战场"
+            },
+            {
+                "segment_id": "seg_000095",
+                "index": 95,
+                "start": 117.78,
+                "end": 119.82000000000001,
+                "text": "所以它主要保医院就很合理"
+            },
+            {
+                "segment_id": "seg_000096",
+                "index": 96,
+                "start": 119.82000000000001,
+                "end": 121.10000000000001,
+                "text": "而医保的药价呢"
+            },
+            {
+                "segment_id": "seg_000097",
+                "index": 97,
+                "start": 121.10000000000001,
+                "end": 122.32000000000001,
+                "text": "你想那是医保局谈的"
+            },
+            {
+                "segment_id": "seg_000098",
+                "index": 98,
+                "start": 122.32000000000001,
+                "end": 123.32000000000001,
+                "text": "他们集合了全国"
+            },
+            {
+                "segment_id": "seg_000099",
+                "index": 99,
+                "start": 123.32000000000001,
+                "end": 124.36000000000001,
+                "text": "大大小小医院的需求"
+            },
+            {
+                "segment_id": "seg_000100",
+                "index": 100,
+                "start": 124.36000000000001,
+                "end": 125.56,
+                "text": "然后去跟药企谈价"
+            },
+            {
+                "segment_id": "seg_000101",
+                "index": 101,
+                "start": 125.56,
+                "end": 126.82000000000001,
+                "text": "通过这个规模效应"
+            },
+            {
+                "segment_id": "seg_000102",
+                "index": 102,
+                "start": 126.82,
+                "end": 128.04,
+                "text": "能够把价格压到比较低"
+            },
+            {
+                "segment_id": "seg_000103",
+                "index": 103,
+                "start": 128.04,
+                "end": 129.4,
+                "text": "这价格医院说了也不算"
+            },
+            {
+                "segment_id": "seg_000104",
+                "index": 104,
+                "start": 129.4,
+                "end": 130.26,
+                "text": "那除了医保局"
+            },
+            {
+                "segment_id": "seg_000105",
+                "index": 105,
+                "start": 130.26,
+                "end": 131.72,
+                "text": "医院自己采买的部分呢"
+            },
+            {
+                "segment_id": "seg_000106",
+                "index": 106,
+                "start": 131.72,
+                "end": 132.48,
+                "text": "原则上啊"
+            },
+            {
+                "segment_id": "seg_000107",
+                "index": 107,
+                "start": 132.48,
+                "end": 133.64,
+                "text": "他们是要在一个省级的"
+            },
+            {
+                "segment_id": "seg_000108",
+                "index": 108,
+                "start": 133.64,
+                "end": 134.44,
+                "text": "采购平台去买"
+            },
+            {
+                "segment_id": "seg_000109",
+                "index": 109,
+                "start": 134.44,
+                "end": 135.32,
+                "text": "在这个平台上"
+            },
+            {
+                "segment_id": "seg_000110",
+                "index": 110,
+                "start": 135.32,
+                "end": 136.57999999999998,
+                "text": "医院跟药企的溢价"
+            },
+            {
+                "segment_id": "seg_000111",
+                "index": 111,
+                "start": 136.57999999999998,
+                "end": 137.35999999999999,
+                "text": "都是公开的"
+            },
+            {
+                "segment_id": "seg_000112",
+                "index": 112,
+                "start": 137.35999999999999,
+                "end": 138.95999999999998,
+                "text": "也有要求说医院不能加价"
+            },
+            {
+                "segment_id": "seg_000113",
+                "index": 113,
+                "start": 138.95999999999998,
+                "end": 139.82,
+                "text": "就多少钱进"
+            },
+            {
+                "segment_id": "seg_000114",
+                "index": 114,
+                "start": 139.82,
+                "end": 140.6,
+                "text": "就多少钱出"
+            },
+            {
+                "segment_id": "seg_000115",
+                "index": 115,
+                "start": 140.6,
+                "end": 141.45999999999998,
+                "text": "总之你看啊"
+            },
+            {
+                "segment_id": "seg_000116",
+                "index": 116,
+                "start": 141.45999999999998,
+                "end": 142.73999999999998,
+                "text": "医院走医保的部分"
+            },
+            {
+                "segment_id": "seg_000117",
+                "index": 117,
+                "start": 142.73999999999998,
+                "end": 144.04,
+                "text": "量大价格便宜"
+            },
+            {
+                "segment_id": "seg_000118",
+                "index": 118,
+                "start": 144.04,
+                "end": 144.92,
+                "text": "自己采买的部分"
+            },
+            {
+                "segment_id": "seg_000119",
+                "index": 119,
+                "start": 144.92,
+                "end": 145.66,
+                "text": "又不能加价"
+            },
+            {
+                "segment_id": "seg_000120",
+                "index": 120,
+                "start": 145.66,
+                "end": 146.57999999999998,
+                "text": "所以总体来说"
+            },
+            {
+                "segment_id": "seg_000121",
+                "index": 121,
+                "start": 146.57999999999998,
+                "end": 148.51999999999998,
+                "text": "医院的药价是更公开透明的"
+            },
+            {
+                "segment_id": "seg_000122",
+                "index": 122,
+                "start": 148.51999999999998,
+                "end": 149.12,
+                "text": "而且啊"
+            },
+            {
+                "segment_id": "seg_000123",
+                "index": 123,
+                "start": 149.12,
+                "end": 149.66,
+                "text": "说实在的"
+            },
+            {
+                "segment_id": "seg_000124",
+                "index": 124,
+                "start": 149.66,
+                "end": 150.4,
+                "text": "很多人他买药"
+            },
+            {
+                "segment_id": "seg_000125",
+                "index": 125,
+                "start": 156.82,
+                "end": 158.32,
+                "text": "就是医院买药不算太贵"
+            },
+            {
+                "segment_id": "seg_000126",
+                "index": 126,
+                "start": 158.32,
+                "end": 159.76,
+                "text": "这我有比较差一嘴啊"
+            },
+            {
+                "segment_id": "seg_000127",
+                "index": 127,
+                "start": 159.76,
+                "end": 160.95999999999998,
+                "text": "这种主要在医院"
+            },
+            {
+                "segment_id": "seg_000128",
+                "index": 128,
+                "start": 160.95999999999998,
+                "end": 161.95999999999998,
+                "text": "开处方药的模式"
+            },
+            {
+                "segment_id": "seg_000129",
+                "index": 129,
+                "start": 161.95999999999998,
+                "end": 163.0,
+                "text": "放在全世界看"
+            },
+            {
+                "segment_id": "seg_000130",
+                "index": 130,
+                "start": 163.0,
+                "end": 163.78,
+                "text": "都并不常见"
+            },
+            {
+                "segment_id": "seg_000131",
+                "index": 131,
+                "start": 163.78,
+                "end": 164.84,
+                "text": "大部分国家和地区"
+            },
+            {
+                "segment_id": "seg_000132",
+                "index": 132,
+                "start": 164.84,
+                "end": 166.04,
+                "text": "都是医药分离的"
+            },
+            {
+                "segment_id": "seg_000133",
+                "index": 133,
+                "start": 166.04,
+                "end": 166.92,
+                "text": "核心原因呢"
+            },
+            {
+                "segment_id": "seg_000134",
+                "index": 134,
+                "start": 166.92,
+                "end": 167.51999999999998,
+                "text": "就是为了避免"
+            },
+            {
+                "segment_id": "seg_000135",
+                "index": 135,
+                "start": 167.51999999999998,
+                "end": 168.14,
+                "text": "过度开药"
+            },
+            {
+                "segment_id": "seg_000136",
+                "index": 136,
+                "start": 168.14,
+                "end": 168.76,
+                "text": "过度医疗"
+            },
+            {
+                "segment_id": "seg_000137",
+                "index": 137,
+                "start": 168.76,
+                "end": 169.45999999999998,
+                "text": "当然了"
+            },
+            {
+                "segment_id": "seg_000138",
+                "index": 138,
+                "start": 169.45999999999998,
+                "end": 170.14,
+                "text": "医药分离"
+            },
+            {
+                "segment_id": "seg_000139",
+                "index": 139,
+                "start": 170.14,
+                "end": 171.38,
+                "text": "它是需要在医院之外"
+            },
+            {
+                "segment_id": "seg_000140",
+                "index": 140,
+                "start": 171.38,
+                "end": 172.62,
+                "text": "有足够多的网点"
+            },
+            {
+                "segment_id": "seg_000141",
+                "index": 141,
+                "start": 172.62,
+                "end": 174.34,
+                "text": "有足够多专业的药剂师来支持"
+            },
+            {
+                "segment_id": "seg_000142",
+                "index": 142,
+                "start": 174.34,
+                "end": 175.22,
+                "text": "而且医药分离"
+            },
+            {
+                "segment_id": "seg_000143",
+                "index": 143,
+                "start": 175.22,
+                "end": 176.42,
+                "text": "它主要的问题是什么呀"
+            },
+            {
+                "segment_id": "seg_000144",
+                "index": 144,
+                "start": 176.42,
+                "end": 176.88,
+                "text": "就是贵"
+            },
+            {
+                "segment_id": "seg_000145",
+                "index": 145,
+                "start": 176.88,
+                "end": 178.56,
+                "text": "它也更需要一个完善的"
+            },
+            {
+                "segment_id": "seg_000146",
+                "index": 146,
+                "start": 178.56,
+                "end": 179.5,
+                "text": "商业保险体系"
+            },
+            {
+                "segment_id": "seg_000147",
+                "index": 147,
+                "start": 179.5,
+                "end": 181.0,
+                "text": "其实中国目前也是在部分"
+            },
+            {
+                "segment_id": "seg_000148",
+                "index": 148,
+                "start": 181.0,
+                "end": 182.18,
+                "text": "往医药分离去过度"
+            },
+            {
+                "segment_id": "seg_000149",
+                "index": 149,
+                "start": 182.18,
+                "end": 183.08,
+                "text": "这个医药养医"
+            },
+            {
+                "segment_id": "seg_000150",
+                "index": 150,
+                "start": 183.08,
+                "end": 185.4,
+                "text": "它是一个更长期的体系性的"
+            },
+            {
+                "segment_id": "seg_000151",
+                "index": 151,
+                "start": 185.4,
+                "end": 186.36,
+                "text": "也是更大的话题"
+            },
+            {
+                "segment_id": "seg_000152",
+                "index": 152,
+                "start": 186.36,
+                "end": 187.66,
+                "text": "这个有机会我们再单说"
+            },
+            {
+                "segment_id": "seg_000153",
+                "index": 153,
+                "start": 187.66,
+                "end": 188.12,
+                "text": "总之"
+            },
+            {
+                "segment_id": "seg_000154",
+                "index": 154,
+                "start": 188.12,
+                "end": 189.6,
+                "text": "目前对于国内医院"
+            },
+            {
+                "segment_id": "seg_000155",
+                "index": 155,
+                "start": 189.6,
+                "end": 191.14,
+                "text": "这个以处方药为主的渠道"
+            },
+            {
+                "segment_id": "seg_000156",
+                "index": 156,
+                "start": 191.14,
+                "end": 192.16,
+                "text": "采取的是医保"
+            },
+            {
+                "segment_id": "seg_000157",
+                "index": 157,
+                "start": 192.16,
+                "end": 193.5,
+                "text": "限价等等措施"
+            },
+            {
+                "segment_id": "seg_000158",
+                "index": 158,
+                "start": 193.5,
+                "end": 194.66,
+                "text": "来进行药价管理"
+            },
+            {
+                "segment_id": "seg_000159",
+                "index": 159,
+                "start": 194.66,
+                "end": 194.84,
+                "text": "好"
+            },
+            {
+                "segment_id": "seg_000160",
+                "index": 160,
+                "start": 194.84,
+                "end": 196.46,
+                "text": "咱们接着来看药店跟互联网"
+            },
+            {
+                "segment_id": "seg_000161",
+                "index": 161,
+                "start": 196.46,
+                "end": 197.6,
+                "text": "相比于公立医院"
+            },
+            {
+                "segment_id": "seg_000162",
+                "index": 162,
+                "start": 197.6,
+                "end": 198.98,
+                "text": "有很多行政方面的限制"
+            },
+            {
+                "segment_id": "seg_000163",
+                "index": 163,
+                "start": 198.98,
+                "end": 199.98,
+                "text": "药店跟互联网"
+            },
+            {
+                "segment_id": "seg_000164",
+                "index": 164,
+                "start": 199.98,
+                "end": 201.52,
+                "text": "他们俩相对就跟市场化一些"
+            },
+            {
+                "segment_id": "seg_000165",
+                "index": 165,
+                "start": 201.52,
+                "end": 202.32,
+                "text": "我们刚才也说了"
+            },
+            {
+                "segment_id": "seg_000166",
+                "index": 166,
+                "start": 202.32,
+                "end": 203.56,
+                "text": "它俩是OTC的主战场"
+            },
+            {
+                "segment_id": "seg_000167",
+                "index": 167,
+                "start": 203.56,
+                "end": 204.28,
+                "text": "那对于药价"
+            },
+            {
+                "segment_id": "seg_000168",
+                "index": 168,
+                "start": 204.28,
+                "end": 206.12,
+                "text": "其实就有更多的自主定价权"
+            },
+            {
+                "segment_id": "seg_000169",
+                "index": 169,
+                "start": 206.12,
+                "end": 207.18,
+                "text": "它俩的区别呢"
+            },
+            {
+                "segment_id": "seg_000170",
+                "index": 170,
+                "start": 207.18,
+                "end": 208.06,
+                "text": "其实可以类比"
+            },
+            {
+                "segment_id": "seg_000171",
+                "index": 171,
+                "start": 208.06,
+                "end": 209.86,
+                "text": "线下的便利店跟电商"
+            },
+            {
+                "segment_id": "seg_000172",
+                "index": 172,
+                "start": 209.86,
+                "end": 211.52,
+                "text": "药店就像个线下的便利店嘛"
+            },
+            {
+                "segment_id": "seg_000173",
+                "index": 173,
+                "start": 211.52,
+                "end": 212.16,
+                "text": "只不过是一个"
+            },
+            {
+                "segment_id": "seg_000174",
+                "index": 174,
+                "start": 212.16,
+                "end": 213.68,
+                "text": "有卖药资质的便利店"
+            },
+            {
+                "segment_id": "seg_000175",
+                "index": 175,
+                "start": 213.68,
+                "end": 214.34,
+                "text": "便利店嘛"
+            },
+            {
+                "segment_id": "seg_000176",
+                "index": 176,
+                "start": 214.34,
+                "end": 215.22,
+                "text": "核心就是便利"
+            },
+            {
+                "segment_id": "seg_000177",
+                "index": 177,
+                "start": 215.22,
+                "end": 216.6,
+                "text": "你想你平时去药店买药"
+            },
+            {
+                "segment_id": "seg_000178",
+                "index": 178,
+                "start": 216.6,
+                "end": 217.6,
+                "text": "是不是经常是那种"
+            },
+            {
+                "segment_id": "seg_000179",
+                "index": 179,
+                "start": 217.6,
+                "end": 217.92000000000002,
+                "text": "哎呀"
+            },
+            {
+                "segment_id": "seg_000180",
+                "index": 180,
+                "start": 217.92000000000002,
+                "end": 218.88,
+                "text": "今天着凉了"
+            },
+            {
+                "segment_id": "seg_000181",
+                "index": 181,
+                "start": 218.88,
+                "end": 219.8,
+                "text": "赶紧去买点感冒零"
+            },
+            {
+                "segment_id": "seg_000182",
+                "index": 182,
+                "start": 219.8,
+                "end": 220.36,
+                "text": "或者是哎呀"
+            },
+            {
+                "segment_id": "seg_000183",
+                "index": 183,
+                "start": 220.36,
+                "end": 221.48,
+                "text": "我今天吃坏肚子了"
+            },
+            {
+                "segment_id": "seg_000184",
+                "index": 184,
+                "start": 221.48,
+                "end": 222.6,
+                "text": "赶紧搞点拉肚子的药"
+            },
+            {
+                "segment_id": "seg_000185",
+                "index": 185,
+                "start": 222.6,
+                "end": 223.14,
+                "text": "就是那种"
+            },
+            {
+                "segment_id": "seg_000186",
+                "index": 186,
+                "start": 223.14,
+                "end": 224.32,
+                "text": "我要再不去医院伤口"
+            },
+            {
+                "segment_id": "seg_000187",
+                "index": 187,
+                "start": 224.32,
+                "end": 225.8,
+                "text": "可能就要愈合了的这种情绪"
+            },
+            {
+                "segment_id": "seg_000188",
+                "index": 188,
+                "start": 225.8,
+                "end": 226.5,
+                "text": "所以药店"
+            },
+            {
+                "segment_id": "seg_000189",
+                "index": 189,
+                "start": 226.5,
+                "end": 227.54,
+                "text": "它针对的就是这种"
+            },
+            {
+                "segment_id": "seg_000190",
+                "index": 190,
+                "start": 227.54,
+                "end": 228.82,
+                "text": "相对紧急的情况"
+            },
+            {
+                "segment_id": "seg_000191",
+                "index": 191,
+                "start": 228.82,
+                "end": 230.34,
+                "text": "它本质上不是卖药"
+            },
+            {
+                "segment_id": "seg_000192",
+                "index": 192,
+                "start": 230.34,
+                "end": 231.84,
+                "text": "而是要卖现在就要"
+            },
+            {
+                "segment_id": "seg_000193",
+                "index": 193,
+                "start": 231.84,
+                "end": 233.76,
+                "text": "所以这个属性"
+            },
+            {
+                "segment_id": "seg_000194",
+                "index": 194,
+                "start": 233.76,
+                "end": 234.7,
+                "text": "也决定了它的成本"
+            },
+            {
+                "segment_id": "seg_000195",
+                "index": 195,
+                "start": 234.7,
+                "end": 236.38,
+                "text": "比如说它需要开在居民区"
+            },
+            {
+                "segment_id": "seg_000196",
+                "index": 196,
+                "start": 236.38,
+                "end": 237.04,
+                "text": "商业区"
+            },
+            {
+                "segment_id": "seg_000197",
+                "index": 197,
+                "start": 237.04,
+                "end": 238.18,
+                "text": "这种人很多的地方"
+            },
+            {
+                "segment_id": "seg_000198",
+                "index": 198,
+                "start": 238.18,
+                "end": 239.54,
+                "text": "那像门店地租成本"
+            },
+            {
+                "segment_id": "seg_000199",
+                "index": 199,
+                "start": 239.54,
+                "end": 240.14,
+                "text": "都在那摆着"
+            },
+            {
+                "segment_id": "seg_000200",
+                "index": 200,
+                "start": 240.14,
+                "end": 241.2,
+                "text": "而且药店里的员工"
+            },
+            {
+                "segment_id": "seg_000201",
+                "index": 201,
+                "start": 241.2,
+                "end": 242.2,
+                "text": "它也不是一般的员工"
+            },
+            {
+                "segment_id": "seg_000202",
+                "index": 202,
+                "start": 242.2,
+                "end": 243.0,
+                "text": "你是不是经常看"
+            },
+            {
+                "segment_id": "seg_000203",
+                "index": 203,
+                "start": 243.0,
+                "end": 244.2,
+                "text": "药店一个穿白大褂的"
+            },
+            {
+                "segment_id": "seg_000204",
+                "index": 204,
+                "start": 244.2,
+                "end": 244.66,
+                "text": "跟着站着"
+            },
+            {
+                "segment_id": "seg_000205",
+                "index": 205,
+                "start": 244.66,
+                "end": 245.26,
+                "text": "一般情况下"
+            },
+            {
+                "segment_id": "seg_000206",
+                "index": 206,
+                "start": 245.26,
+                "end": 246.54,
+                "text": "它都是专门的药剂师"
+            },
+            {
+                "segment_id": "seg_000207",
+                "index": 207,
+                "start": 246.54,
+                "end": 247.7,
+                "text": "你只有配了药剂师"
+            },
+            {
+                "segment_id": "seg_000208",
+                "index": 208,
+                "start": 247.7,
+                "end": 249.16,
+                "text": "这个药店才能卖处方药"
+            },
+            {
+                "segment_id": "seg_000209",
+                "index": 209,
+                "start": 249.16,
+                "end": 249.94,
+                "text": "那他们的工资"
+            },
+            {
+                "segment_id": "seg_000210",
+                "index": 210,
+                "start": 249.94,
+                "end": 251.04,
+                "text": "肯定比雇个普通店员"
+            },
+            {
+                "segment_id": "seg_000211",
+                "index": 211,
+                "start": 251.04,
+                "end": 251.5,
+                "text": "高得多"
+            },
+            {
+                "segment_id": "seg_000212",
+                "index": 212,
+                "start": 251.5,
+                "end": 252.74,
+                "text": "所以这些便利的属性"
+            },
+            {
+                "segment_id": "seg_000213",
+                "index": 213,
+                "start": 252.74,
+                "end": 253.42,
+                "text": "就决定了"
+            },
+            {
+                "segment_id": "seg_000214",
+                "index": 214,
+                "start": 253.42,
+                "end": 254.04,
+                "text": "药店的药"
+            },
+            {
+                "segment_id": "seg_000215",
+                "index": 215,
+                "start": 254.04,
+                "end": 255.22,
+                "text": "会有一定程度的溢价"
+            },
+            {
+                "segment_id": "seg_000216",
+                "index": 216,
+                "start": 255.22,
+                "end": 257.18,
+                "text": "不过对于咱们消费者来说"
+            },
+            {
+                "segment_id": "seg_000217",
+                "index": 217,
+                "start": 257.18,
+                "end": 257.82,
+                "text": "好消息是"
+            },
+            {
+                "segment_id": "seg_000218",
+                "index": 218,
+                "start": 257.82,
+                "end": 258.36,
+                "text": "这些药店"
+            },
+            {
+                "segment_id": "seg_000219",
+                "index": 219,
+                "start": 258.36,
+                "end": 259.6,
+                "text": "现在也不敢漫天定价"
+            },
+            {
+                "segment_id": "seg_000220",
+                "index": 220,
+                "start": 259.6,
+                "end": 260.66,
+                "text": "你看现在很多药店"
+            },
+            {
+                "segment_id": "seg_000221",
+                "index": 221,
+                "start": 260.66,
+                "end": 262.52,
+                "text": "尤其是那种大型连锁药店"
+            },
+            {
+                "segment_id": "seg_000222",
+                "index": 222,
+                "start": 262.52,
+                "end": 264.12,
+                "text": "基本上都是医保定点"
+            },
+            {
+                "segment_id": "seg_000223",
+                "index": 223,
+                "start": 264.12,
+                "end": 264.9,
+                "text": "很多药在这"
+            },
+            {
+                "segment_id": "seg_000224",
+                "index": 224,
+                "start": 264.9,
+                "end": 265.88,
+                "text": "你可以直接刷医保"
+            },
+            {
+                "segment_id": "seg_000225",
+                "index": 225,
+                "start": 265.88,
+                "end": 267.0,
+                "text": "就得接受监管"
+            },
+            {
+                "segment_id": "seg_000226",
+                "index": 226,
+                "start": 267.0,
+                "end": 267.84,
+                "text": "药价也得上报"
+            },
+            {
+                "segment_id": "seg_000227",
+                "index": 227,
+                "start": 267.84,
+                "end": 268.28,
+                "text": "对吧"
+            },
+            {
+                "segment_id": "seg_000228",
+                "index": 228,
+                "start": 268.28,
+                "end": 269.62,
+                "text": "药店也不敢随便定价"
+            },
+            {
+                "segment_id": "seg_000229",
+                "index": 229,
+                "start": 269.62,
+                "end": 270.96,
+                "text": "而现在呢"
+            },
+            {
+                "segment_id": "seg_000230",
+                "index": 230,
+                "start": 270.96,
+                "end": 271.98,
+                "text": "随着像京东秒送"
+            },
+            {
+                "segment_id": "seg_000231",
+                "index": 231,
+                "start": 271.98,
+                "end": 272.82,
+                "text": "淘宝美团闪购"
+            },
+            {
+                "segment_id": "seg_000232",
+                "index": 232,
+                "start": 272.82,
+                "end": 274.15999999999997,
+                "text": "这种外卖的铺开"
+            },
+            {
+                "segment_id": "seg_000233",
+                "index": 233,
+                "start": 274.15999999999997,
+                "end": 275.62,
+                "text": "药店能提供便利的范围"
+            },
+            {
+                "segment_id": "seg_000234",
+                "index": 234,
+                "start": 275.62,
+                "end": 276.28,
+                "text": "也从原来"
+            },
+            {
+                "segment_id": "seg_000235",
+                "index": 235,
+                "start": 276.28,
+                "end": 277.68,
+                "text": "方圆几百米的一个小区"
+            },
+            {
+                "segment_id": "seg_000236",
+                "index": 236,
+                "start": 277.68,
+                "end": 278.9,
+                "text": "到现在三五公里以内"
+            },
+            {
+                "segment_id": "seg_000237",
+                "index": 237,
+                "start": 278.9,
+                "end": 279.44,
+                "text": "都能覆盖"
+            },
+            {
+                "segment_id": "seg_000238",
+                "index": 238,
+                "start": 279.44,
+                "end": 280.7,
+                "text": "你看这种外卖模式"
+            },
+            {
+                "segment_id": "seg_000239",
+                "index": 239,
+                "start": 280.7,
+                "end": 281.38,
+                "text": "它本质上"
+            },
+            {
+                "segment_id": "seg_000240",
+                "index": 240,
+                "start": 281.38,
+                "end": 282.82,
+                "text": "其实还是药店的延伸"
+            },
+            {
+                "segment_id": "seg_000241",
+                "index": 241,
+                "start": 282.82,
+                "end": 284.14,
+                "text": "有的时候这平台一补贴吧"
+            },
+            {
+                "segment_id": "seg_000242",
+                "index": 242,
+                "start": 284.14,
+                "end": 285.2,
+                "text": "你就算加上外送费"
+            },
+            {
+                "segment_id": "seg_000243",
+                "index": 243,
+                "start": 285.2,
+                "end": 286.78,
+                "text": "可能比直接去药店里买还便宜"
+            },
+            {
+                "segment_id": "seg_000244",
+                "index": 244,
+                "start": 286.78,
+                "end": 288.2,
+                "text": "而且线上它还好比价嘛"
+            },
+            {
+                "segment_id": "seg_000245",
+                "index": 245,
+                "start": 288.2,
+                "end": 289.21999999999997,
+                "text": "所以这种外卖模式"
+            },
+            {
+                "segment_id": "seg_000246",
+                "index": 246,
+                "start": 289.21999999999997,
+                "end": 290.8,
+                "text": "一定程度上也加速了"
+            },
+            {
+                "segment_id": "seg_000247",
+                "index": 247,
+                "start": 290.8,
+                "end": 292.52,
+                "text": "药店药价的竞争和市场化"
+            },
+            {
+                "segment_id": "seg_000248",
+                "index": 248,
+                "start": 292.52,
+                "end": 293.34,
+                "text": "而且你知道吗"
+            },
+            {
+                "segment_id": "seg_000249",
+                "index": 249,
+                "start": 293.34,
+                "end": 294.94,
+                "text": "最近还出了一些官方的"
+            },
+            {
+                "segment_id": "seg_000250",
+                "index": 250,
+                "start": 294.94,
+                "end": 296.38,
+                "text": "药店比价小程序"
+            },
+            {
+                "segment_id": "seg_000251",
+                "index": 251,
+                "start": 296.38,
+                "end": 297.56,
+                "text": "各省的我就放在这儿了"
+            },
+            {
+                "segment_id": "seg_000252",
+                "index": 252,
+                "start": 297.56,
+                "end": 298.65999999999997,
+                "text": "大家有需要可以自取"
+            },
+            {
+                "segment_id": "seg_000253",
+                "index": 253,
+                "start": 298.65999999999997,
+                "end": 300.0,
+                "text": "这个其实也对药店的药价"
+            },
+            {
+                "segment_id": "seg_000254",
+                "index": 254,
+                "start": 300.0,
+                "end": 300.68,
+                "text": "有了一个约束"
+            },
+            {
+                "segment_id": "seg_000255",
+                "index": 255,
+                "start": 300.68,
+                "end": 301.0,
+                "text": "对吧"
+            },
+            {
+                "segment_id": "seg_000256",
+                "index": 256,
+                "start": 301.0,
+                "end": 302.78,
+                "text": "让市场这个无形的手来管一个"
+            },
+            {
+                "segment_id": "seg_000257",
+                "index": 257,
+                "start": 302.78,
+                "end": 305.84,
+                "text": "而市场化更充分的"
+            },
+            {
+                "segment_id": "seg_000258",
+                "index": 258,
+                "start": 305.84,
+                "end": 306.76,
+                "text": "就是这个互联网"
+            },
+            {
+                "segment_id": "seg_000259",
+                "index": 259,
+                "start": 306.76,
+                "end": 307.12,
+                "text": "电商"
+            },
+            {
+                "segment_id": "seg_000260",
+                "index": 260,
+                "start": 307.12,
+                "end": 309.2,
+                "text": "其实从便利店到电商这个逻辑"
+            },
+            {
+                "segment_id": "seg_000261",
+                "index": 261,
+                "start": 309.2,
+                "end": 310.22,
+                "text": "大家应该都很好理解"
+            },
+            {
+                "segment_id": "seg_000262",
+                "index": 262,
+                "start": 310.22,
+                "end": 311.1,
+                "text": "从2015年"
+            },
+            {
+                "segment_id": "seg_000263",
+                "index": 263,
+                "start": 311.1,
+                "end": 312.14,
+                "text": "国家逐步放开了"
+            },
+            {
+                "segment_id": "seg_000264",
+                "index": 264,
+                "start": 312.14,
+                "end": 313.92,
+                "text": "对医药电商领域的管制之后呢"
+            },
+            {
+                "segment_id": "seg_000265",
+                "index": 265,
+                "start": 313.92,
+                "end": 315.44,
+                "text": "像比如说京东大药房"
+            },
+            {
+                "segment_id": "seg_000266",
+                "index": 266,
+                "start": 315.44,
+                "end": 317.02,
+                "text": "这种电商买药的形态"
+            },
+            {
+                "segment_id": "seg_000267",
+                "index": 267,
+                "start": 317.02,
+                "end": 317.94,
+                "text": "就应运而生了"
+            },
+            {
+                "segment_id": "seg_000268",
+                "index": 268,
+                "start": 317.94,
+                "end": 319.1,
+                "text": "其实就相当于京东"
+            },
+            {
+                "segment_id": "seg_000269",
+                "index": 269,
+                "start": 319.1,
+                "end": 320.72,
+                "text": "它在网上开了个药房"
+            },
+            {
+                "segment_id": "seg_000270",
+                "index": 270,
+                "start": 320.72,
+                "end": 322.32,
+                "text": "你看电商相比于便利店"
+            },
+            {
+                "segment_id": "seg_000271",
+                "index": 271,
+                "start": 322.32,
+                "end": 323.34,
+                "text": "它不需要线下的门店"
+            },
+            {
+                "segment_id": "seg_000272",
+                "index": 272,
+                "start": 323.34,
+                "end": 324.96,
+                "text": "就降低了电租人员的成本"
+            },
+            {
+                "segment_id": "seg_000273",
+                "index": 273,
+                "start": 324.96,
+                "end": 326.32,
+                "text": "同时覆盖面也更大"
+            },
+            {
+                "segment_id": "seg_000274",
+                "index": 274,
+                "start": 326.32,
+                "end": 328.04,
+                "text": "可以把不同地区的需求给整合起来"
+            },
+            {
+                "segment_id": "seg_000275",
+                "index": 275,
+                "start": 328.04,
+                "end": 328.86,
+                "text": "要有规模效应"
+            },
+            {
+                "segment_id": "seg_000276",
+                "index": 276,
+                "start": 328.86,
+                "end": 329.96,
+                "text": "也有更强的溢价权"
+            },
+            {
+                "segment_id": "seg_000277",
+                "index": 277,
+                "start": 329.96,
+                "end": 330.52,
+                "text": "同时呢"
+            },
+            {
+                "segment_id": "seg_000278",
+                "index": 278,
+                "start": 330.52,
+                "end": 331.66,
+                "text": "这个电商相对于药店"
+            },
+            {
+                "segment_id": "seg_000279",
+                "index": 279,
+                "start": 331.66,
+                "end": 333.8,
+                "text": "还少了实体货架空间的限制"
+            },
+            {
+                "segment_id": "seg_000280",
+                "index": 280,
+                "start": 333.8,
+                "end": 334.68,
+                "text": "品种就可以更多"
+            },
+            {
+                "segment_id": "seg_000281",
+                "index": 281,
+                "start": 334.68,
+                "end": 335.92,
+                "text": "市场竞争也可以更充分"
+            },
+            {
+                "segment_id": "seg_000282",
+                "index": 282,
+                "start": 335.92,
+                "end": 336.42,
+                "text": "这些呢"
+            },
+            {
+                "segment_id": "seg_000283",
+                "index": 283,
+                "start": 336.42,
+                "end": 338.18,
+                "text": "都让电商平台的药价更有性价比"
+            },
+            {
+                "segment_id": "seg_000284",
+                "index": 284,
+                "start": 338.18,
+                "end": 339.6,
+                "text": "所以他们主要针对的呢"
+            },
+            {
+                "segment_id": "seg_000285",
+                "index": 285,
+                "start": 339.6,
+                "end": 341.18,
+                "text": "就是一些家庭常备的"
+            },
+            {
+                "segment_id": "seg_000286",
+                "index": 286,
+                "start": 341.18,
+                "end": 342.48,
+                "text": "不一定那么急的需求"
+            },
+            {
+                "segment_id": "seg_000287",
+                "index": 287,
+                "start": 342.48,
+                "end": 343.65999999999997,
+                "text": "还有一些慢病药"
+            },
+            {
+                "segment_id": "seg_000288",
+                "index": 288,
+                "start": 343.65999999999997,
+                "end": 345.06,
+                "text": "大家主要在网上买什么药呢"
+            },
+            {
+                "segment_id": "seg_000289",
+                "index": 289,
+                "start": 345.06,
+                "end": 346.78,
+                "text": "最近京东健康推出了一个"
+            },
+            {
+                "segment_id": "seg_000290",
+                "index": 290,
+                "start": 346.78,
+                "end": 348.48,
+                "text": "2025健康年度好物宝"
+            },
+            {
+                "segment_id": "seg_000291",
+                "index": 291,
+                "start": 348.48,
+                "end": 350.4,
+                "text": "是根据平台的销售数据测算出来的"
+            },
+            {
+                "segment_id": "seg_000292",
+                "index": 292,
+                "start": 350.4,
+                "end": 351.6,
+                "text": "比如你看常用的感冒药"
+            },
+            {
+                "segment_id": "seg_000293",
+                "index": 293,
+                "start": 351.6,
+                "end": 352.46,
+                "text": "有奥斯塔维"
+            },
+            {
+                "segment_id": "seg_000294",
+                "index": 294,
+                "start": 352.46,
+                "end": 353.72,
+                "text": "苏夫达的马巴洛沙维"
+            },
+            {
+                "segment_id": "seg_000295",
+                "index": 295,
+                "start": 353.72,
+                "end": 354.52,
+                "text": "还有露迪盐液"
+            },
+            {
+                "segment_id": "seg_000296",
+                "index": 296,
+                "start": 354.52,
+                "end": 355.14,
+                "text": "维生素等等"
+            },
+            {
+                "segment_id": "seg_000297",
+                "index": 297,
+                "start": 355.14,
+                "end": 356.18,
+                "text": "还有运动防护"
+            },
+            {
+                "segment_id": "seg_000298",
+                "index": 298,
+                "start": 356.18,
+                "end": 357.1,
+                "text": "科技适老等等"
+            },
+            {
+                "segment_id": "seg_000299",
+                "index": 299,
+                "start": 357.1,
+                "end": 358.36,
+                "text": "10个健康趋势榜单"
+            },
+            {
+                "segment_id": "seg_000300",
+                "index": 300,
+                "start": 358.36,
+                "end": 360.34,
+                "text": "能看出来大家现在从被动治疗"
+            },
+            {
+                "segment_id": "seg_000301",
+                "index": 301,
+                "start": 360.34,
+                "end": 361.5,
+                "text": "开始主动健康"
+            },
+            {
+                "segment_id": "seg_000302",
+                "index": 302,
+                "start": 361.5,
+                "end": 363.84,
+                "text": "现在到12月31号"
+            },
+            {
+                "segment_id": "seg_000303",
+                "index": 303,
+                "start": 363.84,
+                "end": 365.32,
+                "text": "京东搜健康免单"
+            },
+            {
+                "segment_id": "seg_000304",
+                "index": 304,
+                "start": 365.32,
+                "end": 366.46,
+                "text": "可以跟榜选好物"
+            },
+            {
+                "segment_id": "seg_000305",
+                "index": 305,
+                "start": 366.46,
+                "end": 367.98,
+                "text": "平台还有千元健康补贴"
+            },
+            {
+                "segment_id": "seg_000306",
+                "index": 306,
+                "start": 367.98,
+                "end": 369.58,
+                "text": "甚至有机会抽全额免单"
+            },
+            {
+                "segment_id": "seg_000307",
+                "index": 307,
+                "start": 369.58,
+                "end": 371.46,
+                "text": "京东这个榜单可以帮大家筛选"
+            },
+            {
+                "segment_id": "seg_000308",
+                "index": 308,
+                "start": 371.46,
+                "end": 373.15999999999997,
+                "text": "加上它供应链物流的优势"
+            },
+            {
+                "segment_id": "seg_000309",
+                "index": 309,
+                "start": 373.15999999999997,
+                "end": 374.38,
+                "text": "一线城市半小时送达"
+            },
+            {
+                "segment_id": "seg_000310",
+                "index": 310,
+                "start": 374.38,
+                "end": 376.5,
+                "text": "三四线城市也可以当天或者次日打"
+            },
+            {
+                "segment_id": "seg_000311",
+                "index": 311,
+                "start": 376.5,
+                "end": 377.86,
+                "text": "另外平台上还打通了"
+            },
+            {
+                "segment_id": "seg_000312",
+                "index": 312,
+                "start": 377.86,
+                "end": 379.74,
+                "text": "医 减 诊 药的全流程"
+            },
+            {
+                "segment_id": "seg_000313",
+                "index": 313,
+                "start": 379.74,
+                "end": 382.06,
+                "text": "方便可以一条龙处理日常的小病小痛"
+            },
+            {
+                "segment_id": "seg_000314",
+                "index": 314,
+                "start": 382.06,
+                "end": 383.96,
+                "text": "去年还上线了医保支付的功能"
+            },
+            {
+                "segment_id": "seg_000315",
+                "index": 315,
+                "start": 383.96,
+                "end": 385.9,
+                "text": "覆盖北上广深等核心城市"
+            },
+            {
+                "segment_id": "seg_000316",
+                "index": 316,
+                "start": 385.9,
+                "end": 387.58,
+                "text": "全品类家庭常备用药都可以用"
+            },
+            {
+                "segment_id": "seg_000317",
+                "index": 317,
+                "start": 387.58,
+                "end": 389.74,
+                "text": "总之让大家健康管理更轻松"
+            },
+            {
+                "segment_id": "seg_000318",
+                "index": 318,
+                "start": 389.74,
+                "end": 391.1,
+                "text": "看病买药更便捷"
+            },
+            {
+                "segment_id": "seg_000319",
+                "index": 319,
+                "start": 391.1,
+                "end": 392.8,
+                "text": "更舒心地迎接2026"
+            },
+            {
+                "segment_id": "seg_000320",
+                "index": 320,
+                "start": 392.8,
+                "end": 395.65999999999997,
+                "text": "好 这个就是医院"
+            },
+            {
+                "segment_id": "seg_000321",
+                "index": 321,
+                "start": 395.65999999999997,
+                "end": 396.96,
+                "text": "药店 电商"
+            },
+            {
+                "segment_id": "seg_000322",
+                "index": 322,
+                "start": 396.96,
+                "end": 398.4,
+                "text": "三种不同渠道的逻辑"
+            },
+            {
+                "segment_id": "seg_000323",
+                "index": 323,
+                "start": 398.4,
+                "end": 401.6,
+                "text": "其实也构成了中国特色的三轨并行结构"
+            },
+            {
+                "segment_id": "seg_000324",
+                "index": 324,
+                "start": 401.6,
+                "end": 403.46,
+                "text": "公立医院是行政定家的体系"
+            },
+            {
+                "segment_id": "seg_000325",
+                "index": 325,
+                "start": 403.46,
+                "end": 405.41999999999996,
+                "text": "药店是零售服务的逻辑"
+            },
+            {
+                "segment_id": "seg_000326",
+                "index": 326,
+                "start": 405.41999999999996,
+                "end": 407.28,
+                "text": "而互联网就是更市场化的竞争"
+            },
+            {
+                "segment_id": "seg_000327",
+                "index": 327,
+                "start": 407.28,
+                "end": 408.64,
+                "text": "他们之间这个定价逻辑吧"
+            },
+            {
+                "segment_id": "seg_000328",
+                "index": 328,
+                "start": 408.64,
+                "end": 411.03999999999996,
+                "text": "其实有点类似于批发和传统零售"
+            },
+            {
+                "segment_id": "seg_000329",
+                "index": 329,
+                "start": 411.03999999999996,
+                "end": 411.96,
+                "text": "和电商网购"
+            },
+            {
+                "segment_id": "seg_000330",
+                "index": 330,
+                "start": 411.96,
+                "end": 414.14,
+                "text": "他们也在医药体系里扮演着不同的角色"
+            },
+            {
+                "segment_id": "seg_000331",
+                "index": 331,
+                "start": 414.14,
+                "end": 416.41999999999996,
+                "text": "相对来说医院就针对大病当取"
+            },
+            {
+                "segment_id": "seg_000332",
+                "index": 332,
+                "start": 416.41999999999996,
+                "end": 417.8,
+                "text": "药店是小病急取"
+            },
+            {
+                "segment_id": "seg_000333",
+                "index": 333,
+                "start": 417.8,
+                "end": 419.84,
+                "text": "互联网则是高性价比的常备药"
+            },
+            {
+                "segment_id": "seg_000334",
+                "index": 334,
+                "start": 420.84,
+                "end": 422.36,
+                "text": "之前医院买药是主力"
+            },
+            {
+                "segment_id": "seg_000335",
+                "index": 335,
+                "start": 422.36,
+                "end": 423.82,
+                "text": "现在随着互联网 药店"
+            },
+            {
+                "segment_id": "seg_000336",
+                "index": 336,
+                "start": 423.82,
+                "end": 424.7,
+                "text": "覆盖面越来越过"
+            },
+            {
+                "segment_id": "seg_000337",
+                "index": 337,
+                "start": 424.7,
+                "end": 425.78,
+                "text": "服务越来越全面"
+            },
+            {
+                "segment_id": "seg_000338",
+                "index": 338,
+                "start": 425.78,
+                "end": 428.03999999999996,
+                "text": "也开始逐渐分担一部分厨房的外流"
+            },
+            {
+                "segment_id": "seg_000339",
+                "index": 339,
+                "start": 428.03999999999996,
+                "end": 429.12,
+                "text": "不过不管是哪个渠道"
+            },
+            {
+                "segment_id": "seg_000340",
+                "index": 340,
+                "start": 429.12,
+                "end": 430.03999999999996,
+                "text": "你看这个药"
+            },
+            {
+                "segment_id": "seg_000341",
+                "index": 341,
+                "start": 430.03999999999996,
+                "end": 432.03999999999996,
+                "text": "它作为一个专业性极高的民生需求"
+            },
+            {
+                "segment_id": "seg_000342",
+                "index": 342,
+                "start": 432.03999999999996,
+                "end": 433.28,
+                "text": "监管的导向肯定是"
+            },
+            {
+                "segment_id": "seg_000343",
+                "index": 343,
+                "start": 433.28,
+                "end": 435.64,
+                "text": "更便捷 更透明 更安全"
+            },
+            {
+                "segment_id": "seg_000344",
+                "index": 344,
+                "start": 435.64,
+                "end": 437.4,
+                "text": "咱们也再次感谢京东健康"
+            },
+            {
+                "segment_id": "seg_000345",
+                "index": 345,
+                "start": 437.4,
+                "end": 438.68,
+                "text": "对本期视频内容的支持"
+            },
+            {
+                "segment_id": "seg_000346",
+                "index": 346,
+                "start": 438.68,
+                "end": 440.34000000000003,
+                "text": "每个月18号好药会员日"
+            },
+            {
+                "segment_id": "seg_000347",
+                "index": 347,
+                "start": 440.34000000000003,
+                "end": 441.79999999999995,
+                "text": "开卡有礼 毫无无辙"
+            },
+            {
+                "segment_id": "seg_000348",
+                "index": 348,
+                "start": 441.79999999999995,
+                "end": 444.06,
+                "text": "京东健康让你2026更好一点"
+            },
+            {
+                "segment_id": "seg_000349",
+                "index": 349,
+                "start": 444.06,
+                "end": 446.0,
+                "text": "小林也祝你2026更好一点"
+            }
+        ],
+        "srt_path": "temp/86af46e6-7f80-4ba4-9394-284f94823c24/transcript.srt",
+        "vtt_path": "temp/86af46e6-7f80-4ba4-9394-284f94823c24/transcript.vtt"
+    },
+    "summary": {
+        "overall": "The video analyzes the reasons behind significant price differences for medicines across three main channels in China: hospitals, physical pharmacies, and e-commerce platforms. It explains that these disparities stem from distinct business models and pricing logics. Hospitals follow administrative pricing with zero markups for serious treatments; physical pharmacies charge premiums to cover rent and labor while providing immediate convenience for urgent needs; and e-commerce platforms leverage low operational costs and scale to offer the most competitive prices for non-urgent, family stocking purposes.",
+        "by_slice": [
+            {
+                "slice_id": 0,
+                "start": 0,
+                "end": 300,
+                "summary": "This section introduces the phenomenon of varying drug prices and analyzes the market structure, noting that hospitals dominate prescription sales while pharmacies and online platforms lead in OTC drugs. It details the pricing logic of hospitals, which rely on government-negotiated insurance prices and zero markups, and physical pharmacies, which operate like convenience stores with higher prices driven by rent and labor costs to serve urgent medical needs."
+            },
+            {
+                "slice_id": 1,
+                "start": 300,
+                "end": 600,
+                "summary": "The video discusses the third channel, internet e-commerce, highlighting its advantages in cost efficiency, variety, and suitability for stocking chronic or common medicines. It concludes by summarizing China's 'three-track' pharmaceutical system, defining the distinct roles of hospitals for serious illnesses, pharmacies for immediate minor ailments, and online platforms for cost-effective, routine health management."
+            }
+        ]
+    },
+    "keywords": {
+        "items": [
+            {
+                "keyword_id": 1,
+                "term": "医药分离",
+                "definition": "A healthcare policy concept separating medical diagnosis/treatment from the sale of pharmaceuticals to prevent over-prescription and conflicts of interest.",
+                "mentions": [
+                    {
+                        "segment_id": "seg_000132"
+                    },
+                    {
+                        "segment_id": "seg_000138"
+                    },
+                    {
+                        "segment_id": "seg_000142"
+                    },
+                    {
+                        "segment_id": "seg_000148"
+                    }
+                ],
+                "links": [
+                    {
+                        "title": "Separation of Prescribing and Dispensing",
+                        "url": "https://en.wikipedia.org/wiki/Separation_of_prescribing_and_dispensing",
+                        "source": "llm"
+                    }
+                ]
+            },
+            {
+                "keyword_id": 2,
+                "term": "马巴洛沙维",
+                "definition": "Baloxavir marboxil; an antiviral medication for the treatment of influenza A and B, often cited as a newer alternative to Oseltamivir.",
+                "mentions": [
+                    {
+                        "segment_id": "seg_000294"
+                    }
+                ],
+                "links": [
+                    {
+                        "title": "Baloxavir marboxil (Wikipedia)",
+                        "url": "https://en.wikipedia.org/wiki/Baloxavir_marboxil",
+                        "source": "llm"
+                    }
+                ]
+            },
+            {
+                "keyword_id": 3,
+                "term": "三轨并行",
+                "definition": "A structural description of the Chinese pharmaceutical market where three distinct pricing logics coexist: administrative (hospitals), retail service (pharmacies), and market competition (e-commerce).",
+                "mentions": [
+                    {
+                        "segment_id": "seg_000323"
+                    }
+                ],
+                "links": []
+            }
+        ]
+    },
+    "error": null
+}

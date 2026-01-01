@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
-import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import { useState, useRef, useEffect, useMemo } from 'react';
+import * as Popover from '@radix-ui/react-popover';
+import { Paperclip, Loader2 } from 'lucide-react';
+import { toast, Toaster } from 'sonner';
 import svgPaths from "./imports/svg-svp3s9ofq0";
 import imgImage13 from "figma:asset/1b939f420685ed9c8938abc89cf30951f9bcaf97.png";
 import imgRectangle34 from "figma:asset/caa09756c2c0383d70e8b4aaf1f8867fbac59966.png";
@@ -12,13 +14,24 @@ import imgRectangle40 from "figma:asset/7e2d0ad511bfb28d652cdc6178082141ac38f2ec
 import imgRectangle41 from "figma:asset/d8171626aea5f73ce218807f19b43ec6e8695d44.png";
 import imgRectangle43 from "figma:asset/ff402fbd8f833c106d51bdead08f65a61bb7ea50.png";
 import imgRectangle44 from "figma:asset/f37d5db6325420610e361115e5f6859812b1ee5d.png";
-import { UploadPopover } from './components/UploadPopover';
-import { AIAnalyzingIndicator, AIAnalysisCompleted, AIAnalysisFailed } from './components/AIAnalyzingIndicator';
-import { useVideoStore } from './store/useVideoStore';
-import { apiService } from './services/api';
-import { sseManager, cleanupSSE } from './services/sse';
-import type { AnalysisMode, VideoStyle, VideoTask } from './types';
+import imgMp4 from "figma:asset/f37d5db6325420610e361115e5f6859812b1ee5d.png";
+import { ExpandedPanel } from './components/ExpandedPanel';
+import { KnowledgeCard } from './components/KnowledgeCard';
+import { VideoNotes } from './components/VideoNotes';
+import {
+  knowledgeCards,
+  videoSegments,
+  findActiveKnowledgeCard,
+  findActiveSegment,
+  type KnowledgeCardData
+} from './data/videoTimelineData';
+import type { TaskResult } from './types/task';
+import { API_ENDPOINTS, STAGE_MESSAGES } from './config/api';
+import { mapTaskResult } from './utils/taskMapper';
+import { getActiveDemo, FAST_TRACK_CONFIG, matchDemoByFilename } from './config/demoRegistry';
+import { loadDistributedData } from './utils/dataLoader';
 
+type PageType = 'welcome' | 'home' | 'library' | 'me' | 'detail';
 type VideoSection = 'reading' | 'later' | 'recent';
 
 const videoData = [
@@ -30,30 +43,62 @@ const videoData = [
   { id: 6, title: "一口气了解2025年全球经济 | 关税新格局", image: imgRectangle39, progress: 0, section: 'later' },
 ];
 
+/**
+ * 从文件名提取视频标题（去掉扩展名）
+ */
+const getVideoTitle = (filename: string): string => {
+  return filename.replace(/\.[^/.]+$/, '');
+};
+
 export default function App() {
-  // 组件卸载时清理所有 SSE 连接
-  useEffect(() => {
-    return () => {
-      cleanupSSE();
-    };
-  }, []);
+  const [currentPage, setCurrentPage] = useState<PageType>('welcome');
+  const [selectedVideo, setSelectedVideo] = useState<number | null>(null);
+  const [uploadedTaskResult, setUploadedTaskResult] = useState<TaskResult | null>(null);
+
+  const handleStart = () => {
+    setCurrentPage('home');
+  };
+
+  const handleNavigation = (page: PageType) => {
+    setCurrentPage(page);
+    setSelectedVideo(null);
+    setUploadedTaskResult(null);
+  };
+
+  const handleVideoClick = (videoId: number) => {
+    setSelectedVideo(videoId);
+    setUploadedTaskResult(null);
+    setCurrentPage('detail');
+  };
+
+  const handleUploadComplete = (taskResult: TaskResult) => {
+    setUploadedTaskResult(taskResult);
+    setSelectedVideo(null);
+    setCurrentPage('detail');
+  };
 
   return (
-    <div className="w-screen h-screen overflow-hidden bg-[#f9f9f9]">
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/library" element={<LibraryPage />} />
-        <Route path="/me" element={<MePage />} />
-        <Route path="/video/:id" element={<VideoPlayerPage />} />
-      </Routes>
+    <div className="w-screen h-screen overflow-hidden bg-white">
+      <div className="max-w-[1280px] h-full mx-auto bg-[#f9f9f9] relative">
+        {currentPage === 'welcome' && <WelcomePage onStart={handleStart} />}
+        {currentPage === 'home' && <HomePage onNavigate={handleNavigation} onVideoClick={handleVideoClick} onUploadComplete={handleUploadComplete} />}
+        {currentPage === 'library' && <LibraryPage onNavigate={handleNavigation} onVideoClick={handleVideoClick} onUploadComplete={handleUploadComplete} />}
+        {currentPage === 'me' && <MePage onNavigate={handleNavigation} />}
+        {currentPage === 'detail' && (selectedVideo || uploadedTaskResult) && (
+          <DetailPage
+            onNavigate={handleNavigation}
+            videoId={selectedVideo}
+            taskResult={uploadedTaskResult}
+            onUploadComplete={handleUploadComplete}
+          />
+        )}
+      </div>
+      <Toaster position="top-center" richColors />
     </div>
   );
 }
 
-function WelcomePage() {
-  const navigate = useNavigate();
-
+function WelcomePage({ onStart }: { onStart: () => void }) {
   return (
     <div className="relative w-full h-full bg-white overflow-clip">
       <div className="absolute left-1/2 size-[1240px] top-[-233px] translate-x-[-50%]">
@@ -76,8 +121,8 @@ function WelcomePage() {
         </div>
       </div>
       <p className="absolute font-['Avenir:Light',sans-serif] leading-[normal] left-1/2 not-italic text-[24px] text-nowrap text-white top-[372px] -translate-x-1/2">See More. Know More. Be More.</p>
-      <button
-        onClick={() => navigate('/home')}
+      <button 
+        onClick={onStart}
         className="absolute bg-white h-[60px] left-1/2 rounded-[26.5px] top-[calc(50%+76px)] translate-x-[-50%] translate-y-[-50%] w-[133px] cursor-pointer hover:scale-105 transition-transform"
       >
         <p className="font-['Helvetica:Bold',sans-serif] leading-[normal] text-[#e0130b] text-[28px] text-center">Start</p>
@@ -87,34 +132,19 @@ function WelcomePage() {
   );
 }
 
-function HomePage() {
-  const navigate = useNavigate();
-  // 从 Zustand Store 读取视频列表
-  const videoTasks = useVideoStore((state) => state.videoTasks);
-
-  // 如果没有上传的视频，使用 mock 数据
-  const displayVideos = videoTasks.length > 0
-    ? videoTasks.map(task => ({
-        id: parseInt(task.id.replace('task_', '')),
-        title: task.title,
-        image: task.thumbnail || imgRectangle34, // TODO: 生成缩略图
-        progress: task.playProgress,
-        section: task.section,
-      }))
-    : videoData;
-
-  const handleVideoClick = (videoId: number) => {
-    navigate(`/video/${videoId}`);
-  };
-
+function HomePage({ onNavigate, onVideoClick, onUploadComplete }: {
+  onNavigate: (page: PageType) => void,
+  onVideoClick: (id: number) => void,
+  onUploadComplete: (taskResult: TaskResult) => void
+}) {
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
-      <Sidebar currentPage="home" />
-      <SearchBar />
+      <Sidebar currentPage="home" onNavigate={onNavigate} />
+      <SearchBar onUploadComplete={onUploadComplete} />
       <div className="absolute content-stretch flex flex-col gap-[12px] items-start left-[calc(16.67%+19.67px)] top-[126px] w-[603px]">
-        <VideoSection title="Reading" videos={displayVideos.filter(v => v.section === 'reading')} onVideoClick={handleVideoClick} />
-        <VideoSection title="Later" videos={displayVideos.filter(v => v.section === 'later')} onVideoClick={handleVideoClick} />
-        <RecentSection onVideoClick={handleVideoClick} />
+        <VideoSection title="Reading" videos={videoData.filter(v => v.section === 'reading')} onVideoClick={onVideoClick} />
+        <VideoSection title="Later" videos={videoData.filter(v => v.section === 'later')} onVideoClick={onVideoClick} />
+        <RecentSection onVideoClick={onVideoClick} />
       </div>
       <StatsPanel />
       <CalendarWidget />
@@ -122,29 +152,15 @@ function HomePage() {
   );
 }
 
-function LibraryPage() {
-  const navigate = useNavigate();
-  // 从 Zustand Store 读取视频列表（优先显示新上传的视频）
-  const videoTasks = useVideoStore((state) => state.videoTasks);
-
-  const displayVideos = videoTasks.length > 0
-    ? videoTasks.map(task => ({
-        id: parseInt(task.id.replace('task_', '')),
-        title: task.title,
-        image: task.thumbnail || imgRectangle34,
-        progress: task.playProgress,
-        section: task.section,
-      }))
-    : videoData;
-
-  const handleVideoClick = (videoId: number) => {
-    navigate(`/video/${videoId}`);
-  };
-
+function LibraryPage({ onNavigate, onVideoClick, onUploadComplete }: {
+  onNavigate: (page: PageType) => void,
+  onVideoClick: (id: number) => void,
+  onUploadComplete: (taskResult: TaskResult) => void
+}) {
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
-      <Sidebar currentPage="library" />
-      <SearchBar />
+      <Sidebar currentPage="library" onNavigate={onNavigate} />
+      <SearchBar onUploadComplete={onUploadComplete} />
       <div className="absolute left-[calc(16.67%+19.67px)] top-[144px]">
         <div className="flex gap-[38px] items-center mb-6">
           <TabButton icon={<BookIcon color="#E0130B" />} label="Reading" active={true} />
@@ -153,28 +169,27 @@ function LibraryPage() {
         </div>
       </div>
       <div className="absolute left-[calc(16.67%+19.67px)] top-[193px] w-[604px]">
-        {/* 显示前3个视频，新上传的在最前面 */}
-        {displayVideos.slice(0, 3).map((video, index) => (
-          <div
-            key={video.id}
+        {videoData.slice(0, 3).map((video, index) => (
+          <div 
+            key={video.id} 
             className="mb-4 cursor-pointer hover:scale-[1.02] transition-transform"
-            onClick={() => handleVideoClick(video.id)}
+            onClick={() => onVideoClick(video.id)}
           >
             <LibraryVideoCard video={video} />
           </div>
         ))}
       </div>
-
+      
       {/* Right Side Chat Panel */}
       <ChatPanel />
     </div>
   );
 }
 
-function MePage() {
+function MePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
-      <Sidebar currentPage="me" />
+      <Sidebar currentPage="me" onNavigate={onNavigate} />
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
         <div className="flex flex-col items-center gap-6">
           <div className="w-32 h-32 rounded-full bg-[#ef3e23] flex items-center justify-center">
@@ -190,152 +205,236 @@ function MePage() {
   );
 }
 
-function VideoPlayerPage() {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const videoId = parseInt(id || '0');
+function DetailPage({ onNavigate, videoId, taskResult, onUploadComplete }: {
+  onNavigate: (page: PageType) => void,
+  videoId: number | null,
+  taskResult: TaskResult | null,
+  onUploadComplete: (taskResult: TaskResult) => void
+}) {
+  const video = videoId ? videoData.find(v => v.id === videoId) : null;
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpertMode, setIsExpertMode] = useState(false); // false = simple, true = deep
+  const [isNotesExpanded, setIsNotesExpanded] = useState(false); // 控制视频笔记展开/收起
 
-  const videoTasks = useVideoStore((state) => state.videoTasks);
-  const currentVideo = useVideoStore((state) => state.currentVideo);
-  const setCurrentVideo = useVideoStore((state) => state.setCurrentVideo);
+  // 映射后端数据到前端格式
+  const mappedData = useMemo(() => {
+    if (taskResult) {
+      console.log('🔍 DetailPage received taskResult:', taskResult);
+      const mapped = mapTaskResult(taskResult);
+      console.log('✅ Mapped data:', mapped);
+      return mapped;
+    }
+    console.log('⚠️ No taskResult, using default data');
+    return null;
+  }, [taskResult]);
 
-  // 查找对应的视频任务
-  const taskId = `task_${videoId}`;
-  const videoTask = videoTasks.find(task => task.id === taskId);
+  // 根据数据源决定使用哪个数据
+  const displaySegments = mappedData?.videoSegments || videoSegments;
+  const displayKnowledgeCards = mappedData?.knowledgeCards || knowledgeCards;
+  const displayQuotes = mappedData?.quotes || [];
 
-  // 如果找不到 task，使用 mock 数据
-  const video = videoTask
-    ? {
-        id: videoId,
-        title: videoTask.title,
-        image: videoTask.thumbnail || imgRectangle34,
-        progress: videoTask.playProgress,
-        videoSrc: videoTask.videoSrc,
+  console.log('📊 displaySegments:', displaySegments);
+  console.log('💎 displayQuotes:', displayQuotes);
+
+  // 视频源优先级：taskResult.video_url > demoRegistry.videoPath
+  const activeDemo = getActiveDemo();
+  const videoSrc = taskResult?.video_url || activeDemo.videoPath;
+
+  // 视频相关状态
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [activeKnowledgeCard, setActiveKnowledgeCard] = useState<KnowledgeCardData | null>(null);
+  const [showKnowledgeCard, setShowKnowledgeCard] = useState(false);
+  const lastTriggeredCard = useRef<{ word: string; time: number } | null>(null);
+
+  // 查找当前时间激活的知识卡片
+  const findCurrentKnowledgeCard = (time: number): KnowledgeCardData | null => {
+    const card = displayKnowledgeCards.find(card => Math.abs(card.time - time) < 0.5);
+    if (card) {
+      console.log('🎯 Found knowledge card at time', time, ':', card.word);
+    }
+    return card || null;
+  };
+
+  // 监听视频播放时间
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    console.log('🎬 Video player initialized. Knowledge cards:', displayKnowledgeCards.length);
+    console.log('📍 Card trigger times:', displayKnowledgeCards.map(c => `${c.word}@${c.time}s`));
+
+    const handleTimeUpdate = () => {
+      const time = videoElement.currentTime;
+      setCurrentTime(time);
+
+      // 检查是否需要显示知识卡片
+      const card = findCurrentKnowledgeCard(time);
+
+      if (card) {
+        // 检查是否需要重新触发（避免在同一时间段内重复触发）
+        const shouldTrigger = !lastTriggeredCard.current ||
+                             lastTriggeredCard.current.word !== card.word ||
+                             Math.abs(lastTriggeredCard.current.time - time) > 2; // 2秒冷却时间
+
+        if (shouldTrigger) {
+          console.log('✨ Triggering knowledge card:', card.word, 'at', time);
+          setActiveKnowledgeCard(card);
+          setShowKnowledgeCard(true);
+          lastTriggeredCard.current = { word: card.word, time };
+
+          // 5秒后自动隐藏（防抖：解决段落太碎的问题）
+          setTimeout(() => {
+            setShowKnowledgeCard(false);
+          }, 5000);
+        }
+      } else {
+        // 离开所有卡片的触发区域，重置状态（允许重新触发）
+        if (lastTriggeredCard.current &&
+            !displayKnowledgeCards.some(c => Math.abs(c.time - time) < 2)) {
+          lastTriggeredCard.current = null;
+        }
       }
-    : videoData.find(v => v.id === videoId) || videoData[0];
+    };
 
-  // 设置当前视频（如果有 Blob URL 且不是当前正在播放的视频）
-  if (videoTask && videoTask.videoSrc && currentVideo?.blobUrl !== videoTask.videoSrc) {
-    setCurrentVideo({
-      blobUrl: videoTask.videoSrc,
-      metadata: {
-        title: videoTask.title,
-        duration: videoTask.endTime || 0,
-        thumbnail: videoTask.thumbnail,
-      },
-      currentTime: 0,
-      isPlaying: false,
-    });
-  }
+    videoElement.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, [activeKnowledgeCard, displayKnowledgeCards]);
+
+  // 视频跳转函数
+  const handleSeekTo = (time: number) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = time;
+    }
+  };
 
   return (
-    <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
-      <Sidebar currentPage="library" />
-      <SearchBar />
+    <div className="relative w-full h-full bg-[#f9f9f9] overflow-y-auto">
+      <Sidebar currentPage="library" onNavigate={onNavigate} />
+      <SearchBar onUploadComplete={onUploadComplete} />
 
-      <div className="absolute left-[calc(16.67%+19.67px)] top-[144px]">
-        <button
-          onClick={() => navigate('/library')}
-          className="text-[#e0130b] hover:underline mb-4"
+      {/* Video Title and Info */}
+      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(16.67%+19.67px)] not-italic text-[22.135px] text-black top-[132px] w-[451px]">
+        {taskResult?.title || video?.title || "一口气了解2025年全球经济 | 关税新格局"}
+      </p>
+      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(16.67%+20.67px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">
+        {taskResult ? 'AI 智能分析' : '@小 Lin 说'}
+      </p>
+      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(25%-6px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">
+        {new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')}
+      </p>
+      <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(25%+87px)] not-italic text-[#b8b5b5] text-[14px] text-nowrap top-[163px]">
+        Video
+      </p>
+
+      {/* Video Player Area */}
+      <div className="absolute h-[340px] left-[calc(16.67%+19.67px)] rounded-[14px] top-[194px] w-[604.444px]">
+        <video
+          ref={videoRef}
+          className="absolute inset-0 max-w-none object-cover rounded-[14px] size-full"
+          src={videoSrc}
+          controls
+          poster={imgMp4}
         >
-          ← 返回
-        </button>
-        <div className="flex gap-[38px] items-center mb-6">
-          <TabButton icon={<BookIcon color="#E0130B" />} label="Reading" active={true} />
-          <TabButton icon={<TagIcon />} label="Later" active={false} />
-          <TabButton icon={<CopyIcon />} label="Finish" active={false} />
-        </div>
+          您的浏览器不支持视频播放
+        </video>
+        <div aria-hidden="true" className="absolute border-[#e0130b] border-[0px_0px_0px_2px] border-solid inset-[0_0_0_-2px] rounded-[14px] pointer-events-none" />
       </div>
 
-      <div className="absolute left-[calc(16.67%+19.67px)] top-[206px] w-[604px]">
-        {/* 视频信息卡片 */}
-        <div className="bg-white rounded-[20px] p-6 mb-4">
-          <div className="flex gap-4">
-            {/* 视频播放器或缩略图 */}
-            <div className="w-[288px] h-[200px] rounded-[10px] overflow-hidden bg-black">
-              {videoTask && videoTask.videoSrc ? (
-                <video
-                  src={videoTask.videoSrc}
-                  controls
-                  className="w-full h-full object-contain"
-                  poster={videoTask.thumbnail}
-                >
-                  您的浏览器不支持视频播放。
-                </video>
-              ) : (
-                <img src={video.image} alt="" className="w-full h-full object-cover" />
-              )}
-            </div>
-            <div className="flex-1">
-              <h2 className="text-[20px] mb-2">{video.title}</h2>
-              <p className="text-[14px] text-[#b8b5b5] mb-4">本文主要讲了2025 年全球经济的发展，对中美贸易战做了清晰的梳理</p>
-              <div className="flex gap-2 text-[12px] text-[#b8b5b5]">
-                <span>昨天</span>
-                <span>Video</span>
-                <span>{video.progress}%</span>
-              </div>
-              {/* 显示任务状态 */}
-              {videoTask && (
-                <div className="mt-4">
-                  {/* 等待分析 */}
-                  {videoTask.status === 'queued' && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-[12px] text-[#e0130b]">⏳ 等待分析...</span>
-                    </div>
-                  )}
-
-                  {/* AI 分析中 - 使用详细模式显示完整阶段 */}
-                  {videoTask.status === 'processing' && (
-                    <AIAnalyzingIndicator
-                      stage={videoTask.stage || 'transcribing'}
-                      progress={videoTask.progress}
-                      detailed={true}
-                    />
-                  )}
-
-                  {/* 分析完成 */}
-                  {videoTask.status === 'completed' && <AIAnalysisCompleted />}
-
-                  {/* 分析失败 */}
-                  {videoTask.status === 'failed' && (
-                    <AIAnalysisFailed error={videoTask.result?.error || '未知错误'} />
-                  )}
-                </div>
-              )}
+      {/* Expand/Collapse Triangle Button */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="absolute flex items-center justify-center left-[calc(16.67%+12.67px)] size-[22px] top-[232px] cursor-pointer hover:scale-110 transition-transform z-10"
+        style={{ "--transform-inner-width": "0", "--transform-inner-height": "0" } as React.CSSProperties}
+      >
+        <div className={`flex-none ${isExpanded ? 'rotate-[270deg]' : 'rotate-[90deg]'} transition-transform`}>
+          <div className="relative size-[22px]">
+            <div className="absolute bottom-1/4 left-[10.02%] right-[10.02%] top-[4.55%]">
+              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 17.5914 15.5">
+                <path d={svgPaths.p2db17900} fill="#E32C25" />
+              </svg>
             </div>
           </div>
         </div>
-
-        {/* 注释卡片（TODO: 显示真实的注释数据） */}
-        <div className="bg-[rgba(255,255,255,0.7)] border-[#e0130b] border-2 rounded-[7px] p-4 shadow-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <svg className="w-3 h-3" fill="#E0130B" viewBox="0 0 12 12">
-              <path d={svgPaths.pe3e3e00} />
-            </svg>
-            <span className="text-[10px] text-[#e0130b]">美股泡沫</span>
-            <div className="ml-auto flex items-center gap-2 text-[8px]">
-              <span className="text-[#b8b5b5]">小白</span>
-              <div className="bg-[#ef3e23] rounded-full w-8 h-4 flex items-center justify-end px-1">
-                <div className="w-3 h-3 bg-white rounded-full" />
-              </div>
-              <span className="text-[#e0130b]">大师</span>
+      </button>
+      
+      {/* Right Arrow */}
+      <div className="absolute flex h-[26px] items-center justify-center left-[calc(58.33%+72.33px)] top-[234px] w-[24px]" style={{ "--transform-inner-width": "0", "--transform-inner-height": "0" } as React.CSSProperties}>
+        <div className="flex-none rotate-[270deg]">
+          <div className="h-[24px] relative w-[26px]">
+            <div className="absolute bottom-1/4 left-[6.7%] right-[6.7%] top-0">
+              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 22.5167 18">
+                <path d={svgPaths.p1a00fc00} fill="#D9D9D9" />
+              </svg>
             </div>
           </div>
-          <p className="text-[8px] text-[#e0130b] leading-relaxed">
-            2025 年美股泡沫核心是AI 狂热叠加宽松流动性驱动的高估值失衡，集中体现为科技巨头估值与基本面脱节、巴菲特指标创历史新高，本质是市场对 AI 长期盈利的过度乐观与资金 "自我强化" 推升的非理性繁荣。估值极度偏高·······
-          </p>
-          <button className="text-[8px] text-white underline mt-2">more</button>
+        </div>
+      </div>
+      
+      {/* Expanded Panel - Video Notes */}
+      {isExpanded && (
+        <ExpandedPanel
+          segments={displaySegments}
+          knowledgeCards={displayKnowledgeCards}
+          quotes={displayQuotes}
+          currentTime={currentTime}
+          onSeekTo={handleSeekTo}
+        />
+      )}
+
+      {/* Knowledge Card - 自动弹窗 */}
+      {activeKnowledgeCard && (
+        <KnowledgeCard
+          visible={showKnowledgeCard}
+          word={activeKnowledgeCard.word}
+          simple={activeKnowledgeCard.simple}
+          deep={activeKnowledgeCard.deep}
+          isExpertMode={isExpertMode}
+          onToggle={() => setIsExpertMode(!isExpertMode)}
+          onClose={() => setShowKnowledgeCard(false)}
+        />
+      )}
+      
+      {/* Bottom Tabs - 视频笔记展开/收起按钮 */}
+      <button
+        onClick={() => setIsNotesExpanded(!isNotesExpanded)}
+        className="absolute flex items-center gap-2 left-[calc(16.67%+34.67px)] top-[551px] cursor-pointer hover:opacity-80 transition-opacity"
+      >
+        <p className="font-['Alibaba_PuHuiTi_3.0:85_Bold',sans-serif] leading-[normal] not-italic text-[14.5px] text-black text-nowrap">
+          视频笔记
+        </p>
+        <div className={`transition-transform ${isNotesExpanded ? 'rotate-180' : 'rotate-0'}`}>
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+            <path d="M1 1L6 6L11 1" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      
+      {/* Divider Line */}
+      <div className="absolute h-0 left-[calc(16.67%+34.67px)] top-[578px] w-[583px]">
+        <div className="absolute inset-[-1px_0_0_0]">
+          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 583 1">
+            <line stroke="#B8B5B5" x2="583" y1="0.5" y2="0.5" />
+          </svg>
         </div>
       </div>
 
-      <ChatWidget />
+      {/* Video Notes Component - 只在展开时显示 */}
+      {isNotesExpanded && <VideoNotes taskResult={taskResult} videoId={videoId} />}
+      
+      {/* Right Side Chat Panel - DetailChatPanel */}
+      <DetailChatPanel />
+      
+      {/* Spacer to ensure enough height for scrolling - VideoNotes is at top-590px and needs ~400px height */}
+      <div className="h-[1100px]" aria-hidden="true" />
     </div>
   );
 }
 
-function Sidebar({ currentPage }: { currentPage: string }) {
-  const navigate = useNavigate();
-
+function Sidebar({ currentPage, onNavigate }: { currentPage: string, onNavigate: (page: PageType) => void }) {
   return (
     <div className="absolute bg-[#ef3e23] flex flex-col gap-[28px] h-[calc(100%-48px)] items-center left-[24px] px-[8px] py-[32px] rounded-[20px] top-[24px] w-[185px]">
       <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start">
@@ -352,25 +451,25 @@ function Sidebar({ currentPage }: { currentPage: string }) {
           </div>
         </div>
       </div>
-
+      
       <div className="flex flex-col gap-[11px] w-full">
-        <NavItem
-          icon={<HomeIcon />}
-          label="Home"
-          active={currentPage === 'home'}
-          onClick={() => navigate('/home')}
+        <NavItem 
+          icon={<HomeIcon />} 
+          label="Home" 
+          active={currentPage === 'home'} 
+          onClick={() => onNavigate('home')}
         />
-        <NavItem
-          icon={<BookIcon />}
-          label="Library"
-          active={currentPage === 'library'}
-          onClick={() => navigate('/library')}
+        <NavItem 
+          icon={<BookIcon />} 
+          label="Library" 
+          active={currentPage === 'library'} 
+          onClick={() => onNavigate('library')}
         />
-        <NavItem
-          icon={<StickerIcon />}
-          label="Me"
-          active={currentPage === 'me'}
-          onClick={() => navigate('/me')}
+        <NavItem 
+          icon={<StickerIcon />} 
+          label="Me" 
+          active={currentPage === 'me'} 
+          onClick={() => onNavigate('me')}
         />
       </div>
     </div>
@@ -433,101 +532,161 @@ function CopyIcon() {
   );
 }
 
-function SearchBar() {
-  const addVideoTask = useVideoStore((state) => state.addVideoTask);
-  const updateTaskProgress = useVideoStore((state) => state.updateTaskProgress);
+function SearchBar({ onUploadComplete }: { onUploadComplete: (taskResult: TaskResult) => void }) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [currentStage, setCurrentStage] = useState<string>('');
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleUpload = async (file: File, mode: AnalysisMode, style: VideoStyle) => {
-    // 生成本地 Blob URL（核心功能：秒开本地视频）
-    const videoSrc = URL.createObjectURL(file);
+  /**
+   * Fast-Track 模式：模拟 SSE 进度，直接加载本地数据
+   */
+  const handleFastTrackUpload = async (file: File) => {
+    // 根据文件名自动匹配对应的 Demo 配置
+    const activeDemo = matchDemoByFilename(file.name);
+    const stages: Array<keyof typeof FAST_TRACK_CONFIG.stageDelays> = ['slicing', 'asr', 'llm_summary', 'llm_keywords', 'finalize'];
 
-    // 生成任务 ID
-    const taskId = `task_${Date.now()}`;
+    setIsUploading(true);
+    setPopoverOpen(true);
 
-    // 创建视频任务对象
-    const newTask: VideoTask = {
-      id: taskId,
-      title: file.name.replace(/\.[^/.]+$/, ''), // 去掉文件扩展名
-      videoSrc,
-      videoFile: file,
-      status: 'queued',
-      progress: 0,
-      mode,
-      style,
-      language: 'auto',
-      section: 'reading', // 新上传的视频默认放在 reading 分类
-      playProgress: 0,
-      startTime: 0,
-      endTime: 0, // 将在获取视频时长后更新
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
+    // 模拟各阶段进度
+    for (const stage of stages) {
+      setCurrentStage(stage);
+      await new Promise(resolve => setTimeout(resolve, FAST_TRACK_CONFIG.stageDelays[stage]));
+    }
 
-    // 添加到 Store（会自动保存到 localStorage）
-    addVideoTask(newTask);
-
-    console.log('✅ 视频任务已创建:', newTask);
-
-    // 调用后端 API 创建任务
     try {
-      // 方法1：使用本地路径模式（Demo 推荐）
-      const response = await apiService.createTask({
-        source_type: 'path',
-        source_path: file.name, // 实际应用中这里应该是服务器上的路径
-        title: newTask.title,
-        mode,
-        style,
-        language: 'auto',
-        return_formats: ['srt', 'vtt', 'json'],
-      });
+      let taskResult: TaskResult;
 
-      console.log('🚀 后端任务已创建:', response);
+      // 根据数据类型选择加载方式
+      if (activeDemo.dataType === 'single') {
+        // 旧格式：单个 JSON 文件
+        console.log('📄 Loading single file:', activeDemo.dataPath);
+        const response = await fetch(activeDemo.dataPath);
+        if (!response.ok) {
+          throw new Error(`Failed to load demo data: ${activeDemo.dataPath}`);
+        }
+        taskResult = await response.json();
+      } else {
+        // 新格式：分散式文件夹
+        console.log('📂 Loading distributed data from:', activeDemo.dataPath);
+        const folderName = activeDemo.dataPath.replace('/data/', '');
+        taskResult = await loadDistributedData(folderName);
+      }
 
-      // 更新任务状态为 processing
-      updateTaskProgress(taskId, 0, 'transcribing');
+      console.log('🎯 Fast-Track loaded taskResult:', taskResult);
+      console.log('📦 summary.by_slice:', taskResult.summary?.by_slice);
 
-      // 开始监听 SSE 事件
-      sseManager.startListening(response.task_id || taskId);
+      // 注入视频 URL（从配置中读取）
+      taskResult.video_url = activeDemo.videoPath;
+      // 注入视频标题（从上传的文件名提取）
+      taskResult.title = getVideoTitle(file.name);
+
+      // 完成上传
+      setIsUploading(false);
+      setPopoverOpen(false);
+      toast.success(`${activeDemo.name} - 分析完成`);
+      console.log('✅ Calling onUploadComplete with taskResult');
+      onUploadComplete(taskResult);
     } catch (error) {
-      console.error('❌ 调用后端 API 失败:', error);
-
-      // API 调用失败时，使用 Mock 数据模拟进度（Demo 模式）
-      console.log('⚠️ 进入 Mock 模式：模拟 AI 分析进度');
-      simulateMockProgress(taskId);
+      console.error('Fast-Track error:', error);
+      toast.error('加载演示数据失败');
+      setIsUploading(false);
+      setPopoverOpen(false);
     }
   };
 
   /**
-   * Mock 模式：模拟进度更新（当后端不可用时）
+   * 真实上传模式（可选）- 调用后端 API
    */
-  const simulateMockProgress = (taskId: string) => {
-    const stages = [
-      { stage: 'transcribing', duration: 2000 },
-      { stage: 'summarizing', duration: 1500 },
-      { stage: 'keywording', duration: 1500 },
-      { stage: 'linking', duration: 1000 },
-    ];
+  const handleRealUpload = async (file: File) => {
+    setIsUploading(true);
+    setCurrentStage('slicing');
 
-    let currentProgress = 0;
-    let stageIndex = 0;
+    try {
+      // 1. 创建任务
+      const formData = new FormData();
+      formData.append('video', file);
+      formData.append('mode', 'simple');
+      formData.append('video_type', 'History');
 
-    const interval = setInterval(() => {
-      currentProgress += 0.05;
+      const createResponse = await fetch(API_ENDPOINTS.createTask, {
+        method: 'POST',
+        body: formData,
+      });
 
-      if (currentProgress >= 1) {
-        clearInterval(interval);
-        updateTaskProgress(taskId, 1, 'linking');
-        console.log('✅ Mock 任务完成');
-        return;
+      if (!createResponse.ok) {
+        throw new Error('Failed to create task');
       }
 
-      // 更新阶段
-      const progressPerStage = 1 / stages.length;
-      stageIndex = Math.floor(currentProgress / progressPerStage);
-      if (stageIndex >= stages.length) stageIndex = stages.length - 1;
+      const { task_id } = await createResponse.json();
 
-      updateTaskProgress(taskId, currentProgress, stages[stageIndex].stage as any);
-    }, 200);
+      // 2. 监听 SSE 进度
+      const eventSource = new EventSource(API_ENDPOINTS.getTaskEvents(task_id));
+
+      eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.stage) {
+          setCurrentStage(data.stage);
+        }
+
+        if (data.status === 'finished') {
+          eventSource.close();
+
+          // 3. 获取结果
+          fetch(API_ENDPOINTS.getTaskResult(task_id))
+            .then(res => res.json())
+            .then((result: TaskResult) => {
+              // 如果后端没有返回标题，使用文件名作为标题
+              if (!result.title) {
+                result.title = getVideoTitle(file.name);
+              }
+              setIsUploading(false);
+              setPopoverOpen(false);
+              toast.success('视频解析完成');
+              onUploadComplete(result);
+            })
+            .catch(err => {
+              console.error('Failed to fetch result:', err);
+              toast.error('获取结果失败');
+              setIsUploading(false);
+            });
+        } else if (data.status === 'failed') {
+          eventSource.close();
+          toast.error('视频处理失败');
+          setIsUploading(false);
+        }
+      };
+
+      eventSource.onerror = () => {
+        eventSource.close();
+        toast.error('连接失败');
+        setIsUploading(false);
+      };
+
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error('上传失败');
+      setIsUploading(false);
+    }
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // 根据配置决定使用 Fast-Track 还是真实上传
+    if (FAST_TRACK_CONFIG.enabled) {
+      await handleFastTrackUpload(file);
+    } else {
+      await handleRealUpload(file);
+    }
+
+    // 清空 input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -542,10 +701,10 @@ function SearchBar() {
         </div>
       </div>
 
-      {/* 上传 Popover - 包装右侧菜单图标 */}
-      <UploadPopover
-        trigger={
-          <button className="cursor-pointer hover:scale-110 transition-transform">
+      {/* Upload Popover */}
+      <Popover.Root open={popoverOpen} onOpenChange={setPopoverOpen}>
+        <Popover.Trigger asChild>
+          <button className="w-6 h-6 cursor-pointer hover:opacity-80 transition-opacity">
             <svg className="w-6 h-6" fill="black" viewBox="0 0 24 24">
               <path d={svgPaths.p60b280} />
               <path d={svgPaths.pd820400} />
@@ -553,9 +712,45 @@ function SearchBar() {
               <path d={svgPaths.p1d844e00} />
             </svg>
           </button>
-        }
-        onUpload={handleUpload}
-      />
+        </Popover.Trigger>
+
+        <Popover.Portal>
+          <Popover.Content
+            className="bg-white/90 backdrop-blur-md rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-6 w-[160px] flex flex-col items-center justify-center gap-4 animate-in fade-in zoom-in-95 duration-200"
+            sideOffset={5}
+          >
+            {isUploading ? (
+              <>
+                <Loader2 className="w-14 h-14 text-[#E0130B] animate-spin" />
+                <p className="text-[10px] font-bold tracking-widest text-gray-400 text-center">
+                  {STAGE_MESSAGES[currentStage] || '处理中...'}
+                </p>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex flex-col items-center justify-center gap-3 cursor-pointer hover:scale-105 transition-transform"
+                >
+                  <div className="w-10 h-10 rounded-full bg-gray-50/50 flex items-center justify-center">
+                    <Paperclip className="w-4 h-4 text-gray-400" />
+                  </div>
+                  <p className="text-[8px] font-bold tracking-widest text-gray-400">上传视频</p>
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="video/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                  style={{ display: 'none' }}
+                  aria-hidden="true"
+                />
+              </>
+            )}
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
     </div>
   );
 }
@@ -885,6 +1080,248 @@ function ChatPanel() {
           </div>
         </div>
         
+        {/* Small Avatar - at 666px */}
+        <div className="absolute left-[calc(66.67%+26.67px)] rounded-[4px] size-[42px] top-[666px]">
+          <div aria-hidden="true" className="absolute inset-0 pointer-events-none rounded-[4px]">
+            <div className="absolute bg-[#d9d9d9] inset-0 rounded-[4px]" />
+            <img alt="" className="absolute max-w-none object-50%-50% object-cover rounded-[4px] size-full" src={imgRectangle43} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// AI 对话消息类型
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  displayContent?: string; // 用于打字机效果
+  timestamp: number;
+}
+
+// 组件 Props
+interface DetailChatPanelProps {
+  currentTime?: number; // 当前视频播放时间（秒），可选
+}
+
+function DetailChatPanel({ currentTime = 150 }: DetailChatPanelProps) {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [videoData, setVideoData] = useState<any>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 加载视频数据 (test1.json)
+  useEffect(() => {
+    fetch('/data/test1.json')
+      .then(res => res.json())
+      .then(data => setVideoData(data))
+      .catch(err => console.error('加载视频数据失败:', err));
+  }, []);
+
+  // 自动滚动到底部
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // 定位当前章节总结
+  const getCurrentChapterSummary = (): string => {
+    if (!videoData?.summary?.by_slice) return '';
+    const chapter = videoData.summary.by_slice.find(
+      (slice: any) => currentTime >= slice.start && currentTime < slice.end
+    );
+    return chapter?.summary || '';
+  };
+
+  // 定位当前字幕及上下文（前后各10条）
+  const getCurrentSubtitleContext = (): string => {
+    if (!videoData?.transcript?.segments) return '';
+    const segments = videoData.transcript.segments;
+
+    // 找到当前时间对应的字幕索引
+    const currentIndex = segments.findIndex(
+      (seg: any) => currentTime >= seg.start && currentTime <= seg.end
+    );
+
+    if (currentIndex === -1) return '';
+
+    // 提取前后各10条字幕
+    const startIndex = Math.max(0, currentIndex - 10);
+    const endIndex = Math.min(segments.length - 1, currentIndex + 10);
+
+    return segments
+      .slice(startIndex, endIndex + 1)
+      .map((seg: any) => seg.text)
+      .join('');
+  };
+
+  // 构建上下文
+  const buildContext = (): string => {
+    const chapterSummary = getCurrentChapterSummary();
+    const subtitleContext = getCurrentSubtitleContext();
+
+    return `当前章节总结：${chapterSummary}\n\n当前视频字幕片段：${subtitleContext}`;
+  };
+
+  // 打字机效果
+  const typewriterEffect = (message: ChatMessage, fullText: string) => {
+    let currentIndex = 0;
+
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+    }
+
+    typingIntervalRef.current = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === message.id
+              ? { ...msg, displayContent: fullText.slice(0, currentIndex) }
+              : msg
+          )
+        );
+        currentIndex++;
+      } else {
+        if (typingIntervalRef.current) {
+          clearInterval(typingIntervalRef.current);
+          typingIntervalRef.current = null;
+        }
+        setIsTyping(false);
+      }
+    }, 30); // 30ms 逐字显示
+  };
+
+  // 发送消息
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isTyping) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: inputValue,
+      timestamp: Date.now()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsTyping(true);
+
+    try {
+      const context = buildContext();
+      const response = await fetch('http://localhost:8000/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage.content,
+          context: context
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        const aiMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.reply,
+          displayContent: '',
+          timestamp: Date.now()
+        };
+
+        setMessages(prev => [...prev, aiMessage]);
+        typewriterEffect(aiMessage, data.reply);
+      } else {
+        throw new Error(data.error || '发送失败');
+      }
+    } catch (error) {
+      console.error('发送消息失败:', error);
+      setIsTyping(false);
+      toast.error('发送失败，请重试');
+    }
+  };
+
+  // 处理回车发送
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  return (
+    <div className="absolute contents left-[calc(66.67%+9.67px)] top-[193px]">
+      {/* Main Chat Container - 615px height */}
+      <div className="absolute bg-white h-[615px] left-[calc(66.67%+9.67px)] rounded-[20px] shadow-[0px_4px_20px_4px_rgba(0,0,0,0.1)] top-[193px] w-[393px]" />
+
+      {/* Title Section */}
+      <div className="absolute contents left-[calc(66.67%+21.67px)] top-[218px]">
+        <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(91.67%+6.67px)] not-italic text-[14px] text-black text-nowrap top-[218px]">new</p>
+        <p className="absolute font-['Alibaba_PuHuiTi_3.0:65_Medium',sans-serif] leading-[normal] left-[calc(66.67%+56.67px)] not-italic text-[14px] text-black text-nowrap top-[218px]">一口气了解2025年全球经济 | 关税新格局</p>
+
+        {/* Chat Messages Group - 可滚动区域 */}
+        <div className="absolute left-[calc(66.67%+21.67px)] top-[249px] w-[360px] min-w-[360px] max-w-[360px] h-[400px] flex-shrink-0 overflow-y-auto overflow-x-hidden">
+          <div className="flex flex-col gap-[8px] min-w-0">
+            {messages.map((msg) => (
+              <div key={msg.id} className={`flex min-w-0 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`flex items-center justify-center p-[6px] rounded-[9px] max-w-[330px] w-fit ${
+                  msg.role === 'user' ? 'bg-[#f5f5f5]' : 'bg-[rgba(255,120,120,0.2)]'
+                }`}>
+                  <p className="font-['Alibaba_PuHuiTi_3.0:55_Regular',sans-serif] leading-[16px] not-italic text-[#5e5e5e] text-[12px] whitespace-pre-wrap break-words overflow-hidden">
+                    {msg.role === 'assistant' && msg.displayContent !== undefined
+                      ? msg.displayContent
+                      : msg.content}
+                  </p>
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Section with Gradient and Input */}
+      <div className="absolute contents left-[calc(66.67%+9.67px)] top-[659px]">
+        {/* Bottom Gradient - starts at 659px, height 149px, ends at 808px (193+615=808) */}
+        <div className="absolute bg-gradient-to-b from-[11.074%] from-[rgba(255,255,255,0)] h-[149px] left-[calc(66.67%+9.67px)] rounded-bl-[20px] rounded-br-[20px] to-[#ffffff] to-[32.55%] top-[659px] w-[393px] pointer-events-none" />
+
+        {/* Input Field Container - 72px height at 713px */}
+        <div className="absolute content-stretch flex flex-col gap-[4px] h-[72px] items-start left-[calc(66.67%+23.67px)] top-[713px] w-[366px]">
+          <div className="basis-0 bg-white grow min-h-px min-w-px relative rounded-[8px] shrink-0 w-full">
+            <div className="overflow-clip rounded-[inherit] size-full">
+              <div className="content-stretch flex gap-[8px] items-start pl-[8px] pr-0 py-0 relative size-full">
+                <div className="basis-0 content-stretch flex grow h-full items-start min-h-px min-w-px px-0 py-[8px] relative shrink-0">
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Describe your task or ask a question…"
+                    disabled={isTyping}
+                    className="basis-0 font-['SF_Pro:Regular',sans-serif] font-normal grow h-full leading-[18px] min-h-px min-w-px relative shrink-0 text-[#5c5c5c] text-[13px] bg-transparent border-none outline-none placeholder:text-[#5c5c5c]"
+                  />
+                </div>
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!inputValue.trim() || isTyping}
+                  className="content-stretch flex h-full items-end justify-center pb-[8px] pt-0 px-0 relative shrink-0 w-[32px]"
+                >
+                  <svg className="w-4 h-4" fill={inputValue.trim() && !isTyping ? "#000" : "#C9C9C9"} viewBox="0 0 16 16">
+                    <path d={svgPaths.p18c26800} />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div aria-hidden="true" className="absolute border border-[#5c5c5c] border-solid inset-0 pointer-events-none rounded-[8px]" />
+          </div>
+        </div>
+
         {/* Small Avatar - at 666px */}
         <div className="absolute left-[calc(66.67%+26.67px)] rounded-[4px] size-[42px] top-[666px]">
           <div aria-hidden="true" className="absolute inset-0 pointer-events-none rounded-[4px]">

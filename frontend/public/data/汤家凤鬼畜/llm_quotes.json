@@ -1,0 +1,48 @@
+{
+  "raw": {
+    "quotes": [
+      {
+        "segment_id": "seg_000006",
+        "text": "你怎么睡得早的"
+      },
+      {
+        "segment_id": "seg_000009",
+        "text": "你这个阶段睡得早的"
+      },
+      {
+        "segment_id": "seg_000017",
+        "text": "你们还在笑得出来"
+      }
+    ]
+  },
+  "normalized": {
+    "items": [
+      {
+        "segment_id": "seg_000006",
+        "index": 6,
+        "start": 11.52,
+        "end": 13.44,
+        "text": "你怎么睡得早的"
+      },
+      {
+        "segment_id": "seg_000009",
+        "index": 9,
+        "start": 16.42,
+        "end": 18.06,
+        "text": "你这个阶段睡得早的"
+      },
+      {
+        "segment_id": "seg_000017",
+        "index": 17,
+        "start": 28.28,
+        "end": 29.72,
+        "text": "你们还在笑得出来"
+      }
+    ]
+  },
+  "meta": {
+    "model": "gemini-3-pro-preview",
+    "provider": "gemini",
+    "source": "llm"
+  }
+}
