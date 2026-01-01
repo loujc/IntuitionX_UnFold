@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { ArcTimeline } from './ArcTimeline';
 import type { Annotation } from '../types';
 
 interface VideoPlayerWithAnnotationsProps {
@@ -13,8 +14,8 @@ interface VideoPlayerWithAnnotationsProps {
 }
 
 /**
- * 视频播放器组件 + 时间戳同步注释列表
- * 核心功能：实时联动视频播放时间和注释卡片高亮
+ * 视频播放器组件 + 弧形时间轴同步注释
+ * 核心功能：实时联动视频播放时间和弧形轴上的注释卡片高亮
  */
 export function VideoPlayerWithAnnotations({
   videoSrc,
@@ -23,9 +24,18 @@ export function VideoPlayerWithAnnotations({
   className = '',
 }: VideoPlayerWithAnnotationsProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const annotationsContainerRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState(0); // 当前播放时间（毫秒）
+  const [duration, setDuration] = useState(0); // 视频总时长（毫秒）
   const [activeAnnotationIndex, setActiveAnnotationIndex] = useState<number | null>(null);
+
+  /**
+   * 监听视频元数据加载，获取视频总时长
+   */
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration * 1000); // 转换为毫秒
+    }
+  };
 
   /**
    * 监听视频时间更新（核心逻辑）
@@ -42,38 +52,12 @@ export function VideoPlayerWithAnnotations({
         currentTimeMs >= annotation.start_ms && currentTimeMs <= annotation.end_ms
     );
 
-    // 如果找到新的活跃注释，更新高亮并滚动
+    // 如果找到新的活跃注释，更新高亮
     if (currentAnnotationIndex !== -1 && currentAnnotationIndex !== activeAnnotationIndex) {
       setActiveAnnotationIndex(currentAnnotationIndex);
-      scrollToAnnotation(currentAnnotationIndex);
     } else if (currentAnnotationIndex === -1 && activeAnnotationIndex !== null) {
       // 当前时间不在任何注释范围内，清除高亮
       setActiveAnnotationIndex(null);
-    }
-  };
-
-  /**
-   * 自动滚动到指定注释（确保在视口中心）
-   */
-  const scrollToAnnotation = (index: number) => {
-    if (!annotationsContainerRef.current) return;
-
-    const container = annotationsContainerRef.current;
-    const annotationElement = container.children[index] as HTMLElement;
-
-    if (annotationElement) {
-      // 计算滚动位置，使注释卡片位于视口中心
-      const containerHeight = container.clientHeight;
-      const annotationTop = annotationElement.offsetTop;
-      const annotationHeight = annotationElement.clientHeight;
-
-      const scrollPosition =
-        annotationTop - containerHeight / 2 + annotationHeight / 2;
-
-      container.scrollTo({
-        top: scrollPosition,
-        behavior: 'smooth',
-      });
     }
   };
 
@@ -93,7 +77,7 @@ export function VideoPlayerWithAnnotations({
   };
 
   return (
-    <div className={`flex gap-4 ${className}`}>
+    <div className={`flex gap-6 ${className}`}>
       {/* 左侧：视频播放器 */}
       <div className="flex-1">
         <video
@@ -103,122 +87,51 @@ export function VideoPlayerWithAnnotations({
           controls
           className="w-full rounded-lg bg-black"
           onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          style={{
+            maxHeight: '70vh',
+          }}
         >
           您的浏览器不支持视频播放。
         </video>
 
-        {/* 当前播放时间显示（调试用） */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-2 text-xs text-gray-500">
-            当前时间: {(currentTime / 1000).toFixed(2)}s
+        {/* 自定义进度条（细长红色条） */}
+        <div className="mt-4 relative">
+          <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[var(--brand-red)] transition-all duration-150"
+              style={{
+                width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%',
+              }}
+            />
           </div>
-        )}
+          {/* 时间显示 */}
+          <div className="flex justify-between mt-2 text-xs text-gray-500">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
+        </div>
       </div>
 
-      {/* 右侧：注释列表 */}
-      <div className="w-[300px] flex flex-col">
-        <h3 className="text-lg font-bold mb-3 text-black">智能注释</h3>
-
-        <div
-          ref={annotationsContainerRef}
-          className="flex-1 overflow-y-auto max-h-[500px] space-y-3 pr-2"
-        >
-          {annotations.length === 0 ? (
-            <p className="text-sm text-gray-500">暂无注释，等待 AI 分析...</p>
-          ) : (
-            annotations.map((annotation, index) => (
-              <AnnotationCard
-                key={index}
-                annotation={annotation}
-                isActive={index === activeAnnotationIndex}
-                onClick={() => handleAnnotationClick(annotation)}
-              />
-            ))
-          )}
-        </div>
+      {/* 右侧：弧形时间轴 */}
+      <div className="w-[400px]">
+        <ArcTimeline
+          annotations={annotations}
+          activeIndex={activeAnnotationIndex}
+          duration={duration}
+          onAnnotationClick={handleAnnotationClick}
+        />
       </div>
     </div>
   );
 }
 
 /**
- * 注释卡片组件
- * 包含明显的高亮效果（红色边框 + 阴影呼吸灯）
+ * 格式化时间显示（毫秒 → MM:SS）
  */
-interface AnnotationCardProps {
-  annotation: Annotation;
-  isActive: boolean;
-  onClick: () => void;
+function formatTime(ms: number): string {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
-
-function AnnotationCard({ annotation, isActive, onClick }: AnnotationCardProps) {
-  return (
-    <div
-      onClick={onClick}
-      className={`
-        cursor-pointer rounded-lg p-3 transition-all duration-300
-        ${
-          isActive
-            ? 'bg-[rgba(255,120,120,0.2)] border-2 border-[#E0130B] shadow-lg animate-pulse-subtle'
-            : 'bg-white border border-gray-200 hover:border-[#E0130B] hover:shadow-md'
-        }
-      `}
-      style={
-        isActive
-          ? {
-              boxShadow:
-                '0 0 20px rgba(224, 19, 11, 0.3), 0 0 40px rgba(224, 19, 11, 0.2)',
-            }
-          : undefined
-      }
-    >
-      {/* 标题和重要性 */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <svg
-            className="w-3 h-3"
-            fill={isActive ? '#E0130B' : '#B8B5B5'}
-            viewBox="0 0 12 12"
-          >
-            <circle cx="6" cy="6" r="6" />
-          </svg>
-          <span
-            className={`text-sm font-semibold ${
-              isActive ? 'text-[#E0130B]' : 'text-black'
-            }`}
-          >
-            {annotation.term}
-          </span>
-        </div>
-        <span className="text-xs text-gray-500">
-          {(annotation.start_ms / 1000).toFixed(0)}s
-        </span>
-      </div>
-
-      {/* 简要解释 */}
-      <p
-        className={`text-xs leading-relaxed ${
-          isActive ? 'text-[#E0130B]' : 'text-gray-700'
-        }`}
-      >
-        {annotation.explanation_short}
-      </p>
-
-      {/* 重要性指示器 */}
-      {annotation.importance > 0.7 && (
-        <div className="mt-2 flex items-center gap-1">
-          <span className="text-xs text-[#E0130B]">⭐ 重要</span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// 添加呼吸灯动画到全局 CSS（如果尚未添加）
-// @keyframes pulse-subtle {
-//   0%, 100% { opacity: 1; }
-//   50% { opacity: 0.8; }
-// }
-// .animate-pulse-subtle {
-//   animation: pulse-subtle 2s ease-in-out infinite;
-// }

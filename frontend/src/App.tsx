@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import svgPaths from "./imports/svg-svp3s9ofq0";
 import imgImage13 from "figma:asset/1b939f420685ed9c8938abc89cf30951f9bcaf97.png";
 import imgRectangle34 from "figma:asset/caa09756c2c0383d70e8b4aaf1f8867fbac59966.png";
@@ -18,7 +19,6 @@ import { apiService } from './services/api';
 import { sseManager, cleanupSSE } from './services/sse';
 import type { AnalysisMode, VideoStyle, VideoTask } from './types';
 
-type PageType = 'welcome' | 'home' | 'library' | 'me' | 'detail';
 type VideoSection = 'reading' | 'later' | 'recent';
 
 const videoData = [
@@ -31,9 +31,6 @@ const videoData = [
 ];
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('welcome');
-  const [selectedVideo, setSelectedVideo] = useState<number | null>(null);
-
   // 组件卸载时清理所有 SSE 连接
   useEffect(() => {
     return () => {
@@ -41,32 +38,22 @@ export default function App() {
     };
   }, []);
 
-  const handleStart = () => {
-    setCurrentPage('home');
-  };
-
-  const handleNavigation = (page: PageType) => {
-    setCurrentPage(page);
-    setSelectedVideo(null);
-  };
-
-  const handleVideoClick = (videoId: number) => {
-    setSelectedVideo(videoId);
-    setCurrentPage('detail');
-  };
-
   return (
     <div className="w-screen h-screen overflow-hidden bg-[#f9f9f9]">
-      {currentPage === 'welcome' && <WelcomePage onStart={handleStart} />}
-      {currentPage === 'home' && <HomePage onNavigate={handleNavigation} onVideoClick={handleVideoClick} />}
-      {currentPage === 'library' && <LibraryPage onNavigate={handleNavigation} onVideoClick={handleVideoClick} />}
-      {currentPage === 'me' && <MePage onNavigate={handleNavigation} />}
-      {currentPage === 'detail' && selectedVideo && <DetailPage onNavigate={handleNavigation} videoId={selectedVideo} />}
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/library" element={<LibraryPage />} />
+        <Route path="/me" element={<MePage />} />
+        <Route path="/video/:id" element={<VideoPlayerPage />} />
+      </Routes>
     </div>
   );
 }
 
-function WelcomePage({ onStart }: { onStart: () => void }) {
+function WelcomePage() {
+  const navigate = useNavigate();
+
   return (
     <div className="relative w-full h-full bg-white overflow-clip">
       <div className="absolute left-1/2 size-[1240px] top-[-233px] translate-x-[-50%]">
@@ -89,8 +76,8 @@ function WelcomePage({ onStart }: { onStart: () => void }) {
         </div>
       </div>
       <p className="absolute font-['Avenir:Light',sans-serif] leading-[normal] left-1/2 not-italic text-[24px] text-nowrap text-white top-[372px] -translate-x-1/2">See More. Know More. Be More.</p>
-      <button 
-        onClick={onStart}
+      <button
+        onClick={() => navigate('/home')}
         className="absolute bg-white h-[60px] left-1/2 rounded-[26.5px] top-[calc(50%+76px)] translate-x-[-50%] translate-y-[-50%] w-[133px] cursor-pointer hover:scale-105 transition-transform"
       >
         <p className="font-['Helvetica:Bold',sans-serif] leading-[normal] text-[#e0130b] text-[28px] text-center">Start</p>
@@ -100,7 +87,8 @@ function WelcomePage({ onStart }: { onStart: () => void }) {
   );
 }
 
-function HomePage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) => void, onVideoClick: (id: number) => void }) {
+function HomePage() {
+  const navigate = useNavigate();
   // 从 Zustand Store 读取视频列表
   const videoTasks = useVideoStore((state) => state.videoTasks);
 
@@ -115,14 +103,18 @@ function HomePage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) =
       }))
     : videoData;
 
+  const handleVideoClick = (videoId: number) => {
+    navigate(`/video/${videoId}`);
+  };
+
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
-      <Sidebar currentPage="home" onNavigate={onNavigate} />
+      <Sidebar currentPage="home" />
       <SearchBar />
       <div className="absolute content-stretch flex flex-col gap-[12px] items-start left-[calc(16.67%+19.67px)] top-[126px] w-[603px]">
-        <VideoSection title="Reading" videos={displayVideos.filter(v => v.section === 'reading')} onVideoClick={onVideoClick} />
-        <VideoSection title="Later" videos={displayVideos.filter(v => v.section === 'later')} onVideoClick={onVideoClick} />
-        <RecentSection onVideoClick={onVideoClick} />
+        <VideoSection title="Reading" videos={displayVideos.filter(v => v.section === 'reading')} onVideoClick={handleVideoClick} />
+        <VideoSection title="Later" videos={displayVideos.filter(v => v.section === 'later')} onVideoClick={handleVideoClick} />
+        <RecentSection onVideoClick={handleVideoClick} />
       </div>
       <StatsPanel />
       <CalendarWidget />
@@ -130,7 +122,8 @@ function HomePage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) =
   );
 }
 
-function LibraryPage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType) => void, onVideoClick: (id: number) => void }) {
+function LibraryPage() {
+  const navigate = useNavigate();
   // 从 Zustand Store 读取视频列表（优先显示新上传的视频）
   const videoTasks = useVideoStore((state) => state.videoTasks);
 
@@ -144,9 +137,13 @@ function LibraryPage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType
       }))
     : videoData;
 
+  const handleVideoClick = (videoId: number) => {
+    navigate(`/video/${videoId}`);
+  };
+
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
-      <Sidebar currentPage="library" onNavigate={onNavigate} />
+      <Sidebar currentPage="library" />
       <SearchBar />
       <div className="absolute left-[calc(16.67%+19.67px)] top-[144px]">
         <div className="flex gap-[38px] items-center mb-6">
@@ -161,7 +158,7 @@ function LibraryPage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType
           <div
             key={video.id}
             className="mb-4 cursor-pointer hover:scale-[1.02] transition-transform"
-            onClick={() => onVideoClick(video.id)}
+            onClick={() => handleVideoClick(video.id)}
           >
             <LibraryVideoCard video={video} />
           </div>
@@ -174,10 +171,10 @@ function LibraryPage({ onNavigate, onVideoClick }: { onNavigate: (page: PageType
   );
 }
 
-function MePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
+function MePage() {
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
-      <Sidebar currentPage="me" onNavigate={onNavigate} />
+      <Sidebar currentPage="me" />
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
         <div className="flex flex-col items-center gap-6">
           <div className="w-32 h-32 rounded-full bg-[#ef3e23] flex items-center justify-center">
@@ -193,9 +190,13 @@ function MePage({ onNavigate }: { onNavigate: (page: PageType) => void }) {
   );
 }
 
-function DetailPage({ onNavigate, videoId }: { onNavigate: (page: PageType) => void, videoId: number }) {
+function VideoPlayerPage() {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const videoId = parseInt(id || '0');
+
   const videoTasks = useVideoStore((state) => state.videoTasks);
-  const currentVideoSrc = useVideoStore((state) => state.currentVideoSrc);
+  const currentVideo = useVideoStore((state) => state.currentVideo);
   const setCurrentVideo = useVideoStore((state) => state.setCurrentVideo);
 
   // 查找对应的视频任务
@@ -213,19 +214,28 @@ function DetailPage({ onNavigate, videoId }: { onNavigate: (page: PageType) => v
       }
     : videoData.find(v => v.id === videoId) || videoData[0];
 
-  // 设置当前视频（如果有 Blob URL）
-  if (videoTask && videoTask.videoSrc && currentVideoSrc !== videoTask.videoSrc) {
-    setCurrentVideo(videoTask.id, videoTask.videoSrc);
+  // 设置当前视频（如果有 Blob URL 且不是当前正在播放的视频）
+  if (videoTask && videoTask.videoSrc && currentVideo?.blobUrl !== videoTask.videoSrc) {
+    setCurrentVideo({
+      blobUrl: videoTask.videoSrc,
+      metadata: {
+        title: videoTask.title,
+        duration: videoTask.endTime || 0,
+        thumbnail: videoTask.thumbnail,
+      },
+      currentTime: 0,
+      isPlaying: false,
+    });
   }
 
   return (
     <div className="relative w-full h-full bg-[#f9f9f9] overflow-clip">
-      <Sidebar currentPage="library" onNavigate={onNavigate} />
+      <Sidebar currentPage="library" />
       <SearchBar />
 
       <div className="absolute left-[calc(16.67%+19.67px)] top-[144px]">
         <button
-          onClick={() => onNavigate('library')}
+          onClick={() => navigate('/library')}
           className="text-[#e0130b] hover:underline mb-4"
         >
           ← 返回
@@ -323,7 +333,9 @@ function DetailPage({ onNavigate, videoId }: { onNavigate: (page: PageType) => v
   );
 }
 
-function Sidebar({ currentPage, onNavigate }: { currentPage: string, onNavigate: (page: PageType) => void }) {
+function Sidebar({ currentPage }: { currentPage: string }) {
+  const navigate = useNavigate();
+
   return (
     <div className="absolute bg-[#ef3e23] flex flex-col gap-[28px] h-[calc(100%-48px)] items-center left-[24px] px-[8px] py-[32px] rounded-[20px] top-[24px] w-[185px]">
       <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start">
@@ -340,25 +352,25 @@ function Sidebar({ currentPage, onNavigate }: { currentPage: string, onNavigate:
           </div>
         </div>
       </div>
-      
+
       <div className="flex flex-col gap-[11px] w-full">
-        <NavItem 
-          icon={<HomeIcon />} 
-          label="Home" 
-          active={currentPage === 'home'} 
-          onClick={() => onNavigate('home')}
+        <NavItem
+          icon={<HomeIcon />}
+          label="Home"
+          active={currentPage === 'home'}
+          onClick={() => navigate('/home')}
         />
-        <NavItem 
-          icon={<BookIcon />} 
-          label="Library" 
-          active={currentPage === 'library'} 
-          onClick={() => onNavigate('library')}
+        <NavItem
+          icon={<BookIcon />}
+          label="Library"
+          active={currentPage === 'library'}
+          onClick={() => navigate('/library')}
         />
-        <NavItem 
-          icon={<StickerIcon />} 
-          label="Me" 
-          active={currentPage === 'me'} 
-          onClick={() => onNavigate('me')}
+        <NavItem
+          icon={<StickerIcon />}
+          label="Me"
+          active={currentPage === 'me'}
+          onClick={() => navigate('/me')}
         />
       </div>
     </div>

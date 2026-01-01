@@ -1,6 +1,20 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { VideoTask, Task, TaskResult } from '../types';
+import type { VideoTask, Task, TaskResult, VideoMetadata } from '../types';
+
+/**
+ * 当前播放视频对象（深度状态控制）
+ */
+export interface CurrentVideo {
+  /** 视频 Blob URL */
+  blobUrl: string;
+  /** 视频元数据（标题、时长等） */
+  metadata: VideoMetadata;
+  /** 当前播放时间（毫秒） */
+  currentTime: number;
+  /** 是否正在播放 */
+  isPlaying: boolean;
+}
 
 /**
  * 视频状态管理 Store
@@ -14,17 +28,11 @@ interface VideoStore {
   /** 所有视频任务列表 */
   videoTasks: VideoTask[];
 
-  /** 当前播放的视频 ID */
-  currentVideoId: string | null;
-
-  /** 当前视频的 Blob URL（防止页面切换时丢失） */
-  currentVideoSrc: string | null;
+  /** 当前播放的视频（深度状态控制 - 支持跨页面保持播放状态） */
+  currentVideo: CurrentVideo | null;
 
   /** 当前任务信息 */
   currentTask: Task | null;
-
-  /** 当前播放时间（毫秒） */
-  currentTime: number;
 
   // ============================================================================
   // Actions - 视频任务管理
@@ -60,11 +68,16 @@ interface VideoStore {
   // ============================================================================
 
   /**
-   * 设置当前播放的视频
-   * @param videoId 视频ID
-   * @param videoSrc Blob URL
+   * 设置当前播放的视频（完整状态）
+   * @param video 当前视频对象
    */
-  setCurrentVideo: (videoId: string, videoSrc: string) => void;
+  setCurrentVideo: (video: CurrentVideo) => void;
+
+  /**
+   * 更新当前视频状态（部分更新）
+   * @param updates 需要更新的字段
+   */
+  updateCurrentVideo: (updates: Partial<CurrentVideo>) => void;
 
   /**
    * 清除当前视频
@@ -76,6 +89,12 @@ interface VideoStore {
    * @param time 时间（毫秒）
    */
   setCurrentTime: (time: number) => void;
+
+  /**
+   * 设置播放/暂停状态
+   * @param isPlaying 是否正在播放
+   */
+  setIsPlaying: (isPlaying: boolean) => void;
 
   // ============================================================================
   // Actions - 任务状态更新
@@ -140,10 +159,8 @@ interface VideoStore {
  */
 const initialState = {
   videoTasks: [],
-  currentVideoId: null,
-  currentVideoSrc: null,
+  currentVideo: null,
   currentTask: null,
-  currentTime: 0,
 };
 
 /**
@@ -175,8 +192,9 @@ export const useVideoStore = create<VideoStore>()(
         set((state) => ({
           videoTasks: state.videoTasks.filter((task) => task.id !== id),
           // 如果删除的是当前视频，清除当前视频状态
-          currentVideoId: state.currentVideoId === id ? null : state.currentVideoId,
-          currentVideoSrc: state.currentVideoId === id ? null : state.currentVideoSrc,
+          currentVideo: state.currentVideo && state.currentVideo.metadata.title === id
+            ? null
+            : state.currentVideo,
         })),
 
       getVideoTask: (id) => {
@@ -187,24 +205,36 @@ export const useVideoStore = create<VideoStore>()(
       // 当前视频控制
       // ========================================================================
 
-      setCurrentVideo: (videoId, videoSrc) =>
+      setCurrentVideo: (video) =>
         set({
-          currentVideoId: videoId,
-          currentVideoSrc: videoSrc,
-          currentTime: 0,
+          currentVideo: video,
         }),
+
+      updateCurrentVideo: (updates) =>
+        set((state) => ({
+          currentVideo: state.currentVideo
+            ? { ...state.currentVideo, ...updates }
+            : null,
+        })),
 
       clearCurrentVideo: () =>
         set({
-          currentVideoId: null,
-          currentVideoSrc: null,
-          currentTime: 0,
+          currentVideo: null,
         }),
 
       setCurrentTime: (time) =>
-        set({
-          currentTime: time,
-        }),
+        set((state) => ({
+          currentVideo: state.currentVideo
+            ? { ...state.currentVideo, currentTime: time }
+            : null,
+        })),
+
+      setIsPlaying: (isPlaying) =>
+        set((state) => ({
+          currentVideo: state.currentVideo
+            ? { ...state.currentVideo, isPlaying }
+            : null,
+        })),
 
       // ========================================================================
       // 任务状态更新
@@ -298,8 +328,7 @@ export const useVideoStore = create<VideoStore>()(
       partialize: (state) => ({
         // 只持久化这些字段
         videoTasks: state.videoTasks,
-        currentVideoId: state.currentVideoId,
-        // 注意：currentVideoSrc 不持久化，因为 Blob URL 刷新后失效
+        // 注意：currentVideo 不持久化，因为包含 Blob URL 刷新后失效
       }),
     }
   )

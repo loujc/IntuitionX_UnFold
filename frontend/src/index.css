@@ -1681,6 +1681,9 @@
   --sidebar-accent-foreground: oklch(.205 0 0);
   --sidebar-border: oklch(.922 0 0);
   --sidebar-ring: oklch(.708 0 0);
+
+  /* 品牌主色 - 统一的红色 */
+  --brand-red: #E60012;
 }
 
 .dark {

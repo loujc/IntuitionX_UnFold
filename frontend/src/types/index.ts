@@ -42,6 +42,16 @@ export interface VideoMeta {
 }
 
 /**
+ * 视频播放元数据（用于 Store currentVideo）
+ */
+export interface VideoMetadata {
+  title: string;
+  duration: number;  // 毫秒
+  thumbnail?: string;
+  videoType?: VideoType;
+}
+
+/**
  * 摘要片段（带时间戳）
  */
 export interface SummarySegment {

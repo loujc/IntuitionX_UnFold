@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -14,6 +15,7 @@ interface UploadPopoverProps {
 /**
  * 视频上传 Popover 组件
  * 在 Home 页面搜索栏右侧图标点击后弹出
+ * 使用 framer-motion 实现丝滑的弹出动画 + backdrop-filter
  */
 export function UploadPopover({ trigger, onUpload }: UploadPopoverProps) {
   const [open, setOpen] = useState(false);
@@ -65,10 +67,21 @@ export function UploadPopover({ trigger, onUpload }: UploadPopoverProps) {
       </PopoverTrigger>
 
       <PopoverContent
-        className="w-80 p-4 bg-white rounded-xl shadow-lg border border-gray-200"
+        className="w-80 p-4 bg-white/95 rounded-xl shadow-lg border border-gray-200"
+        style={{
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
         align="end"
         sideOffset={8}
+        asChild
       >
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+        >
         <div className="flex flex-col gap-4">
           {/* 标题 */}
           <div className="flex items-center justify-between">
@@ -151,6 +164,7 @@ export function UploadPopover({ trigger, onUpload }: UploadPopoverProps) {
             )}
           </Button>
         </div>
+      </motion.div>
       </PopoverContent>
     </Popover>
   );
