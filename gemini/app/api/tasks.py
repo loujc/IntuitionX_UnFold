@@ -179,19 +179,6 @@ def get_task_timing_endpoint(task_id: str, db: Session = Depends(get_session)) -
     }
 
 
-@router.get("/tasks/{task_id}")
-def get_task_status_endpoint(task_id: str, db: Session = Depends(get_session)) -> dict:
-    task = get_task(db, task_id)
-    if task is None:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return {
-        "task_id": task.id,
-        "status": task.status,
-        "stage": task.stage,
-        "error": task.error,
-    }
-
-
 @router.get("/tasks/{task_id}/segments")
 def get_task_segments_endpoint(task_id: str, db: Session = Depends(get_session)) -> dict:
     task = get_task(db, task_id)

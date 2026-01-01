@@ -95,6 +95,9 @@
 | 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/api/tasks.py` | 优化 SSE 断线检测超时 (1.0s -> 0.5s) |
 | 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/api/tasks.py` | SSE 连接时推送初始任务状态 |
 | 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/services/result_builder.py` | 增强 video_type 空值校验 |
+| 2026-01-01 Step 10-12 Review | Claude Opus 4.5 | `app/api/tasks.py` | 修复重复的 GET /tasks/{task_id} 端点定义 |
+| 2026-01-01 (LLM Provider) | Codex | `app/services/llm_client.py` | 支持 Gemini 官方 API（google-genai）provider 分支 |
+| 2026-01-01 (LLM Provider) | Codex | `app/core/config.py` / `config.yaml` / `requirements.txt` / `README.md` | 增加 provider 配置与依赖、补充 Gemini 配置示例 |
 
 ## 测试状态
 

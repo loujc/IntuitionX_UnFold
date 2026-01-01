@@ -102,6 +102,7 @@ stage: slicing -> asr -> merge -> llm_summary -> llm_keywords -> finalize
 
 ## 配置
 敏感信息放 .env，运行参数放 config.yaml。
+日志级别通过环境变量 LOG_LEVEL 控制（默认 INFO，可选：DEBUG/INFO/WARNING/ERROR）。
 
 示例 config.yaml:
 ```yaml
@@ -150,13 +151,99 @@ storage:
 - Python 依赖见 requirements.txt（fastapi、uvicorn、openai、sqlalchemy、pyyaml、tenacity、pytest、httpx）
 - ASR 后端：faster-whisper 或 mlx-whisper
 
-## 最小运行命令
+## 快速开始（含 LLM 接入）
+建议使用 conda 环境 `unfold`（可选）：
 ```bash
+# 可选：创建/进入环境
+conda create -n unfold python=3.10 -y
+conda activate unfold
+
 # 安装依赖
 pip install -r requirements.txt
-# 启动（单进程）
+
+# 检查 ffmpeg 是否可用
+ffmpeg -version
+```
+
+### LLM API 接入
+本项目支持两种方式：
+- `openai_compat`（默认）：OpenAI 兼容接口（可对接 OpenAI/本地网关）
+- `gemini`：Google 官方 Gemini API（通过 `google-genai`）
+
+你只需要配置：
+- `LLM_API_KEY` 或 `GEMINI_API_KEY`：放到 `gemini/.env` 或环境变量
+- `llm.provider`、`llm.base_url` 与 `llm.model_name`：在 `gemini/config.yaml` 中配置
+
+示例（OpenAI 接口）：
+```bash
+# gemini/.env
+LLM_API_KEY=你的key
+```
+
+```yaml
+# gemini/config.yaml
+llm:
+  provider: "openai_compat"
+  base_url: "https://api.openai.com/v1"
+  model_name: "gpt-4o-mini"
+  api_key: "${LLM_API_KEY}"
+```
+
+如果你是本地/第三方兼容接口（如 LM Studio / DeepSeek / Moonshot），只需改 `base_url` 与 `model_name`。
+
+示例（Gemini 官方 API）：
+```bash
+# gemini/.env
+GEMINI_API_KEY=你的key
+```
+
+```yaml
+# gemini/config.yaml
+llm:
+  provider: "gemini"
+  model_name: "gemini-1.5-flash"
+  api_key: "${GEMINI_API_KEY}"
+```
+
+### Demo 视频放置
+建议把 demo 视频放到仓库根目录的 `video/`（已在 `.gitignore` 中忽略）：
+```
+video/demo.mp4
+```
+
+## 运行步骤（一步步）
+1) 启动服务（单进程）  
+```bash
+cd gemini
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1
 ```
+
+2) 上传视频创建任务  
+```bash
+# 在仓库根目录执行
+curl -F "file=@video/demo.mp4" -F "mode=simple" http://127.0.0.1:8000/api/v1/tasks
+
+# 或在 gemini 目录执行
+curl -F "file=@../video/demo.mp4" -F "mode=simple" http://127.0.0.1:8000/api/v1/tasks
+```
+
+3) 查看任务进度（SSE）  
+```bash
+curl -N http://127.0.0.1:8000/api/v1/tasks/<task_id>/events
+```
+
+4) 轮询结果/状态  
+```bash
+curl http://127.0.0.1:8000/api/v1/tasks/<task_id>
+curl http://127.0.0.1:8000/api/v1/tasks/<task_id>/result
+curl http://127.0.0.1:8000/api/v1/tasks/<task_id>/segments
+```
+
+5) 产物位置  
+- `temp/<task_id>/input.*`：原始上传文件  
+- `temp/<task_id>/chunks/`：切片音频  
+- `temp/<task_id>/asr.json`：ASR 原始输出  
+- `temp/<task_id>/transcript.srt|vtt`：字幕文件  
 
 ## 运行测试
 ```bash

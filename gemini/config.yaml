@@ -1,6 +1,6 @@
 runtime:
   # Max concurrent LLM calls across the process.
-  max_llm_concurrency: 10
+  max_llm_concurrency: 5
 
 system:
   # Allowed video type labels for classification.
@@ -18,13 +18,20 @@ processing:
   llm_concurrency: 5
 
 asr:
-  backend: "auto"     # faster-whisper / mlx-whisper
-  model_size: "medium"
+  backend: "mlx-whisper"     # faster-whisper / mlx-whisper
+  # model_size: "mlx-community/whisper-large-v3-turbo"
+  model_size: "/Users/jclou/models/whisper-large-v3-turbo"
 
 llm:
-  base_url: "http://127.0.0.1:8045/v1"
-  model_name: "gemini-3-flash"
-  api_key: "${LLM_API_KEY}"
+  # Provider: openai_compat | gemini
+  provider: "gemini"
+  model_name: "${LLM_MODEL}"
+  api_key: "${GEMINI_API_KEY}"
+
+  # provider: "openai_compat"
+  # base_url: "http://127.0.0.1:8045/v1"
+  # model_name: "${LLM_MODEL}"
+  # api_key: "${LLM_API_KEY}"
 
 db:
   # SQLite database file path.
