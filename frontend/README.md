@@ -8,6 +8,4 @@
   Run `npm i` to install the dependencies.
 
   Run `npm run dev` to start the development server.
-  # 前端应用
-
-本目录预留给前端代码与资源。后端 API 与数据结构请参考 `codex/` 与 `gemini/` 文档。
+  
