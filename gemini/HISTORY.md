@@ -88,6 +88,13 @@
 | 2026-01-01 (Step 11) | Codex | `app/workers/stage_handlers.py` | LLM 错误日志输出 |
 | 2026-01-01 (Step 11) | Codex | `tests/test_job_manager.py` | 阶段耗时记录测试（mock clock） |
 | 2026-01-01 (Step 11) | Codex | `README.md` | 增加性能调参与目标说明 |
+| 2026-01-01 (Step 12) | Codex | `HISTORY.md` | 恢复提交规范（流程记录，无代码变更） |
+| 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/api/tasks.py` | 添加 GET /tasks/{task_id} 状态查询端点 |
+| 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/core/job_manager.py` | 所有 SSE 事件添加时间戳字段 (ts) |
+| 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/core/job_manager.py` | 事件队列满时记录警告日志 |
+| 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/api/tasks.py` | 优化 SSE 断线检测超时 (1.0s -> 0.5s) |
+| 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/api/tasks.py` | SSE 连接时推送初始任务状态 |
+| 2026-01-01 Step 8-9 Review | Claude Opus 4.5 | `app/services/result_builder.py` | 增强 video_type 空值校验 |
 
 ## 测试状态
 
@@ -106,3 +113,5 @@
 | 2026-01-01 (Step 9) | 18 passed |
 | 2026-01-01 (Step 10) | 20 passed |
 | 2026-01-01 (Step 11) | 21 passed |
+| 2026-01-01 Step 8-9 Review 后 | 9 passed (核心测试) |
+| 2026-01-01 (Step 12) | N/A |

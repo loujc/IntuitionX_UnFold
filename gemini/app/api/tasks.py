@@ -61,7 +61,7 @@ def _event_stream(job_manager: object, request: Request, task_id: str, ping_inte
                 if await request.is_disconnected():
                     break
                 try:
-                    message = await asyncio.wait_for(queue.get(), timeout=1.0)
+                    message = await asyncio.wait_for(queue.get(), timeout=0.5)
                 except asyncio.TimeoutError:
                     now = time.monotonic()
                     if now - last_ping >= ping_interval:
@@ -137,6 +137,19 @@ async def create_task_endpoint(
     return {"task_id": task.id, "status": STATUS_QUEUED}
 
 
+@router.get("/tasks/{task_id}")
+def get_task_status_endpoint(task_id: str, db: Session = Depends(get_session)) -> dict:
+    task = get_task(db, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {
+        "task_id": task.id,
+        "status": task.status,
+        "stage": task.stage,
+        "error": task.error,
+    }
+
+
 @router.get("/tasks/{task_id}/result")
 def get_task_result_endpoint(task_id: str, db: Session = Depends(get_session)) -> dict:
     result = get_task_result(db, task_id)
@@ -204,6 +217,19 @@ def get_task_segment_endpoint(
 @router.get("/tasks/{task_id}/events")
 async def stream_task_events(request: Request, task_id: str) -> StreamingResponse:
     job_manager = request.app.state.job_manager
+    # Push initial state if task exists
+    state = job_manager.tasks.get(task_id)
+    if state:
+        job_manager.publish_event(
+            task_id,
+            "task_status",
+            {
+                "task_id": task_id,
+                "status": state.status,
+                "stage": state.stage,
+                "ts": time.time(),
+            },
+        )
     return StreamingResponse(
         _event_stream(job_manager, request, task_id, PING_INTERVAL_SECONDS),
         media_type="text/event-stream",

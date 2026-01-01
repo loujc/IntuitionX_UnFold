@@ -73,6 +73,9 @@ class JobManager:
             try:
                 queue.put_nowait(message)
             except asyncio.QueueFull:
+                logger.warning(
+                    "Event queue full for task %s, dropping event %s", task_id, event_type
+                )
                 continue
 
     def enqueue(self, task_id: str) -> None:
@@ -135,7 +138,7 @@ class JobManager:
             self.publish_event(
                 task_id,
                 "task_status",
-                {"task_id": task_id, "status": state.status, "stage": state.stage},
+                {"task_id": task_id, "status": state.status, "stage": state.stage, "ts": time.time()},
             )
 
             total_stages = len(STAGES)
@@ -148,7 +151,7 @@ class JobManager:
                 self.publish_event(
                     task_id,
                     "task_progress",
-                    {"task_id": task_id, "status": state.status, "stage": stage, "progress": state.progress},
+                    {"task_id": task_id, "status": state.status, "stage": stage, "progress": state.progress, "ts": time.time()},
                 )
                 start_ts = time.perf_counter()
                 try:
@@ -169,7 +172,7 @@ class JobManager:
             self.publish_event(
                 task_id,
                 "task_result",
-                {"task_id": task_id, "status": state.status, "stage": state.stage},
+                {"task_id": task_id, "status": state.status, "stage": state.stage, "ts": time.time()},
             )
         finally:
             clear_context()
@@ -211,7 +214,7 @@ class JobManager:
         self.publish_event(
             task_id,
             "task_status",
-            {"task_id": task_id, "status": STATUS_FAILED, "stage": stage, "error": str(exc)},
+            {"task_id": task_id, "status": STATUS_FAILED, "stage": stage, "error": str(exc), "ts": time.time()},
         )
 
     def set_stage_handlers(self, stage_handlers: Dict[str, StageHandler]) -> None:

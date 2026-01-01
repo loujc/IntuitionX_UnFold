@@ -16,9 +16,11 @@ def _serialize_segment(segment: Segment) -> dict:
 
 
 def _build_video_type(task: Task, raw: dict) -> dict | None:
-    raw_type = raw.get("video_type") or {}
+    raw_type = raw.get("video_type")
     if isinstance(raw_type, dict) and raw_type.get("label"):
-        label = str(raw_type.get("label"))
+        label = str(raw_type.get("label")).strip()
+        if not label:
+            return None
         confidence = raw_type.get("confidence", 0.0)
         try:
             confidence = float(confidence)
