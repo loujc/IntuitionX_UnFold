@@ -32,6 +32,24 @@
 | 2026-01-01 Step 3 Review | Claude Opus 4.5 | `app/db/search.py` | `_keyword_rows` 中添加 keyword_id 验证，跳过无效数据 |
 | 2026-01-01 Step 3 Review | Claude Opus 4.5 | `tests/test_search_index.py` | 补充边界测试：空查询、不存在的 task、无效 keyword_id |
 | 2026-01-01 Step 3 Review | Claude Opus 4.5 | `tests/test_search_index.py` | 添加 `session.commit()` 以适配事务控制修改 |
+| 2026-01-01 (Spec) | Codex | `spec/Frontend_Data_Contract.md` | 新增前端接口数据契约文档 |
+| 2026-01-01 (Step 4) | Codex | `app/core/job_manager.py` | 新增 JobManager：任务队列、阶段状态机、事件队列、失败处理与计时 |
+| 2026-01-01 (Step 4) | Codex | `app/services/llm_retry.py` | LLM 调用重试封装（tenacity）并写入重试计数 |
+| 2026-01-01 (Step 4) | Codex | `app/db/models.py` | Task 增加 `llm_retry_count` 字段 |
+| 2026-01-01 (Step 4) | Codex | `app/db/repository.py` | 增加 `increment_task_retry` |
+| 2026-01-01 (Step 4) | Codex | `app/main.py` | 注册 JobManager 并在 lifespan 启停 |
+| 2026-01-01 (Step 4) | Codex | `tests/test_job_manager.py` | JobManager 状态流转与失败路径测试 |
+| 2026-01-01 (Step 4) | Codex | `tests/test_llm_retry.py` | LLM 重试计数测试 |
+| 2026-01-01 (Step 4) | Claude Opus 4.5 | `pytest.ini` / `tests/conftest.py` | 固定 anyio 后端为 asyncio |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `app/core/job_manager.py` | 修复 worker_loop 阻塞问题（添加 timeout 检查 stop_event） |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `app/services/llm_retry.py` | 修复 LLM 重试 rollback 导致数据丢失问题（使用独立 session） |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `app/core/job_manager.py` | 为 `_update_db_status` 和 `_record_timing` 添加异常日志 |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `tests/test_job_manager.py` | 修复测试只使用 asyncio backend（添加 `backends=["asyncio"]`） |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `tests/conftest.py` | 新增 pytest fixture 覆盖 anyio_backend 为仅 asyncio |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `app/core/job_manager.py` | 为事件队列添加大小限制（maxsize=100）防止内存泄漏 |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `app/core/job_manager.py` | 修复 progress 计算（当前阶段为 0.5 进度更准确） |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `tests/test_llm_retry.py` | 更新测试以适配新的 `call_llm_with_retry` 签名 |
+| 2026-01-01 Step 4 Review | Claude Opus 4.5 | `pytest.ini` | 新增 pytest 配置文件 |
 
 ## 测试状态
 
@@ -39,4 +57,6 @@
 |------|----------|
 | 2026-01-01 Review 后 | 4 passed, 0 warnings |
 | 2026-01-01 (Step 3) | 5 passed, 0 warnings |
-| 2026-01-01 Step 3 Review 后 | 5 passed, 0 warnings |
+| 2026-01-01 Step 3 Review 后 | 6 passed, 0 warnings |
+| 2026-01-01 (Step 4) | 9 passed, 0 warnings (含 trio 失败) |
+| 2026-01-01 Step 4 Review 后 | 9 passed, 0 warnings |

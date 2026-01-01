@@ -74,6 +74,16 @@ def save_task_log(db: Session, task_id: str, level: str, message: str) -> TaskLo
     return log
 
 
+def increment_task_retry(db: Session, task_id: str, increment: int = 1) -> Task | None:
+    task = db.get(Task, task_id)
+    if task is None:
+        return None
+    task.llm_retry_count += increment
+    db.commit()
+    db.refresh(task)
+    return task
+
+
 def bulk_insert_segments(
     db: Session, task_id: str, segments: Sequence[dict]
 ) -> list[Segment]:

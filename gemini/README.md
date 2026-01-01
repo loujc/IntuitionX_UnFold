@@ -47,6 +47,8 @@
   - GET /tasks/{task_id}/raw
   - GET /tasks/{task_id}/timing
 
+前端对齐的数据结构与事件格式详见 `spec/Frontend_Data_Contract.md`。
+
 ### SSE 事件
 event: task_status | task_progress | task_result | ping
 data: JSON with task_id, status, stage, progress, message, ts

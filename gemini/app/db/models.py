@@ -21,6 +21,7 @@ class Task(Base):
     mode: Mapped[str] = mapped_column(String(32), default="simple")
     video_type: Mapped[str | None] = mapped_column(String(64), nullable=True)
     input_meta: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    llm_retry_count: Mapped[int] = mapped_column(Integer, default=0)
     error: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), index=True
