@@ -8,6 +8,7 @@ from typing import Any, Awaitable, Callable, Dict, Iterable
 
 from sqlalchemy.orm import Session
 
+from app.core.logging import bind_run_id, bind_task_id, clear_context
 from app.db.repository import save_task_log, save_task_timing, update_task_status
 
 logger = logging.getLogger(__name__)
@@ -82,8 +83,9 @@ class JobManager:
         self.tasks[task_id] = state
         self.job_queue.put_nowait(task_id)
         self._update_db_status(task_id, status=STATUS_QUEUED, stage=STAGES[0])
+        logger.info("Task queued: %s", task_id)
         self.publish_event(
-            task_id, "task_status", {"task_id": task_id, "status": state.status, "stage": state.stage}
+            task_id, "task_status", {"task_id": task_id, "status": state.status, "stage": state.stage, "ts": time.time()}
         )
 
     def start(self) -> None:
@@ -122,42 +124,55 @@ class JobManager:
             self.job_queue.task_done()
 
     async def process_task(self, task_id: str) -> None:
-        state = self.tasks.get(task_id) or TaskState(task_id=task_id)
-        state.status = STATUS_RUNNING
-        self.tasks[task_id] = state
-        self._update_db_status(task_id, status=STATUS_RUNNING, stage=state.stage or STAGES[0])
-        self.publish_event(
-            task_id, "task_status", {"task_id": task_id, "status": state.status, "stage": state.stage}
-        )
-
-        total_stages = len(STAGES)
-        for idx, stage in enumerate(STAGES):
-            state.stage = stage
-            # Progress calculation: current stage is half-done
-            state.progress = (idx + 0.5) / total_stages
-            self._update_db_status(task_id, status=STATUS_RUNNING, stage=stage)
+        bind_task_id(task_id)
+        bind_run_id(task_id)
+        try:
+            state = self.tasks.get(task_id) or TaskState(task_id=task_id)
+            state.status = STATUS_RUNNING
+            self.tasks[task_id] = state
+            self._update_db_status(task_id, status=STATUS_RUNNING, stage=state.stage or STAGES[0])
+            logger.info("Task processing started")
             self.publish_event(
                 task_id,
-                "task_progress",
-                {"task_id": task_id, "status": state.status, "stage": stage, "progress": state.progress},
+                "task_status",
+                {"task_id": task_id, "status": state.status, "stage": state.stage},
             )
-            start_ts = time.perf_counter()
-            try:
-                await self._run_stage(stage, task_id)
-            except Exception as exc:
+
+            total_stages = len(STAGES)
+            for idx, stage in enumerate(STAGES):
+                state.stage = stage
+                # Progress calculation: current stage is half-done
+                state.progress = (idx + 0.5) / total_stages
+                self._update_db_status(task_id, status=STATUS_RUNNING, stage=stage)
+                logger.info("Stage started: %s", stage)
+                self.publish_event(
+                    task_id,
+                    "task_progress",
+                    {"task_id": task_id, "status": state.status, "stage": stage, "progress": state.progress},
+                )
+                start_ts = time.perf_counter()
+                try:
+                    await self._run_stage(stage, task_id)
+                except Exception as exc:
+                    elapsed_ms = int((time.perf_counter() - start_ts) * 1000)
+                    self._record_timing(task_id, stage, elapsed_ms)
+                    self._mark_failed(task_id, stage, exc)
+                    return
                 elapsed_ms = int((time.perf_counter() - start_ts) * 1000)
                 self._record_timing(task_id, stage, elapsed_ms)
-                self._mark_failed(task_id, stage, exc)
-                return
-            elapsed_ms = int((time.perf_counter() - start_ts) * 1000)
-            self._record_timing(task_id, stage, elapsed_ms)
+                logger.info("Stage completed: %s", stage)
 
-        state.status = STATUS_FINISHED
-        state.progress = 1.0
-        self._update_db_status(task_id, status=STATUS_FINISHED, stage=STAGES[-1])
-        self.publish_event(
-            task_id, "task_result", {"task_id": task_id, "status": state.status, "stage": state.stage}
-        )
+            state.status = STATUS_FINISHED
+            state.progress = 1.0
+            self._update_db_status(task_id, status=STATUS_FINISHED, stage=STAGES[-1])
+            logger.info("Task processing finished")
+            self.publish_event(
+                task_id,
+                "task_result",
+                {"task_id": task_id, "status": state.status, "stage": state.stage},
+            )
+        finally:
+            clear_context()
 
     async def _run_stage(self, stage: str, task_id: str) -> None:
         handler = self._stage_handlers.get(stage)
@@ -192,6 +207,7 @@ class JobManager:
                 save_task_log(db, task_id, "error", f"{stage} failed: {exc}")
         except Exception:
             pass
+        logger.error("Stage failed: %s", stage, exc_info=exc)
         self.publish_event(
             task_id,
             "task_status",

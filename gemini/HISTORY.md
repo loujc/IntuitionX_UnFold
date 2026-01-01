@@ -84,6 +84,10 @@
 | 2026-01-01 (Step 10) | Codex | `app/api/tasks.py` | 状态/segments 读取接口 |
 | 2026-01-01 (Step 10) | Codex | `tests/test_read_endpoints.py` | 读取接口与错误场景测试 |
 | 2026-01-01 (Step 10) | Codex | `README.md` | 更新读取接口说明 |
+| 2026-01-01 (Step 11) | Codex | `app/core/job_manager.py` | 增加任务阶段日志与失败日志 |
+| 2026-01-01 (Step 11) | Codex | `app/workers/stage_handlers.py` | LLM 错误日志输出 |
+| 2026-01-01 (Step 11) | Codex | `tests/test_job_manager.py` | 阶段耗时记录测试（mock clock） |
+| 2026-01-01 (Step 11) | Codex | `README.md` | 增加性能调参与目标说明 |
 
 ## 测试状态
 
@@ -101,3 +105,4 @@
 | 2026-01-01 (Step 8) | 17 passed |
 | 2026-01-01 (Step 9) | 18 passed |
 | 2026-01-01 (Step 10) | 20 passed |
+| 2026-01-01 (Step 11) | 21 passed |

@@ -135,6 +135,15 @@ storage:
   max_upload_size_mb: 500
 ```
 
+## 性能与调参
+- 目标：20-30s 端到端（Best Effort，取决于模型与视频时长）。
+- 关键调参：
+  - `processing.chunk_duration`：切片时长，越短并行度越高但开销增大。
+  - `processing.max_asr_workers`：ASR 并发数，受显存限制，默认 1。
+  - `processing.llm_concurrency` / `runtime.max_llm_concurrency`：LLM 并发度上限。
+  - `asr.model_size`：ASR 模型大小（速度/准确率权衡）。
+  - `llm.model_name` 与 `llm.base_url`：LLM 模型与服务端点。
+
 ## 依赖清单（最小）
 - Python 3.10+
 - FFmpeg

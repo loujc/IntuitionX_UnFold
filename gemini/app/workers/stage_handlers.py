@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Dict
@@ -46,6 +47,8 @@ from app.services.storage import get_task_dir
 from app.services.subtitles import generate_srt, generate_vtt, write_subtitle
 from app.services.transcript import merge_chunk_segments
 from app.services.video_splitter import split_video
+
+logger = logging.getLogger(__name__)
 
 
 def build_stage_handlers(
@@ -201,14 +204,22 @@ def build_stage_handlers(
             video_type_payload = {"label": task.video_type, "confidence": 1.0}
         else:
             type_messages = build_video_type_prompt(config.system.video_types, transcript_text)
-            type_raw = await call_llm_json_async(task_id, type_messages)
+            try:
+                type_raw = await call_llm_json_async(task_id, type_messages)
+            except Exception:
+                logger.exception("LLM video type failed")
+                raise
             video_type_payload = normalize_video_type(type_raw, config.system.video_types)
             if video_type_payload.get("label"):
                 with session_factory() as db:
                     update_task_video_type(db, task_id, video_type_payload["label"])
 
         summary_messages = build_summary_prompt(video_type_payload.get("label"), slices)
-        summary_raw = await call_llm_json_async(task_id, summary_messages)
+        try:
+            summary_raw = await call_llm_json_async(task_id, summary_messages)
+        except Exception:
+            logger.exception("LLM summary failed")
+            raise
         summary_payload = normalize_summary(summary_raw, slices)
 
         with session_factory() as db:
@@ -236,7 +247,11 @@ def build_stage_handlers(
             if seg.text
         ]
         keyword_messages = build_keyword_prompt(task.video_type, mode, segment_payload)
-        keyword_raw = await call_llm_json_async(task_id, keyword_messages)
+        try:
+            keyword_raw = await call_llm_json_async(task_id, keyword_messages)
+        except Exception:
+            logger.exception("LLM keywords failed")
+            raise
         keywords_payload = normalize_keywords(keyword_raw, segments)
 
         if not keywords_payload:

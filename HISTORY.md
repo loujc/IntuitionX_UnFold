@@ -17,3 +17,4 @@
 - 完成 TODO 第 8 步：结果组装、Result/Raw/Timing 读取接口与测试。
 - 完成 TODO 第 9 步：SSE 事件流接口与测试。
 - 完成 TODO 第 10 步：读取型 API（任务状态、segments、result/raw/timing）与测试。
+- 完成 TODO 第 11 步：阶段耗时日志、LLM 错误日志与性能调参说明，补充耗时测试。
