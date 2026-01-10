@@ -4,6 +4,7 @@
 
 ## 约定
 - 规范来源：只以 `gemini/spec/` 为准（忽略 `codex/`）。
+- 所有开发工作在 branch `zhuyaxuan-dev` 上进行。
 - 每完成一个 TODO 步骤，必须 **commit + push**。
 - 每一步结束前，需调用 Claude Code 做 review，并按建议修改。
 - 修改与测试结果写入 `HISTORY.md` 与 `gemini/HISTORY.md`。
@@ -29,7 +30,7 @@
 6. **提交与推送**
    - `git add ...`
    - `git commit -m "<message>"`
-   - 若远端有更新：`git pull --rebase origin main`
-   - `git push origin main`
+   - 若远端有更新：`git pull --rebase origin zhuyaxuan-dev`
+   - `git push origin zhuyaxuan-dev`
 7. **进入下一步**
    - 重复上述流程直到 TODO 完成。
